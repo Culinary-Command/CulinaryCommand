@@ -1,70 +1,367 @@
 @using CulinaryCommand.Inventory.Entities
 @using CulinaryCommand.Inventory.Services
-@inject IngredientService Ingredients
 @inject NavigationManager Nav
-@inject IJSRuntime Js
-@rendermode InteractiveServer
+@inject IJSRuntime JS
 
-<h3 class="mb-3">Ingredients</h3>
+@inject IngredientService Ingredients
 
-<button type="button" class="btn btn-success mb-3" @onclick="AddNew">
-    <i class="bi bi-plus-circle"></i> Add New Ingredient
-</button>
 
-@if (items == null)
-{
-    <p>Loading...</p>
-}
-else
-{
-    <table class="table table-striped">
-        <thead>
-            <tr>
-                <th>Name</th>
-                <th>Category</th>
-                <th>Default Unit</th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var i in items)
-            {
+@* Styles integrated from IngredientList.razor.css *@
+@* <style>
+ @import url('IngredientList.razor.css'); 
+</style> *@
+
+<div class="ingredient-container">
+    <div class="ingredient-header">
+        <div class="header-text">
+            <h1>Ingredient Management</h1>
+            <p>Manage your ingredients</p>
+        </div>
+    </div>
+
+    <div class="ingredient-toolbar">
+        <div class="search-bar">
+            <i class="bi bi-search"></i>
+            <input type="text" placeholder="Search Ingredients by name or category..." @bind="searchTerm" @bind:event="oninput" />
+        </div>
+        <div class="toolbar-actions">
+            <button class="icon-btn" @onclick="RefreshIngredients" title="Refresh">
+                <i class="bi bi-arrow-clockwise"></i>
+            </button>
+            <div class="select-wrap">
+                <select class="form-select" @bind="selectedCategory">
+                    <option value="">All Categories</option>
+                    @foreach (var category in availableCategories)
+                    {
+                        <option value="@category">@category</option>
+                    }
+                </select>
+            </div>
+            <button class="btn-add" @onclick="ShowAddIngredientModal">
+                <i class="bi bi-plus-lg"></i> Add Ingredient
+            </button>
+        </div>
+    </div>
+
+    <div class="ingredient-table-container">
+        <table class="ingredient-table">
+            <thead>
                 <tr>
-                    <td>@i.Name</td>
-                    <td>@i.Category</td>
-                    <td>@i.Unit?.Abbreviation</td>
-                    <td>
-                        <button class="btn btn-primary me-2" @onclick="() => Edit(i.Id)">
-                            <i class="bi bi-pencil-square"></i>
-                        </button>
-                        <button class="btn btn-danger" @onclick="() => Delete(i.Id)">
-                            <i class="bi bi-trash"></i>
-                        </button>
-                    </td>
+                    <th>Name</th>
+                    <th>Category</th>
+                    <th>Unit</th>
+                    <th class="actions-col">Actions</th>
                 </tr>
-            }
-        </tbody>
-    </table>
-}
+            </thead>
+            <tbody>
+                @if (isLoading)
+                {
+                    <tr>
+                        <td colspan="4" class="text-center py-4">
+                            <div class="spinner-border" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                        </td>
+                    </tr>
+                }
+                else if (!pagedIngredients.Any())
+                {
+                    <tr>
+                        <td colspan="4" class="text-center py-4">
+                            <p class="text-muted">No ingredients found</p>
+                        </td>
+                    </tr>
+                }
+                else
+                {
+                    @foreach (var ingredient in pagedIngredients)
+                    {
+                        <tr>
+                            <td>@ingredient.Name</td>
+                            <td>@ingredient.Category</td>
+                            @* <td>@ingredient.Unit?.Abbreviation</td> *@
+                            <td class="actions-col">
+                                <div class="action-buttons">
+                                    <button class="btn-action" @onclick="() => EditIngredient(ingredient.Id)" title="Edit">
+                                        <i class="bi bi-pencil"></i>
+                                    </button>
+                                    <button class="btn-action delete" @onclick="() => DeleteIngredient(ingredient.Id)" title="Delete">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+        <div class="table-footer">
+            <div class="footer-count">Showing @GetStartIndex()-@GetEndIndex() of @filteredIngredients.Count Ingredients</div>
+            <div class="pagination">
+                <button class="page-nav" @onclick="PreviousPage" disabled="@(currentPage <= 1)">
+                    <i class="bi bi-chevron-left"></i>
+                </button>
+                @foreach (var pageNum in pageButtons)
+                {
+                    if (pageNum < 0)
+                    {
+                        <span class="page-ellipsis">...</span>
+                    }
+                    else
+                    {
+                        <button class="page-btn @(currentPage == pageNum ? "active" : "")" @onclick="() => GoToPage(pageNum)">@pageNum</button>
+                    }
+                }
+                <button class="page-nav" @onclick="NextPage" disabled="@(currentPage >= totalPages)">
+                    <i class="bi bi-chevron-right"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add/Edit Ingredient Modal -->
+    @if (showModal)
+    {
+        <div class="modal-backdrop" @onclick="CloseModal"></div>
+        <div class="modal-dialog-custom">
+            <div class="modal-content-custom">
+                <div class="modal-header-custom">
+                    <h3>@(editingIngredient == null ? "Add New Ingredient" : "Edit Ingredient")</h3>
+                    <button class="btn-close-custom" @onclick="CloseModal">
+                        <i class="bi bi-x-lg"></i>
+                    </button>
+                </div>
+                <div class="modal-body-custom">
+                    <div class="form-group mb-3">
+                        <label>Name</label>
+                        <input type="text" class="form-control" @bind="modalIngredient.Name" />
+                    </div>
+                    <div class="form-group mb-3">
+                        <label>Category</label>
+                        <input type="text" class="form-control" @bind="modalIngredient.Category" />
+                    </div>
+                    <div class="form-group mb-3">
+                        <label>Unit</label>
+                        @* <input type="text" class="form-control" @bind="modalIngredient.Unit.Abbreviation" /> *@
+                    </div>
+                </div>
+                <div class="modal-footer-custom">
+                    <button class="btn btn-secondary" @onclick="CloseModal">Cancel</button>
+                    <button class="btn btn-success" @onclick="SaveIngredient">
+                        @(editingIngredient == null ? "Add Ingredient" : "Save Changes")
+                    </button>
+                </div>
+            </div>
+        </div>
+    }
+</div>
 
 @code {
-    List<Ingredient>? items;
+    List<Ingredient> ingredients = new();
+    List<Ingredient> filteredIngredients = new();
+    List<Ingredient> pagedIngredients = new();
+    Ingredient modalIngredient = new();
+    Ingredient? editingIngredient = null;
+    List<string> availableCategories = new();
+    string searchTerm = "";
+    string selectedCategory = "";
+    bool isLoading = true;
+    bool showModal = false;
+    int currentPage = 1;
+    int pageSize = 10;
+    int totalPages = 1;
+    List<int> pageButtons = new();
 
     protected override async Task OnInitializedAsync()
     {
-        // ensure service returns Unit navigation populated
-        items = await Ingredients.GetAllAsync();
+        ingredients = await Ingredients.GetAllAsync();
+        availableCategories = ingredients
+            .Select(i => i.Category)
+            .Where(c => !string.IsNullOrWhiteSpace(c))
+            .Distinct()
+            .OrderBy(c => c)
+            .ToList();
+        FilterIngredients();
+        isLoading = false;
     }
 
-    void AddNew() => Nav.NavigateTo("/ingredients/create");
-    void Edit(int id) => Nav.NavigateTo($"/ingredients/edit/{id}");
-
-    async Task Delete(int id)
+    private void FilterIngredients()
     {
-        if (await Js.InvokeAsync<bool>("confirm", $"Delete ingredient #{id}?"))
+        currentPage = 1;
+        filteredIngredients = ingredients.Where(i =>
+            (string.IsNullOrWhiteSpace(searchTerm) || i.Name.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) &&
+            (string.IsNullOrWhiteSpace(selectedCategory) || i.Category == selectedCategory)
+        ).ToList();
+        UpdatePagination();
+    }
+
+    private void UpdatePagination()
+    {
+        totalPages = Math.Max(1, (int)Math.Ceiling(filteredIngredients.Count / (double)pageSize));
+        currentPage = Math.Min(currentPage, totalPages);
+        pagedIngredients = filteredIngredients
+            .Skip((currentPage - 1) * pageSize)
+            .Take(pageSize)
+            .ToList();
+        pageButtons = BuildPageButtons();
+    }
+
+    private List<int> BuildPageButtons()
+    {
+        var buttons = new List<int>();
+        if (totalPages <= 1)
+        {
+            buttons.Add(1);
+            return buttons;
+        }
+        if (totalPages <= 5)
+        {
+            for (var i = 1; i <= totalPages; i++)
+            {
+                buttons.Add(i);
+            }
+            return buttons;
+        }
+        buttons.Add(1);
+        if (currentPage > 3)
+        {
+            buttons.Add(-1);
+        }
+        var start = Math.Max(2, currentPage - 1);
+        var end = Math.Min(totalPages - 1, currentPage + 1);
+        for (var i = start; i <= end; i++)
+        {
+            buttons.Add(i);
+        }
+        if (currentPage < totalPages - 2)
+        {
+            buttons.Add(-1);
+        }
+        buttons.Add(totalPages);
+        return buttons;
+    }
+
+    private void GoToPage(int page)
+    {
+        currentPage = page;
+        UpdatePagination();
+    }
+
+    private void PreviousPage()
+    {
+        if (currentPage > 1)
+        {
+            currentPage--;
+            UpdatePagination();
+        }
+    }
+
+    private void NextPage()
+    {
+        if (currentPage < totalPages)
+        {
+            currentPage++;
+            UpdatePagination();
+        }
+    }
+
+    private int GetStartIndex()
+    {
+        if (filteredIngredients.Count == 0)
+        {
+            return 0;
+        }
+        return ((currentPage - 1) * pageSize) + 1;
+    }
+
+    private int GetEndIndex()
+    {
+        return Math.Min(currentPage * pageSize, filteredIngredients.Count);
+    }
+
+    private void ShowAddIngredientModal()
+    {
+        editingIngredient = null;
+        modalIngredient = new Ingredient();
+        showModal = true;
+    }
+
+    private void EditIngredient(int id)
+    {
+        editingIngredient = ingredients.FirstOrDefault(i => i.Id == id);
+        if (editingIngredient != null)
+        {
+            modalIngredient = new Ingredient
+            {
+                @* Id = editingIngredient.Id, *@
+                Name = editingIngredient.Name,
+                Category = editingIngredient.Category,
+                @* Unit = editingIngredient.Unit *@
+            };
+            showModal = true;
+        }
+    }
+
+    private async Task SaveIngredient()
+    {
+        if (editingIngredient != null)
+        {
+            // Update logic (call service, update list, etc.)
+            editingIngredient.Name = modalIngredient.Name;
+            editingIngredient.Category = modalIngredient.Category;
+            @* editingIngredient.Unit = modalIngredient.Unit; *@
+            await Ingredients.UpdateAsync(editingIngredient);
+        }
+        else
+        {
+            // Add logic (call service, update list, etc.)
+            await Ingredients.CreateAsync(modalIngredient);
+            ingredients = await Ingredients.GetAllAsync();
+        }
+        CloseModal();
+        FilterIngredients();
+    }
+
+    private void CloseModal()
+    {
+        showModal = false;
+        modalIngredient = new();
+        editingIngredient = null;
+    }
+
+    private async Task DeleteIngredient(int id)
+    {
+        if (await JS.InvokeAsync<bool>("confirm", $"Delete ingredient #{id}?") )
         {
             await Ingredients.DeleteAsync(id);
-            items = await Ingredients.GetAllAsync();
+            ingredients = await Ingredients.GetAllAsync();
+            FilterIngredients();
+        }
+    }
+
+    private async Task RefreshIngredients()
+    {
+        ingredients = await Ingredients.GetAllAsync();
+        FilterIngredients();
+    }
+
+    private string SearchTerm
+    {
+        get => this.searchTerm;
+        set
+        {
+            this.searchTerm = value;
+            FilterIngredients();
+        }
+    }
+
+    private string SelectedCategory
+    {
+        get => this.selectedCategory;
+        set
+        {
+            this.selectedCategory = value;
+            FilterIngredients();
         }
     }
 }
