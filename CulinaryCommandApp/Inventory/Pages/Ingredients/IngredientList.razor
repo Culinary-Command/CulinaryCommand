@@ -1,5 +1,7 @@
 @using CulinaryCommand.Inventory.Entities
 @using CulinaryCommand.Inventory.Services
+@inject LocationState locationState
+
 @inject IngredientService Ingredients
 @inject NavigationManager Nav
 @inject IJSRuntime Js
@@ -53,7 +55,7 @@ else
     protected override async Task OnInitializedAsync()
     {
         // ensure service returns Unit navigation populated
-        items = await Ingredients.GetAllAsync();
+        items = await Ingredients.GetByLocationAsync(locationState.CurrentLocation?.Id ?? 0);
     }
 
     void AddNew() => Nav.NavigateTo("/ingredients/create");
