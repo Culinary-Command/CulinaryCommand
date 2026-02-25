@@ -1,11 +1,13 @@
 @page "/ingredients/create"
 @using CulinaryCommand.Inventory.Entities
 @using CulinaryCommand.Inventory.Services
+@inject LocationState locationState
+
 @inject NavigationManager Nav
 @inject IngredientService Ingredients
 @rendermode InteractiveServer
 
-<h3>Create Ingredient</h3>
+<h3>Create Iengredient</h3>
 
 <IngredientForm Model="model" FormTitle="Create Ingredient" OnValidSubmit="Save" />
 
@@ -14,6 +16,8 @@
 
     private async Task Save()
     {
+        model.LocationId = locationState.CurrentLocation?.Id ?? 0;
+        Console.WriteLine("=== DEBUG: " + model.Category, model.Name, model.LocationId);
         await Ingredients.CreateAsync(model);
         Nav.NavigateTo("/ingredients");
     }
