@@ -1,8 +1,8 @@
 using CulinaryCommand.Data;
-using CulinaryCommand.Data.Entities;
+using Rec = CulinaryCommandApp.Recipe.Entities;
 using Microsoft.EntityFrameworkCore;
 
-namespace CulinaryCommand.Services
+namespace CulinaryCommandApp.Recipe.Services
 {
     public class RecipeService
     {
@@ -13,13 +13,13 @@ namespace CulinaryCommand.Services
             _db = db;
         }
 
-        public async Task<List<Recipe>> GetAllAsync()
+        public async Task<List<Rec.Recipe>> GetAllAsync()
             => await _db.Recipes
                 .Include(r => r.RecipeIngredients)
                 .Include(r => r.Steps)
                 .ToListAsync();
         
-        public async Task<List<Recipe>> GetAllByLocationIdAsync(int locationId)
+        public async Task<List<Rec.Recipe>> GetAllByLocationIdAsync(int locationId)
         {
             return await _db.Recipes
                 .Where(r => r.LocationId == locationId)
@@ -28,7 +28,7 @@ namespace CulinaryCommand.Services
                 .ToListAsync();
         }
 
-        public Task<Recipe?> GetByIdAsync(int id)
+        public Task<Rec.Recipe?> GetByIdAsync(int id)
         {
             return _db.Recipes
                 .Include(r => r.RecipeIngredients)
@@ -40,7 +40,7 @@ namespace CulinaryCommand.Services
         }
 
 
-        public async Task CreateAsync(Recipe recipe)
+        public async Task CreateAsync(Rec.Recipe recipe)
         {
             if (string.IsNullOrWhiteSpace(recipe.Category))
                 throw new Exception("Category is required.");
@@ -49,7 +49,7 @@ namespace CulinaryCommand.Services
             await _db.SaveChangesAsync();
         }
 
-        public async Task UpdateAsync(Recipe recipe)
+        public async Task UpdateAsync(Rec.Recipe recipe)
         {
             _db.Recipes.Update(recipe);
             await _db.SaveChangesAsync();

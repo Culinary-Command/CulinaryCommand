@@ -1,4 +1,4 @@
-using CulinaryCommand.Inventory.DTOs;
+using CulinaryCommandApp.Inventory.DTOs;
 using Xunit;
 
 namespace CulinaryCommandUnitTests.Inventory.DTOs

@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using CulinaryCommand.Inventory.Entities;
+using CulinaryCommandApp.Inventory.Entities;
 
 namespace CulinaryCommand.Inventory.Data.Configurations
 {

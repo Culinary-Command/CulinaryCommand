@@ -1,11 +1,11 @@
 using System.Linq;
-using CulinaryCommand.Inventory.Services.Interfaces;
+using CulinaryCommandApp.Inventory.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using CulinaryCommand.Inventory.DTOs;
+using CulinaryCommandApp.Inventory.DTOs;
 using CulinaryCommand.Data;
-using CulinaryCommand.Inventory.Entities;
+using CulinaryCommandApp.Inventory.Entities;
 
-namespace CulinaryCommand.Inventory.Services
+namespace CulinaryCommandApp.Inventory.Services
 {
     public class InventoryManagementService : IInventoryManagementService
     {
@@ -76,7 +76,7 @@ namespace CulinaryCommand.Inventory.Services
         }
 
         public async Task<InventoryItemDTO> AddItemAsync(CreateIngredientDTO dto) {
-            var entity = new CulinaryCommand.Inventory.Entities.Ingredient {
+            var entity = new CulinaryCommandApp.Inventory.Entities.Ingredient {
                 Name = dto.Name,
                 Sku = dto.SKU,
                 Price = dto.Price,

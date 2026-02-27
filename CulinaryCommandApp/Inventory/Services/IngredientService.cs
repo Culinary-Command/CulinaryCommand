@@ -2,11 +2,11 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using CulinaryCommand.Data;
-using CulinaryCommand.Inventory.Entities;
-using CulinaryCommand.Inventory.Services.Interfaces;
+using CulinaryCommandApp.Inventory.Entities;
+using CulinaryCommandApp.Inventory.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
-namespace CulinaryCommand.Inventory.Services
+namespace CulinaryCommandApp.Inventory.Services
 {
     public class IngredientService : IIngredientService
     {

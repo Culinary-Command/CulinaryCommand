@@ -1,9 +1,9 @@
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using CulinaryCommand.Inventory.Entities;
+using CulinaryCommandApp.Inventory.Entities;
 
-namespace CulinaryCommand.Inventory.Services.Interfaces
+namespace CulinaryCommandApp.Inventory.Services.Interfaces
 {
     public interface IIngredientService
     {

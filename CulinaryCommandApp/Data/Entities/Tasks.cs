@@ -1,7 +1,8 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using CulinaryCommand.Data.Enums;
-using InvIngredient = CulinaryCommand.Inventory.Entities.Ingredient;
+using CulinaryCommandApp.Recipe.Entities;
+using InvIngredient = CulinaryCommandApp.Inventory.Entities.Ingredient;
 
 namespace CulinaryCommand.Data.Entities
 {

@@ -4,6 +4,8 @@
 @using CulinaryCommand.Services
 @using CulinaryCommand.Data.Enums;
 @using CulinaryCommand.Services.UserContextSpace
+@using CulinaryCommandApp.Recipe.Services;
+@using CulinaryCommandApp.Recipe.Entities;
 @inject IUserContextService UserCtx
 @inject NavigationManager Nav
 @inject ILocationService LocationService
@@ -346,11 +348,8 @@ else
 
         try
         {
-            var all = await RecipeService.GetAllAsync();
-            recipes = all
-                .Where(r => r.LocationId == selectedLocationId.Value)
-                .OrderBy(r => r.Title)
-                .ToList();
+            recipes = await RecipeService.GetAllByLocationIdAsync(selectedLocationId.Value);
+            recipes = recipes.OrderBy(r => r.Title).ToList();
         }
         catch
         {

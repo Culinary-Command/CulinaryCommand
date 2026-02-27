@@ -5,12 +5,12 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using CulinaryCommand.Data;
-using CulinaryCommand.Inventory.Entities;
-using CulinaryCommand.Inventory.Services.Interfaces;
+using CulinaryCommandApp.Inventory.Entities;
+using CulinaryCommandApp.Inventory.Services.Interfaces;
 
 
 
-namespace CulinaryCommand.Inventory.Services
+namespace CulinaryCommandApp.Inventory.Services
 {
     public class InventoryTransactionService : IInventoryTransactionService
     {

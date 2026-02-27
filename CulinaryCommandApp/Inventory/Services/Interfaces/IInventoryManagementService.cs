@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using CulinaryCommand.Inventory.DTOs;
+using CulinaryCommandApp.Inventory.DTOs;
 
-namespace CulinaryCommand.Inventory.Services.Interfaces
+namespace CulinaryCommandApp.Inventory.Services.Interfaces
 {
     public interface IInventoryManagementService
     {
