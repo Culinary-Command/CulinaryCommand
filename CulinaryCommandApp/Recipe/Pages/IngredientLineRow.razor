@@ -25,7 +25,7 @@
             @foreach (var category in ingredientCategories) {
                 <optgroup label="@category">
                     @foreach ( var ingredient in IngredientsByCategory(category)){
-                        <option value="@ingredient.IngredientId">@ingredient.Name</option>
+                        <option value="@ingredient.Id">@ingredient.Name</option>
                     }
                 </optgroup>
             }
@@ -54,9 +54,18 @@
             @onchange="OnUnitChanged">
         <option value="0">- unit -</option>
         @foreach (var unit in availableUnits) {
-
+            <option value="@unit.Id">@unit.Abbreviation</option>
         }
     </select>
+
+    <input type="text"
+        class="line-note"
+        placeholder="Prep note (optional)"
+        @bind="Line.PrepNote" />
+    
+    <button type="button" class="btn-remove-line" @onclick="() => OnRemove.InvokeAsync(Line)">
+        x
+    </button>
 </div>
 
 

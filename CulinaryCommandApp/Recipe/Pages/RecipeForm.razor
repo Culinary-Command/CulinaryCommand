@@ -1,0 +1,43 @@
+@page "/recipes/new"
+@page "/recipes/{RecipeId:int}/edit"
+@using CulinaryCommandApp.Inventory.Entities
+@rendermode InteractiveServer
+
+
+<PageTitle>@(RecipeId.HasValue ? "Edit Recipe" : "New Recipe")</PageTitle>
+
+<div class="recipes-container">
+    <div class="recipes-header">
+        <div class="header-text">
+            <h1>@(RecipeId.HasValue ? "Edit Recipe" : "New Recipe")</h1>
+            <p>@(RecipeId.HasValue ? "Update this recipe's details." : "Add a new recipe to your location.")</p>
+        </div>
+    </div>
+
+    <EditForm Model="recipe" OnValidSubmit="HandleSubmit">
+
+    </EditForm>
+
+
+</div>
+
+
+
+@code {
+    [Parameter] public int? RecipeId { get; set; }
+
+    private Recipe recipe = new();
+    private List<RecipeIngredient> ingredientLines = new();
+    private List<RecipeStep> steps = new();
+    private List<Unit> yieldUnits = new();
+    private List<Recipe> availableSubRecipes = new();
+    private int locationId;
+    private bool isSaving;
+
+
+    private async Task HandleSubmit() {
+        
+    }
+
+
+}
