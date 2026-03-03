@@ -31,6 +31,10 @@ namespace CulinaryCommandApp.Recipe.Entities
 
         public DateTime? CreatedAt { get; set; }
 
+        // Required to handle concurrent changes
+        [Timestamp]
+        public byte[] RowVersion { get; set; } = Array.Empty<byte>();
+
         // Navigation
         public ICollection<RecipeIngredient> RecipeIngredients { get; set; } = new List<RecipeIngredient>();
         public ICollection<RecipeStep> Steps { get; set; } = new List<RecipeStep>();
