@@ -128,7 +128,8 @@ else {
                            type="number"
                            min="0"
                            step="0.01"
-                           @bind="Model.YieldAmount"
+                           value="@(Model.YieldAmount.HasValue ? Math.Round(Model.YieldAmount.Value, 2).ToString("0.##") : "")"
+                           @onchange="(e) => Model.YieldAmount = decimal.TryParse(e.Value?.ToString(), out var v) ? v : null"
                            placeholder="e.g. 4" />
                 </div>
 
@@ -245,7 +246,8 @@ else {
                                        class="form-control form-control-sm"
                                        min="0"
                                        step="0.01"
-                                       @bind="line.Quantity" />
+                                       value="@Math.Round(line.Quantity, 2).ToString("0.##")"
+                                       @onchange="(e) => line.Quantity = decimal.TryParse(e.Value?.ToString(), out var v) ? v : 0" />
                             </div>
 
                             <div class="col-md-2">
@@ -515,6 +517,7 @@ else {
     }
 
     private void SetLineMode(IngredientLineViewModel vm, bool subRecipeMode) {
+        vm.IsSubRecipeMode = subRecipeMode;
         if (subRecipeMode) {
             vm.Source.IngredientId = null;
             vm.SelectedCategory = null;
@@ -653,9 +656,18 @@ else {
     private sealed class IngredientLineViewModel {
         public RecipeIngredient Source { get; }
 
-        public IngredientLineViewModel(RecipeIngredient source) => Source = source;
+        public IngredientLineViewModel(RecipeIngredient source)
+        {
+            Source = source;
+            _isSubRecipeMode = source.SubRecipeId.HasValue;
+        }
 
-        public bool IsSubRecipeMode => Source.SubRecipeId.HasValue;
+        private bool _isSubRecipeMode;
+        public bool IsSubRecipeMode
+        {
+            get => _isSubRecipeMode;
+            set => _isSubRecipeMode = value;
+        }
 
         public string? SelectedCategory { get; set; }
         public List<Ingredient> FilteredIngredients { get; set; } = new();
