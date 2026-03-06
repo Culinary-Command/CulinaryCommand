@@ -260,10 +260,14 @@
 
     private async void OnLocationChanged()
     {
-        await InvokeAsync(async () =>
-        {
-            await LoadCatalogData();
-            StateHasChanged();
+        _ = InvokeAsync(async () => {
+            try {
+                await LoadCatalogData();
+                StateHasChanged();
+            }
+            catch (Exception){
+                // add some logging later
+            }
         });
     }
 

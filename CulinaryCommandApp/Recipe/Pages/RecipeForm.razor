@@ -7,6 +7,7 @@
 @using CulinaryCommandApp.Inventory.Services
 @using CulinaryCommandApp.Inventory.Services.Interfaces
 @using Microsoft.EntityFrameworkCore
+@using System.Threading
 @inject IIngredientService IngredientService
 @inject IUnitService UnitService
 @inject RecipeService RecipeService
@@ -398,6 +399,7 @@ else {
     private string? _errorMessage;
     private bool _dataLoaded;
     private bool _dataLoading;
+    private readonly SemaphoreSlim _loadSemaphore = new(1, 1);
 
     // Reference data
     private List<string> _recipeTypes = new();
@@ -424,20 +426,31 @@ else {
     }
 
 
-    private async void HandleLocationChanged() {
-        await InvokeAsync(async () => {
-            // Wait for any in-flight load to finish before starting a new one.
-            while (_dataLoading)
-                await Task.Delay(50);
-
-            _dataLoaded = false;
-            await LoadLocationDataAsync();
-            StateHasChanged();
+    private void HandleLocationChanged()
+    {
+        // Schedule the async work without blocking the caller. Use a semaphore
+        // to ensure only one LoadLocationDataAsync runs at a time instead of
+        // polling _dataLoading.
+        _ = InvokeAsync(async () =>
+        {
+            await _loadSemaphore.WaitAsync();
+            try
+            {
+                _dataLoaded = false;
+                await LoadLocationDataAsync();
+                StateHasChanged();
+            }
+            finally
+            {
+                _loadSemaphore.Release();
+            }
         });
     }
 
-    public void Dispose() {
+    public void Dispose()
+    {
         LocationState.OnChange -= HandleLocationChanged;
+        _loadSemaphore.Dispose();
     }
 
     private async Task LoadLocationDataAsync() {
@@ -580,13 +593,15 @@ else {
         if (string.IsNullOrWhiteSpace(Model.Title))
             return;
 
-        // Validate ingredient lines: every line must have a unit selected
+        // Validate all lines: UnitId is non-nullable in the schema and required
+        // for inventory transactions, so every line (ingredient or sub-recipe) must
+        // have a unit selected before saving.
         var badLines = _ingredientLines
             .Where(l => !l.IsSubRecipeMode && l.Source.UnitId == 0)
             .ToList();
         if (badLines.Any())
         {
-            _errorMessage = $"{badLines.Count} ingredient line(s) are missing a unit. Please select a unit for each ingredient.";
+            _errorMessage = $"{badLines.Count} line(s) are missing a unit. Please select a unit for every ingredient and sub-recipe line.";
             _saving = false;
             return;
         }
@@ -617,26 +632,54 @@ else {
 
     // *** Conflict resolution ***
 
-    private async Task ReloadLatest() {
+    private async Task ReloadLatest()
+    {
         if (Model.RecipeId == 0) return;
 
         _saving = true;
 
-        try {
+        try
+        {
             var latest = await RecipeService.GetByIdAsync(Model.RecipeId);
 
-            if (latest is null) {
+            if (latest is null)
+            {
                 _errorMessage = "Recipe no longer exists.";
                 return;
             }
 
+            // Update scalar properties on the existing Model instance so bindings remain intact.
+            Model.Title = latest.Title;
+            Model.Category = latest.Category;
+            Model.RecipeType = latest.RecipeType;
+            Model.YieldAmount = latest.YieldAmount;
+            Model.YieldUnit = latest.YieldUnit;
+            Model.IsSubRecipe = latest.IsSubRecipe;
+            Model.CreatedAt = latest.CreatedAt;
+            Model.LocationId = latest.LocationId;
             Model.RowVersion = latest.RowVersion;
+
+            // Replace ingredient and step collections with the latest server copies
+            Model.RecipeIngredients.Clear();
+            foreach (var ri in (latest.RecipeIngredients ?? Enumerable.Empty<RecipeIngredient>()).OrderBy(r => r.SortOrder))
+                Model.RecipeIngredients.Add(ri);
+
+            Model.Steps.Clear();
+            foreach (var s in (latest.Steps ?? Enumerable.Empty<RecipeStep>()).OrderBy(s => s.StepNumber))
+                Model.Steps.Add(s);
+
+            // Rebuild derived view models and refresh UI
+            RebuildLineViewModels();
             _conflictDetected = false;
+            StateHasChanged();
         }
-        catch (Exception ex) {
-            _errorMessage = $"Could not reload: {ex.Message}";
+        catch (Exception ex)
+        {
+            _errorMessage = $"Could not reload.";
+            // add logging later
         }
-        finally {
+        finally
+        {
             _saving = false;
         }
     }
