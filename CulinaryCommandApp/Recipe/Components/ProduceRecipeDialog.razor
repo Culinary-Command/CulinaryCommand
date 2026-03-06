@@ -178,11 +178,11 @@
         }
         catch (InvalidOperationException ex)
         {
-            _errorMessage = ex.Message; // circular reference or recipe not found
+            _errorMessage = "Circular reference or recipe not found."; 
         }
         catch (Exception ex)
         {
-            _errorMessage = $"Could not load ingredient list: {ex.Message}";
+            _errorMessage = $"Could not load ingredient list.";
         }
 
         _visible = true;
@@ -240,12 +240,12 @@
         }
         catch (InvalidOperationException ex)
         {
-            // Covers: insufficient stock, circular reference, recipe not found
-            _errorMessage = ex.Message;
+
+            _errorMessage = "Insufficient stock, circular reference, or recipe not found.";
         }
         catch (Exception ex)
         {
-            _errorMessage = $"Production failed: {ex.Message}";
+            _errorMessage = $"Production failed.";
         }
         finally
         {
