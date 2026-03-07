@@ -42,6 +42,19 @@ namespace CulinaryCommandApp.Recipe.Services
                 .FirstOrDefaultAsync(r => r.RecipeId == id);
         }
 
+        public Task<Rec.Recipe?> GetByIdAsync(int id, IEnumerable<int> allowedLocationIds)
+        {
+            return _db.Recipes
+                .Include(r => r.RecipeIngredients)
+                    .ThenInclude(ri => ri.Ingredient)
+                .Include(r => r.RecipeIngredients)
+                    .ThenInclude(ri => ri.Unit)
+                .Include(r => r.RecipeIngredients)
+                    .ThenInclude(ri => ri.SubRecipe)
+                .Include(r => r.Steps)
+                .FirstOrDefaultAsync(r => r.RecipeId == id && allowedLocationIds.Contains(r.LocationId));
+        }
+
         public async Task CreateAsync(Rec.Recipe recipe)
         {
             if (string.IsNullOrWhiteSpace(recipe.Category))
@@ -68,6 +81,16 @@ namespace CulinaryCommandApp.Recipe.Services
         }
 
         // ── Ingredient Flattening ────────────────────────────────────────────
+
+        /// <inheritdoc/>
+        public async Task<byte[]?> GetRowVersionAsync(int id)
+        {
+            return await _db.Recipes
+                .AsNoTracking()
+                .Where(r => r.RecipeId == id)
+                .Select(r => r.RowVersion)
+                .FirstOrDefaultAsync();
+        }
 
         /// <inheritdoc/>
         public async Task<List<FlatIngredientLine>> FlattenIngredientsAsync(

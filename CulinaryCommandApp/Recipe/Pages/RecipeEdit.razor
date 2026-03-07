@@ -4,7 +4,7 @@
 @using CulinaryCommand.Services.UserContextSpace
 @using CulinaryCommandApp.Recipe.Entities
 
-@inject RecipeService RecipeService
+@inject IRecipeService RecipeService
 @inject IUserContextService UserCtx
 @inject LocationState LocationState
 @inject NavigationManager Nav
@@ -88,7 +88,8 @@ else
 
         if (_allowed)
         {
-            _model = await RecipeService.GetByIdAsync(Id);
+            var allowedLocationIds = ctx.AccessibleLocations.Select(l => l.Id);
+            _model = await RecipeService.GetByIdAsync(Id, allowedLocationIds);
             _notFound = _model is null;
         }
 

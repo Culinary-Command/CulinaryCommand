@@ -208,33 +208,25 @@
 
         try
         {
-            // Flatten again at produce-time with the chosen multiplier so we have
-            // exact scaled quantities.
+            // Flatten at produce-time with the chosen multiplier to get exact scaled quantities.
             var lines = await RecipeService.FlattenIngredientsAsync(RecipeId, _servings);
 
-            // Group by ingredient so that the same ingredient from multiple branches
-            // is deducted in a single transaction record.
-            var grouped = lines
+            // Group by ingredient so the same ingredient appearing in multiple
+            // sub-recipe branches is combined into a single deduction.
+            var transactions = lines
                 .GroupBy(l => l.IngredientId)
-                .Select(g => new
+                .Select(g => new InventoryTransaction
                 {
-                    g.First().IngredientId,
-                    g.First().IngredientName,
-                    TotalQty = g.Sum(l => l.Quantity),
-                    g.First().UnitId,
-                });
-
-            foreach (var item in grouped)
-            {
-                await TransactionService.RecordAsync(new InventoryTransaction
-                {
-                    IngredientId = item.IngredientId,
-                    StockChange  = -item.TotalQty,   // negative = deduction
-                    UnitId       = item.UnitId,
+                    IngredientId = g.First().IngredientId,
+                    StockChange  = -g.Sum(l => l.Quantity),   // negative = deduction
+                    UnitId       = g.First().UnitId,
                     Reason       = $"Recipe production: {RecipeTitle}",
-                    CreatedAt    = DateTimeOffset.UtcNow,
-                });
-            }
+                })
+                .ToList();
+
+            // All deductions committed atomically — any failure (e.g. insufficient
+            // stock) rolls back the entire batch so inventory is never partially deducted.
+            await TransactionService.RecordBatchAsync(transactions);
 
             _success = true;
         }

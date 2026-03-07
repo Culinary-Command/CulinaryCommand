@@ -10,7 +10,7 @@
 @using System.Threading
 @inject IIngredientService IngredientService
 @inject IUnitService UnitService
-@inject RecipeService RecipeService
+@inject IRecipeService RecipeService
 @inject EnumService EnumService
 @inject IUserContextService UserCtx
 @inject LocationState LocationState
@@ -595,13 +595,24 @@ else {
 
         // Validate all lines: UnitId is non-nullable in the schema and required
         // for inventory transactions, so every line (ingredient or sub-recipe) must
-        // have a unit selected before saving.
-        var badLines = _ingredientLines
-            .Where(l => !l.IsSubRecipeMode && l.Source.UnitId == 0)
+        // have a unit selected before saving. Also ensure each line has exactly one
+        // of IngredientId / SubRecipeId set so no orphaned lines reach the database.
+        var missingUnit = _ingredientLines
+            .Where(l => l.Source.UnitId == 0)
             .ToList();
-        if (badLines.Any())
+        if (missingUnit.Any())
         {
-            _errorMessage = $"{badLines.Count} line(s) are missing a unit. Please select a unit for every ingredient and sub-recipe line.";
+            _errorMessage = $"{missingUnit.Count} line(s) are missing a unit. Please select a unit for every ingredient and sub-recipe line.";
+            _saving = false;
+            return;
+        }
+
+        var missingReference = _ingredientLines
+            .Where(l => l.Source.IngredientId is null && l.Source.SubRecipeId is null)
+            .ToList();
+        if (missingReference.Any())
+        {
+            _errorMessage = $"{missingReference.Count} line(s) have no ingredient or sub-recipe selected. Please complete or remove them before saving.";
             _saving = false;
             return;
         }
@@ -673,7 +684,7 @@ else {
             _conflictDetected = false;
             StateHasChanged();
         }
-        catch (Exception ex)
+        catch (Exception)
         {
             _errorMessage = $"Could not reload.";
             // add logging later
@@ -684,10 +695,71 @@ else {
         }
     }
 
-    private async Task ForceOverwrite() {
-        await ReloadLatest();
-        if (!_conflictDetected && string.IsNullOrWhiteSpace(_errorMessage))
-            await Save();
+    private async Task ForceOverwrite()
+    {
+        if (Model.RecipeId == 0) return;
+
+        _saving = true;
+        _errorMessage = null;
+
+        try
+        {
+            // Snapshot every user edit that is currently in Model so we can
+            // restore them after fetching the latest concurrency token.
+            var titleSnapshot        = Model.Title;
+            var categorySnapshot     = Model.Category;
+            var recipeTypeSnapshot   = Model.RecipeType;
+            var yieldAmountSnapshot  = Model.YieldAmount;
+            var yieldUnitSnapshot    = Model.YieldUnit;
+            var isSubRecipeSnapshot  = Model.IsSubRecipe;
+            var locationIdSnapshot   = Model.LocationId;
+            var createdAtSnapshot    = Model.CreatedAt;
+            var ingredientsSnapshot  = Model.RecipeIngredients.ToList();
+            var stepsSnapshot        = Model.Steps.ToList();
+
+            // Fetch only the token — do NOT overwrite the user's edits.
+            var freshToken = await RecipeService.GetRowVersionAsync(Model.RecipeId);
+
+            if (freshToken is null)
+            {
+                _errorMessage = "Recipe no longer exists and cannot be saved.";
+                return;
+            }
+
+            // Stamp the new token so EF Core's concurrency check will pass.
+            Model.RowVersion = freshToken;
+
+            // Restore the user's in-flight edits (unchanged by the fetch above).
+            Model.Title           = titleSnapshot;
+            Model.Category        = categorySnapshot;
+            Model.RecipeType      = recipeTypeSnapshot;
+            Model.YieldAmount     = yieldAmountSnapshot;
+            Model.YieldUnit       = yieldUnitSnapshot;
+            Model.IsSubRecipe     = isSubRecipeSnapshot;
+            Model.LocationId      = locationIdSnapshot;
+            Model.CreatedAt       = createdAtSnapshot;
+
+            Model.RecipeIngredients.Clear();
+            foreach (var ri in ingredientsSnapshot)
+                Model.RecipeIngredients.Add(ri);
+
+            Model.Steps.Clear();
+            foreach (var s in stepsSnapshot)
+                Model.Steps.Add(s);
+
+            _conflictDetected = false;
+        }
+        catch (Exception)
+        {
+            _errorMessage = $"Could not prepare overwrite.";
+            return;
+        }
+        finally
+        {
+            _saving = false;
+        }
+
+        await Save();
     }
 
     private void DismissConflict() => _conflictDetected = false;

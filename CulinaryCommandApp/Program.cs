@@ -154,7 +154,6 @@ builder.Services.AddAWSService<IAmazonCognitoIdentityProvider>();
 builder.Services.AddScoped<CognitoProvisioningService>();
 
 builder.Services.AddScoped<IRecipeService, RecipeService>();
-builder.Services.AddScoped<RecipeService>();
 builder.Services.AddScoped<UnitService>();
 builder.Services.AddScoped<IngredientService>();
 builder.Services.AddScoped<IIngredientService, IngredientService>();

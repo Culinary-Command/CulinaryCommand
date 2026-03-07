@@ -4,7 +4,7 @@
 @using CulinaryCommand.Services.UserContextSpace
 @using CulinaryCommandApp.Recipe.Entities
 
-@inject RecipeService RecipeService
+@inject IRecipeService RecipeService
 @inject IUserContextService UserCtx
 @inject NavigationManager Nav
 
@@ -248,7 +248,8 @@ else
         _priv = string.Equals(ctx.User.Role, "Admin",   StringComparison.OrdinalIgnoreCase)
              || string.Equals(ctx.User.Role, "Manager", StringComparison.OrdinalIgnoreCase);
 
-        _model = await RecipeService.GetByIdAsync(Id);
+        var allowedLocationIds = ctx.AccessibleLocations.Select(l => l.Id);
+        _model = await RecipeService.GetByIdAsync(Id, allowedLocationIds);
         _notFound = _model is null;
 
         _ready = true;
