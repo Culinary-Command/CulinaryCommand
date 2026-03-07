@@ -62,7 +62,13 @@
             // JS-safe now (we're in OnAfterRender)
             await LocationState.SetLocationsAsync(ctx.AccessibleLocations);
 
-            var target = (ctx.AccessibleLocations?.Any() == true) ? "/dashboard" : "/onboarding";
+            var target = (ctx.AccessibleLocations?.Any() == false) ? "/onboarding" : "/dashboard";
+            if (target == "/dashboard") {
+                if (ctx.User?.Role == "Employee") {
+                    target = "/tasks";
+                }
+            }
+
 
             status = $"Redirecting to {target}…";
             StateHasChanged();

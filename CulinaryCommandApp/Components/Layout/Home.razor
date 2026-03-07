@@ -231,7 +231,13 @@
         var ctx = await UserCtx.GetAsync();
         if (ctx.User?.Id != null)
         {
-            Nav.NavigateTo("/dashboard", forceLoad: true);
+            if (ctx.User?.Role == "Employee") {
+                Nav.NavigateTo("/tasks");
+            }
+            else {
+                Console.WriteLine("DEBUG: dashboard nav. Role: " + ctx.User?.Role);
+                Nav.NavigateTo("/dashboard", forceLoad: true);
+            }
         }
     }
 }
