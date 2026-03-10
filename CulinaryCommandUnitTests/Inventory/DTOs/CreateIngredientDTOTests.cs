@@ -1,7 +1,8 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using CulinaryCommandApp.Inventory.DTOs;
+using CulinaryCommand.Components.Pages.Recipes;
+using CulinaryCommand.Inventory.DTOs;
 using Xunit;
 
 

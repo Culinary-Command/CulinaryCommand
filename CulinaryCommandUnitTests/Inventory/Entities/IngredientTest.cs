@@ -1,5 +1,5 @@
 using System;
-using CulinaryCommandApp.Inventory.Entities;
+using CulinaryCommand.Inventory.Entities;
 using Xunit;
 
 namespace CulinaryCommandUnitTests.Inventory.Entities

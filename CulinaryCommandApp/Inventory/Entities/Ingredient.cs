@@ -1,7 +1,7 @@
 using System;
 using CulinaryCommand.Data.Entities;
 
-namespace CulinaryCommandApp.Inventory.Entities
+namespace CulinaryCommand.Inventory.Entities
 {
     public class Ingredient
     {

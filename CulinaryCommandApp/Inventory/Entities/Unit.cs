@@ -1,8 +1,7 @@
 using System;
 using System.Collections.Generic;
-using System.Text.Json.Serialization;
 
-namespace CulinaryCommandApp.Inventory.Entities
+namespace CulinaryCommand.Inventory.Entities
 {
     public class Unit
     {
@@ -22,9 +21,6 @@ namespace CulinaryCommandApp.Inventory.Entities
 
         // list of inventory transactions that use this unit
         public ICollection<InventoryTransaction> InventoryTransaction { get; set; } = new List<InventoryTransaction>();
-
-        [JsonIgnore]
-        public ICollection<LocationUnit> LocationUnits { get; set; } = new List<LocationUnit>();
 
     }
 }

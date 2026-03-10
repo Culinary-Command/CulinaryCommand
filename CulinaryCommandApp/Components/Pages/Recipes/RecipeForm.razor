@@ -1,0 +1,234 @@
+@using CulinaryCommand.Data.Entities
+@using CulinaryCommand.Inventory.Services
+@rendermode InteractiveServer
+@inject NavigationManager Nav
+@inject IngredientService Ingredients
+@inject UnitService Units
+@inject EnumService enumService
+
+<div class="card shadow-sm">
+    <div class="card-header">
+        <h4>@FormTitle</h4>
+    </div>
+
+    <div class="card-body">
+
+        <!-- BASIC FIELDS -->
+        <div class="row mb-3">
+        <div class="col-md-6">
+            <label class="form-label fw-semibold">Title</label>
+            <input class="form-control" @bind="Model.Title" placeholder="Ex: Caesar Salad" />
+        </div>
+
+        <div class="col-md-6">
+            <label class="form-label fw-semibold">Category</label>
+            <select class="form-select" @bind="Model.Category">
+                <option value="">-- Select Category --</option>
+                @foreach (var cat in recipeCategories)
+                {
+                    <option value="@cat">@cat</option>
+                }
+            </select>
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <div class="col-md-6">
+            <label class="form-label fw-semibold">Recipe Type</label>
+            <select class="form-select" @bind="Model.RecipeType">
+                <option value="">-- Select Type --</option>
+                @foreach (var type in recipeTypes)
+                {
+                    <option value="@type">@type</option>
+                }
+            </select>
+        </div>
+
+        <div class="col-md-3">
+            <label class="form-label fw-semibold">Yield Amount</label>
+            <input class="form-control"
+                type="number"
+                min="0"
+                max="100"
+                step="0.01"
+                @bind="Model.YieldAmount" />
+            <small class="text-muted">Enter a value from 0–100%</small>
+        </div>
+
+        <div class="col-md-3">
+            <label class="form-label fw-semibold">Yield Unit</label>
+            <select class="form-select" @bind="Model.YieldUnit">
+                <option value="">-- Select Unit --</option>
+                @foreach (var u in yieldUnits)
+                {
+                    <option value="@u">@u</option>
+                }
+            </select>
+        </div>
+    </div>
+
+        <hr />
+
+        <!-- INGREDIENTS SECTION -->
+        <h5>Ingredients</h5>
+
+        @foreach (var item in Model.RecipeIngredients.OrderBy(i => i.SortOrder))
+        {
+            <div class="card mb-2 p-3">
+
+                <!-- CATEGORY SELECT -->
+                <div class="mb-2">
+                    <label class="form-label">Ingredient Category</label>
+                    <select class="form-select" @onchange="(e) => LoadIngredientsForCategory(item, e.Value?.ToString())">
+                        <option value="">-- Select Category --</option>
+                        @foreach (var cat in IngredientCategories)
+                        {
+                            <option value="@cat">@cat</option>
+                        }
+                    </select>
+                </div>
+
+                <!-- INGREDIENT SELECT -->
+                <div class="mb-2">
+                    <label class="form-label">Ingredient</label>
+                    <select class="form-select" 
+                        @bind="item.IngredientId"
+                        @bind:after="() => LoadUnitsForIngredient(item)">
+                        <option value="">-- Select Ingredient --</option>
+                        @foreach (var ing in item.AvailableIngredients)
+                        {
+                            <option value="@ing.Id">@ing.Name</option>
+                        }
+                    </select>
+                </div>
+
+                <!-- UNIT SELECT -->
+                <div class="mb-2">
+                    <label class="form-label">Unit</label>
+                    <select class="form-select" @bind="item.UnitId">
+                        <option value="">-- Select Unit --</option>
+                        @foreach (var unit in item.AvailableUnits)
+                        {
+                            <option value="@unit.Id">@unit.Name</option>
+                        }
+                    </select>
+                </div>
+
+                <div class="row">
+                    <div class="col">
+                        <label class="form-label">Quantity</label>
+                        <input class="form-control" type="number" step="0.01" @bind="item.Quantity" />
+                    </div>
+                    <div class="col">
+                        <label class="form-label">Prep Note</label>
+                        <input class="form-control" @bind="item.PrepNote" />
+                    </div>
+                </div>
+
+                <button class="btn btn-danger mt-2" @onclick="() => RemoveIngredient(item)">
+                    Remove
+                </button>
+            </div>
+        }
+
+        <button class="btn btn-secondary my-3" @onclick="AddIngredient">
+            <i class="bi bi-plus-circle"></i> Add Ingredient
+        </button>
+
+        <hr />
+
+        <!-- STEPS SECTION -->
+        <h5>Steps</h5>
+
+        @foreach (var step in Model.Steps.OrderBy(s => s.StepNumber))
+        {
+            <div class="mb-3">
+                <label class="form-label">Step @step.StepNumber</label>
+                <textarea class="form-control" @bind="step.Instructions"></textarea>
+                <button class="btn btn-danger mt-1" @onclick="() => RemoveStep(step)">Remove Step</button>
+            </div>
+        }
+
+        <button class="btn btn-secondary" @onclick="AddStep">
+            <i class="bi bi-plus-circle"></i> Add Step
+        </button>
+
+        <hr />
+
+        <button class="btn btn-success" @onclick="Save">
+            Save Recipe
+        </button>
+
+        <button class="btn btn-outline-secondary ms-2" @onclick="Cancel">
+            Cancel
+        </button>
+
+    </div>
+</div>
+
+@code {
+    [Parameter] public Recipe Model { get; set; } = new();
+    [Parameter] public EventCallback OnValidSubmit { get; set; }
+    [Parameter] public string FormTitle { get; set; } = "Recipe";
+
+    public List<string> IngredientCategories { get; set; } = new();
+    private List<string> recipeCategories = new ();
+    private List<string> recipeTypes = new ();
+    private List<string> yieldUnits = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        IngredientCategories = enumService.GetCategories();
+        recipeCategories = enumService.GetCategories();
+        recipeTypes = enumService.GetRecipeTypes();
+        yieldUnits = enumService.GetUnits();
+    }
+
+    void AddIngredient()
+    {
+        Model.RecipeIngredients.Add(new RecipeIngredient
+        {
+            SortOrder = Model.RecipeIngredients.Count + 1,
+            AvailableIngredients = new(),
+            AvailableUnits = new()
+        });
+    }
+
+    void RemoveIngredient(RecipeIngredient item)
+    {
+        Model.RecipeIngredients.Remove(item);
+    }
+
+    void AddStep()
+    {
+        Model.Steps.Add(new RecipeStep
+        {
+            StepNumber = Model.Steps.Count + 1
+        });
+    }
+
+    void RemoveStep(RecipeStep step)
+    {
+        Model.Steps.Remove(step);
+    }
+
+    async Task LoadIngredientsForCategory(RecipeIngredient item, string? category)
+    {
+        if (string.IsNullOrWhiteSpace(category))
+            return;
+
+        item.AvailableIngredients = await Ingredients.GetByCategoryAsync(category);
+    }
+
+    async Task LoadUnitsForIngredient(RecipeIngredient item)
+    {
+        if (item.IngredientId <= 0)
+            return;
+
+        item.AvailableUnits = await Units.GetUnitsForIngredient(item.IngredientId);
+    }
+
+    void Cancel() => Nav.NavigateTo("/recipes");
+
+    async Task Save() => await OnValidSubmit.InvokeAsync();
+}

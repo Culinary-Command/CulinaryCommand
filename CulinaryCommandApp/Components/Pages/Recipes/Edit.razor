@@ -1,0 +1,33 @@
+@page "/recipes/edit/{id:int}"
+@using CulinaryCommand.Data.Entities
+@inject NavigationManager Nav
+@inject RecipeService Recipes
+@rendermode InteractiveServer
+
+<h3>Edit Recipe</h3>
+
+@if (model == null)
+{
+    <p>Loading...</p>
+}
+else
+{
+    <RecipeForm Model="model" FormTitle="Edit Recipe" OnValidSubmit="Save" />
+}
+
+@code {
+    [Parameter] public int id { get; set; }
+
+    private Recipe? model;
+
+    protected override async Task OnInitializedAsync()
+    {
+        model = await Recipes.GetByIdAsync(id);
+    }
+
+    private async Task Save()
+    {
+        await Recipes.UpdateAsync(model);
+        Nav.NavigateTo("/recipes");
+    }
+}

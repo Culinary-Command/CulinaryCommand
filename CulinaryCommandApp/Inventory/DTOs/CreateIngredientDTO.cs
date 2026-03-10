@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace CulinaryCommandApp.Inventory.DTOs
+namespace CulinaryCommand.Inventory.DTOs
 {
     public class CreateIngredientDTO
     {

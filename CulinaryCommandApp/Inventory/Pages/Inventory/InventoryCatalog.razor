@@ -1,50 +1,15 @@
 @page "/inventory-catalog"
 @rendermode InteractiveServer
-@implements IDisposable
 
-@using CulinaryCommandApp.Inventory.DTOs
-@using CulinaryCommandApp.Inventory.Entities
-@using CulinaryCommandApp.Inventory.Services
-@using CulinaryCommandApp.Inventory.Services.Interfaces
-@using CulinaryCommand.Services
-@using CulinaryCommand.Services.UserContextSpace
-
-@inject IInventoryManagementService InventoryService
-@inject IUnitService UnitService
-@inject LocationState LocationState
-@inject EnumService EnumService
-@inject IUserContextService UserCtx
-@inject NavigationManager Nav
+@using CulinaryCommand.Inventory.DTOs
 
 <div class="inventory-container">
-    @if (!_ready)
-    {
-        <div class="text-center mt-5">Loading...</div>
-    }
-    else if (!_allowed)
-    {
-        <div class="alert alert-warning mt-4">
-            You need Admin or Manager permissions to access the inventory catalog.
-        </div>
-    }
-    else
-    {
     <div class="inventory-header">
         <div class="header-text">
-            <h1>Inventory Catalog</h1>
-            <p>@(LocationState.CurrentLocation is not null ? $"{LocationState.CurrentLocation.Name} — ingredient catalog" : "Manage your ingredient catalog")</p>
+            <h1>Inventory Catalog - testing deployment change</h1>
+            <p>Manage your ingredient catalog</p>
         </div>
     </div>
-
-    @if (LocationState.CurrentLocation is null)
-    {
-        <div class="alert alert-info d-flex align-items-center gap-2 mt-3" role="alert">
-            <i class="bi bi-geo-alt-fill"></i>
-            <span>No location selected. Please choose a location to view its inventory catalog.</span>
-        </div>
-    }
-    else
-    {
 
     <div class="inventory-toolbar">
         <div class="search-bar">
@@ -121,7 +86,7 @@
                             </td>
                             <td>
                                 <div class="name-cell">
-                                    <div class="item-name">@item.Name</div>
+                                    <div class="item-name">@item.ItemName</div>
                                     <div class="item-sku">SKU: @item.SKU</div>
                                 </div>
                             </td>
@@ -129,8 +94,8 @@
                                 <span class="category-pill @GetCategoryClass(item.Category)">@item.Category</span>
                             </td>
                             <td>@item.Unit</td>
-                            <td>$@item.Price.ToString("F2")</td>
-                            <td>@(item.VendorName ?? "—")</td>
+                            <td>$@item.PricePerUnit.ToString("F2")</td>
+                            <td>@item.Supplier</td>
                             <td>@(string.IsNullOrWhiteSpace(item.Notes) ? "-" : item.Notes)</td>
                             <td class="actions-col">
                                 <div class="action-buttons">
@@ -170,11 +135,6 @@
             </div>
         </div>
     </div>
-
-    } @* end @if (LocationState.CurrentLocation is not null) *@
-
-    } @* end else (_allowed) *@
-
 </div>
 
 <!-- Add/Edit Item Modal -->
@@ -192,7 +152,7 @@
             <div class="modal-body-custom">
                 <div class="form-group mb-3">
                     <label>Item Name</label>
-                    <input type="text" class="form-control" @bind="modalItem.Name" />
+                    <input type="text" class="form-control" @bind="modalItem.ItemName" />
                 </div>
                 <div class="form-group mb-3">
                     <label>SKU</label>
@@ -212,29 +172,32 @@
                     <div class="col-md-6">
                         <div class="form-group mb-3">
                             <label>Unit</label>
-                            <select class="form-control" @bind="modalItem.UnitId">
-                                <option value="0">-- Select Unit --</option>
-                                @foreach (var unit in _units)
-                                {
-                                    <option value="@unit.Id">@unit.Name (@unit.Abbreviation)</option>
-                                }
+                            <select class="form-control" @bind="modalItem.Unit">
+                                <option value="count">count</option>
+                                <option value="gallons">gallons</option>
+                                <option value="lbs">lbs</option>
+                                <option value="oz">oz</option>
+                                <option value="kg">kg</option>
+                                <option value="L">L</option>
+                                <option value="mL">mL</option>
+                                <option value="bunch">bunch</option>
                             </select>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="form-group mb-3">
                             <label>Cost Per Unit ($)</label>
-                            <input type="number" step="0.01" class="form-control" @bind="modalItem.Price" />
+                            <input type="number" step="0.01" class="form-control" @bind="modalItem.PricePerUnit" />
                         </div>
                     </div>
                 </div>
                 <div class="form-group mb-3">
-                    <label>Starting Quantity</label>
-                    <input type="number" step="0.01" class="form-control" @bind="modalItem.CurrentQuantity" />
+                    <label>Supplier</label>
+                    <input type="number" step="0.01" class="form-control" @bind="modalItem.Supplier" />
                 </div>
                 <div class="form-group mb-3">
-                    <label>Reorder Level</label>
-                    <input type="number" step="0.01" class="form-control" @bind="modalItem.ReorderLevel" />
+                    <label>Notes</label>
+                    <input type="text" class="form-control" @bind="modalItem.Notes" />
                 </div>
             </div>
             <div class="modal-footer-custom">
@@ -248,10 +211,9 @@
 }
 
 @code {
-    private List<InventoryItemDTO> itemCatalog = new();
-    private List<InventoryItemDTO> filteredItems = new();
-    private List<InventoryItemDTO> pagedItems = new();
-    private List<Unit> _units = new();
+    private List<InventoryCatalogDTO> itemCatalog = new();
+    private List<InventoryCatalogDTO> filteredItems = new();
+    private List<InventoryCatalogDTO> pagedItems = new();
     private bool isLoading = true;
     private string searchTerm = "";
     private string selectedCategory = "";
@@ -262,95 +224,34 @@
     private int totalPages = 1;
     private List<int> pageButtons = new();
     private HashSet<int> selectedIds = new();
-    private List<string> categories = new();
+
+    private List<string> categories = new() { "Vegetables", "Dairy", "Meat & Poultry", "Grains & Pasta", "Oils & Sauces" };
 
     private bool showModal = false;
-    private bool _saving = false;
-    private bool _ready = false;
-    private bool _allowed = false;
-    private CreateIngredientDTO modalItem = new();
-    private InventoryItemDTO? editingItem = null;
+    private InventoryCatalogDTO modalItem = new();
+    private InventoryCatalogDTO? editingItem = null;
 
     protected override async Task OnInitializedAsync()
     {
-        var ctx = await UserCtx.GetAsync();
-
-        if (!ctx.IsAuthenticated)
-        {
-            Nav.NavigateTo("/login", true);
-            return;
-        }
-
-        if (ctx.User is null)
-        {
-            Nav.NavigateTo("/no-access", true);
-            return;
-        }
-
-        _allowed =
-            string.Equals(ctx.User.Role, "Admin", StringComparison.OrdinalIgnoreCase) ||
-            string.Equals(ctx.User.Role, "Manager", StringComparison.OrdinalIgnoreCase);
-
-        _ready = true;
-
-        if (!_allowed)
-            return;
-
-        LocationState.OnChange += OnLocationChanged;
         await LoadCatalogData();
-    }
-
-    private void OnLocationChanged()
-    {
-        _ = InvokeAsync(async () => {
-            try {
-                await LoadCatalogData();
-                StateHasChanged();
-            }
-            catch (Exception){
-                // add some logging later
-            }
-        });
-    }
-
-    public void Dispose()
-    {
-        if (_allowed)
-            LocationState.OnChange -= OnLocationChanged;
     }
 
     private async Task LoadCatalogData()
     {
         isLoading = true;
-        StateHasChanged();
 
-        var locId = LocationState.CurrentLocation?.Id;
-        if (locId is null)
+        itemCatalog = new List<InventoryCatalogDTO>
         {
-            itemCatalog = new();
-            categories = EnumService.GetCategories();
-            _units = await UnitService.GetAllAsync();
-            FilterItems();
-            isLoading = false;
-            return;
-        }
-
-        itemCatalog = await InventoryService.GetItemsByLocationAsync(locId.Value);
-
-        // Always start from the preset list so the modal always has options.
-        // Merge in any DB-side categories not in the preset (e.g. legacy or custom data).
-        var dbCategories = await InventoryService.GetCategoriesByLocationAsync(locId.Value);
-        categories = EnumService.GetCategories()
-            .Union(dbCategories, StringComparer.OrdinalIgnoreCase)
-            .OrderBy(c => c)
-            .ToList();
-
-        _units = await UnitService.GetByLocationAsync(locId.Value);
-        if (!_units.Any())
-            _units = await UnitService.GetAllAsync();
+            new InventoryCatalogDTO { Id = 1, ItemName = "Pasta", SKU = "123", Category = "Grains & Pasta", Unit = "lbs", PricePerUnit = 5.00m, Supplier = 1, Notes = "Dry pasta" },
+            new InventoryCatalogDTO { Id = 2, ItemName = "Milk", SKU = "321", Category = "Dairy", Unit = "mL", PricePerUnit = 8.00m, Supplier = 2, Notes = "" },
+            new InventoryCatalogDTO { Id = 3, ItemName = "Heavy Cream", SKU = "456", Category = "Dairy", Unit = "L", PricePerUnit = 10.00m, Supplier = 2, Notes = "" },
+            new InventoryCatalogDTO { Id = 4, ItemName = "Olive Oil", SKU = "654", Category = "Oils & Sauces", Unit = "L", PricePerUnit = 8.00m, Supplier = 3, Notes = "Extra virgin" },
+            new InventoryCatalogDTO { Id = 5, ItemName = "Potatoes", SKU = "789", Category = "Vegetables", Unit = "lbs", PricePerUnit = 9.00m, Supplier = 4, Notes = "" },
+        };
 
         FilterItems();
         isLoading = false;
+        await Task.CompletedTask;
     }
 
     private void FilterItems()
@@ -359,9 +260,9 @@
         filteredItems = itemCatalog.Where(item =>
         {
             bool searchMatch = string.IsNullOrWhiteSpace(searchTerm) ||
-                item.Name.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ||
-                (item.SKU ?? "").Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ||
-                (item.Category ?? "").Contains(searchTerm, StringComparison.OrdinalIgnoreCase);
+                item.ItemName.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ||
+                item.SKU.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ||
+                item.Category.Contains(searchTerm, StringComparison.OrdinalIgnoreCase);
 
             bool categoryMatch = string.IsNullOrWhiteSpace(selectedCategory) ||
                 item.Category == selectedCategory;
@@ -390,14 +291,14 @@
     {
         filteredItems = sortColumn switch
         {
-            "name" => sortAscending ? filteredItems.OrderBy(i => i.Name).ToList() : filteredItems.OrderByDescending(i => i.Name).ToList(),
-            "price" => sortAscending ? filteredItems.OrderBy(i => i.Price).ToList() : filteredItems.OrderByDescending(i => i.Price).ToList(),
-            "supplier" => sortAscending ? filteredItems.OrderBy(i => i.VendorName).ToList() : filteredItems.OrderByDescending(i => i.VendorName).ToList(),
+            "name" => sortAscending ? filteredItems.OrderBy(i => i.ItemName).ToList() : filteredItems.OrderByDescending(i => i.ItemName).ToList(),
+            "price" => sortAscending ? filteredItems.OrderBy(i => i.PricePerUnit).ToList() : filteredItems.OrderByDescending(i => i.PricePerUnit).ToList(),
+            "supplier" => sortAscending ? filteredItems.OrderBy(i => i.Supplier).ToList() : filteredItems.OrderByDescending(i => i.Supplier).ToList(),
             _ => filteredItems
         };
     }
 
-    private string GetCategoryClass(string? category) => category switch
+    private string GetCategoryClass(string category) => category switch
     {
         "Grains & Pasta" => "category-grains",
         "Dairy" => "category-dairy",
@@ -463,73 +364,49 @@
     private void ShowAddItemModal()
     {
         editingItem = null;
-        modalItem = new CreateIngredientDTO
-        {
-            LocationId = LocationState.CurrentLocation?.Id ?? 0
-        };
+        modalItem = new InventoryCatalogDTO();
         showModal = true;
     }
 
-    private void EditItem(InventoryItemDTO item)
+    private void EditItem(InventoryCatalogDTO item)
     {
         editingItem = item;
-        modalItem = new CreateIngredientDTO
+        modalItem = new InventoryCatalogDTO
         {
-            Name = item.Name,
+            Id = item.Id,
+            ItemName = item.ItemName,
             SKU = item.SKU,
             Category = item.Category,
-            Price = item.Price,
-            CurrentQuantity = item.CurrentQuantity,
-            ReorderLevel = item.ReorderLevel,
-            LocationId = LocationState.CurrentLocation?.Id ?? 0,
-            UnitId = item.UnitId,
-            VendorId = item.VendorId
+            Unit = item.Unit,
+            PricePerUnit = item.PricePerUnit,
+            Supplier = item.Supplier,
+            Notes = item.Notes
         };
         showModal = true;
     }
 
-    private async Task SaveItem()
+    private void SaveItem()
     {
-        _saving = true;
         try
         {
-            if (editingItem is null)
+            if (editingItem != null)
             {
-                await InventoryService.AddItemAsync(modalItem);
+                var idx = itemCatalog.FindIndex(i => i.Id == modalItem.Id);
+                if (idx >= 0) itemCatalog[idx] = modalItem;
+                else itemCatalog.Add(modalItem);
             }
             else
             {
-                var dto = new InventoryItemDTO
-                {
-                    Id = editingItem.Id,
-                    Name = modalItem.Name,
-                    SKU = modalItem.SKU ?? "",
-                    Category = modalItem.Category ?? "",
-                    Price = modalItem.Price,
-                    CurrentQuantity = modalItem.CurrentQuantity,
-                    ReorderLevel = modalItem.ReorderLevel,
-                    UnitId = modalItem.UnitId,
-                    VendorId = modalItem.VendorId,
-                };
-                await InventoryService.UpdateItemAsync(dto);
+                modalItem.Id = itemCatalog.Any() ? itemCatalog.Max(i => i.Id) + 1 : 1;
+                itemCatalog.Add(modalItem);
             }
             CloseModal();
-            await LoadCatalogData();
+            FilterItems();
         }
         catch (Exception ex)
         {
             Console.Error.WriteLine($"Failed to save item: {ex}");
         }
-        finally
-        {
-            _saving = false;
-        }
-    }
-
-    private async Task DeleteItem(InventoryItemDTO item)
-    {
-        await InventoryService.DeleteItemAsync(item.Id);
-        await LoadCatalogData();
     }
 
     private void CloseModal()
@@ -537,6 +414,12 @@
         showModal = false;
         modalItem = new();
         editingItem = null;
+    }
+
+    private void DeleteItem(InventoryCatalogDTO item)
+    {
+        itemCatalog.Remove(item);
+        FilterItems();
     }
 
     private async Task RefreshCatalog()

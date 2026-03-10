@@ -1,6 +1,6 @@
 using System;
 using System.Linq;
-using CulinaryCommandApp.Inventory.Entities;
+using CulinaryCommand.Inventory.Entities;
 using Xunit;
 
 namespace CulinaryCommandUnitTests.Inventory.Entities

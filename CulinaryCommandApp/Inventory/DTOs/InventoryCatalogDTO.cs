@@ -1,6 +1,6 @@
 using System;
 
-namespace CulinaryCommandApp.Inventory.DTOs
+namespace CulinaryCommand.Inventory.DTOs
 {
     public class InventoryCatalogDTO
     {

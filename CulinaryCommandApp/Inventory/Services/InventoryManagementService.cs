@@ -1,11 +1,11 @@
 using System.Linq;
-using CulinaryCommandApp.Inventory.Services.Interfaces;
+using CulinaryCommand.Inventory.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using CulinaryCommandApp.Inventory.DTOs;
+using CulinaryCommand.Inventory.DTOs;
 using CulinaryCommand.Data;
-using CulinaryCommandApp.Inventory.Entities;
+using CulinaryCommand.Inventory.Entities;
 
-namespace CulinaryCommandApp.Inventory.Services
+namespace CulinaryCommand.Inventory.Services
 {
     public class InventoryManagementService : IInventoryManagementService
     {
@@ -76,7 +76,7 @@ namespace CulinaryCommandApp.Inventory.Services
         }
 
         public async Task<InventoryItemDTO> AddItemAsync(CreateIngredientDTO dto) {
-            var entity = new CulinaryCommandApp.Inventory.Entities.Ingredient {
+            var entity = new CulinaryCommand.Inventory.Entities.Ingredient {
                 Name = dto.Name,
                 Sku = dto.SKU,
                 Price = dto.Price,
@@ -129,9 +129,9 @@ namespace CulinaryCommandApp.Inventory.Services
             entity.StockQuantity = dto.CurrentQuantity;
             entity.Price = dto.Price;
             entity.ReorderLevel = dto.ReorderLevel;
+            // Category and Unit mapping: if you have Unit lookup by name to Id, handle here.
+            // For now assume Category stored on entity and UnitId unchanged.
             entity.Category = dto.Category;
-            entity.UnitId = dto.UnitId;
-            entity.VendorId = dto.VendorId;
 
             await _db.SaveChangesAsync();
 
@@ -143,14 +143,12 @@ namespace CulinaryCommandApp.Inventory.Services
                 Category = entity.Category ?? string.Empty,
                 CurrentQuantity = entity.StockQuantity,
                 Unit = entity.Unit != null ? entity.Unit.Name : "count",
-                UnitId = entity.UnitId,
                 Price = entity.Price ?? 0m,
                 ReorderLevel = entity.ReorderLevel,
                 IsLowStock = entity.StockQuantity <= entity.ReorderLevel,
                 OutOfStockDate = null,
                 LastOrderDate = null,
-                Notes = entity.Notes ?? string.Empty,
-                VendorId = entity.VendorId,
+                Notes = entity.Notes ?? string.Empty
             };
         }
      }

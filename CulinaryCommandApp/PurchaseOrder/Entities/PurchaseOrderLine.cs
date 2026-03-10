@@ -1,5 +1,5 @@
 // Represents a single ingredient on a purchase order
-using CulinaryCommandApp.Inventory.Entities;
+using CulinaryCommand.Inventory.Entities;
 
 namespace CulinaryCommand.PurchaseOrder.Entities
 {

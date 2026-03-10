@@ -3,11 +3,11 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using CulinaryCommand.Data;
-using CulinaryCommandApp.Inventory.Entities;
-using CulinaryCommandApp.Inventory.Services.Interfaces;
+using CulinaryCommand.Inventory.Entities;
+using CulinaryCommand.Inventory.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
-namespace CulinaryCommandApp.Inventory.Services
+namespace CulinaryCommand.Inventory.Services
 {
     public class UnitService : IUnitService
     {
@@ -66,46 +66,6 @@ namespace CulinaryCommandApp.Inventory.Services
         public async Task<List<Unit>> GetUnitsForIngredient(int ingredientId, CancellationToken cancellationToken = default)
         {
             return await GetAllAsync(cancellationToken);
-        }
-
-
-        public async Task<List<Unit>> GetByLocationAsync(int locationId, CancellationToken cancellationToken = default)
-        {
-            return await _db.LocationUnits
-                        .Where(lu => lu.LocationId == locationId)
-                        .Include(lu => lu.Unit)
-                        .Select(lu => lu.Unit)
-                        .OrderBy(u => u.Name)
-                        .ToListAsync(cancellationToken);
-        }
-
-
-        public async Task SetLocationUnitsAsync(int locationId, IEnumerable<int> unitIds, CancellationToken cancellationToken = default)
-        {
-            var desired = unitIds.ToHashSet();
-
-            var existing = await _db.LocationUnits
-                                .Where(lu => lu.LocationId == locationId)
-                                .ToListAsync(cancellationToken);
-
-            var existingIds = existing.Select(lu => lu.UnitId).ToHashSet();
-
-            // Remove units no longer in the list
-            var toRemove = existing.Where(lu => !desired.Contains(lu.UnitId)).ToList();
-            _db.LocationUnits.RemoveRange(toRemove);
-
-            // Add new units
-            foreach (var unitId in desired.Where(id => !existingIds.Contains(id)))
-            {
-                _db.LocationUnits.Add(new LocationUnit
-                {
-                    LocationId = locationId,
-                    UnitId = unitId,
-                    AssignedAt = DateTime.UtcNow
-                });
-            }
-
-            await _db.SaveChangesAsync(cancellationToken);
         }
     }
 }

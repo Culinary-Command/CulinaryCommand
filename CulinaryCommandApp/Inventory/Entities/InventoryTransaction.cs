@@ -1,6 +1,6 @@
 using System;
 
-namespace CulinaryCommandApp.Inventory.Entities
+namespace CulinaryCommand.Inventory.Entities
 {
     
     public class InventoryTransaction

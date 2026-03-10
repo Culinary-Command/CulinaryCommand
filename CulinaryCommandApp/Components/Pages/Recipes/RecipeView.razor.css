@@ -1,0 +1,10 @@
+.detail-box {
+    background: #f8f9fa;
+    border: 1px solid #e3e3e3;
+}
+
+.list-group-numbered > .list-group-item {
+    padding: 1rem;
+    border-radius: 6px;
+    margin-bottom: 6px;
+}

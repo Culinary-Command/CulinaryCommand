@@ -1,0 +1,133 @@
+@page "/recipes/view/{id:int}"
+@using CulinaryCommand.Data.Entities
+@inject RecipeService Recipes
+@inject NavigationManager Nav
+
+<div class="container mt-4">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="fw-bold">@recipe?.Title</h2>
+        <button class="btn btn-outline-secondary" @onclick="GoBack">
+            <i class="bi bi-arrow-left"></i> Back
+        </button>
+    </div>
+
+    @if (recipe == null)
+    {
+        <p>Loading...</p>
+    }
+    else
+    {
+        <div class="card shadow-sm mb-4">
+            <div class="card-body">
+
+                <!-- SUMMARY -->
+                <div class="row text-center mb-3">
+                    <div class="col-md-4 mb-3">
+                        <div class="detail-box p-3 rounded">
+                            <div class="text-muted small">Category</div>
+                            <div class="fw-semibold fs-5">@recipe.Category</div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                        <div class="detail-box p-3 rounded">
+                            <div class="text-muted small">Type</div>
+                            <div class="fw-semibold fs-5">@recipe.RecipeType</div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                        <div class="detail-box p-3 rounded">
+                            <div class="text-muted small">Yield</div>
+                            <div class="fw-semibold fs-5">@FormatYield(recipe)</div>
+                        </div>
+                    </div>
+                </div>
+
+                <hr />
+
+                <!-- INGREDIENTS -->
+                <h4 class="fw-bold mb-3">
+                    <i class="bi bi-basket"></i> Ingredients
+                </h4>
+
+                @if (recipe.RecipeIngredients.Count == 0)
+                {
+                    <p class="text-muted">No ingredients added.</p>
+                }
+                else
+                {
+                    <ul class="list-group mb-4">
+                        @foreach (var ing in recipe.RecipeIngredients.OrderBy(i => i.SortOrder))
+                        {
+                            <li class="list-group-item">
+                                <strong>@FormatQuantity(ing.Quantity)</strong>
+                                @(" " + ing.Unit?.Name)
+                                @(" — ")
+                                <span>@ing.Ingredient?.Name</span>
+
+                                @if (!string.IsNullOrWhiteSpace(ing.PrepNote))
+                                {
+                                    <div class="text-muted small mt-1">@ing.PrepNote</div>
+                                }
+                            </li>
+                        }
+                    </ul>
+                }
+
+                <!-- STEPS -->
+                <h4 class="fw-bold mb-3">
+                    <i class="bi bi-list-ol"></i> Steps
+                </h4>
+
+                @if (recipe.Steps.Count == 0)
+                {
+                    <p class="text-muted">No steps added.</p>
+                }
+                else
+                {
+                    <ol class="list-group list-group-numbered">
+                        @foreach (var step in recipe.Steps.OrderBy(s => s.StepNumber))
+                        {
+                            <li class="list-group-item">
+                                <div>@step.Instructions</div>
+                            </li>
+                        }
+                    </ol>
+                }
+
+            </div>
+        </div>
+    }
+</div>
+
+@code {
+    [Parameter] public int id { get; set; }
+    private Recipe? recipe;
+
+    protected override async Task OnInitializedAsync()
+    {
+        recipe = await Recipes.GetByIdAsync(id);
+    }
+
+    void GoBack() => Nav.NavigateTo("/recipes");
+
+    string FormatQuantity(decimal qty)
+    {
+        // remove trailing zeros
+        return qty.ToString("0.##");
+    }
+
+    string FormatYield(Recipe r)
+    {
+        if (!r.YieldAmount.HasValue)
+            return r.YieldUnit ?? "";
+
+        string amt = r.YieldAmount.Value.ToString("0.##");
+
+        return string.IsNullOrWhiteSpace(r.YieldUnit)
+            ? amt
+            : $"{amt} {r.YieldUnit}";
+    }
+}
