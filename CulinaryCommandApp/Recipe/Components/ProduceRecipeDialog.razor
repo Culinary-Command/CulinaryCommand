@@ -1,0 +1,247 @@
+@namespace CulinaryCommandApp.Recipe.Components
+
+@* ProduceRecipeDialog — confirms servings count and deducts inventory for each
+   raw ingredient (recursively resolved through any sub-recipes). *@
+
+@using CulinaryCommandApp.Inventory.Entities
+@using CulinaryCommandApp.Inventory.Services.Interfaces
+@using CulinaryCommandApp.Recipe.Services
+@using CulinaryCommandApp.Recipe.Services.Interfaces
+
+@inject IRecipeService RecipeService
+@inject IInventoryTransactionService TransactionService
+
+@if (_visible)
+{
+    <div class="modal fade show d-block" tabindex="-1" role="dialog"
+         style="background:rgba(0,0,0,.45);">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+
+                <div class="modal-header bg-success text-white">
+                    <h5 class="modal-title">
+                        <i class="bi bi-play-circle me-2"></i>Produce Recipe
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white"
+                            @onclick="Close" disabled="@_working"></button>
+                </div>
+
+                <div class="modal-body">
+
+                    @if (_errorMessage is not null)
+                    {
+                        <div class="alert alert-danger d-flex align-items-center gap-2 mb-3">
+                            <i class="bi bi-x-circle-fill"></i>
+                            <span>@_errorMessage</span>
+                        </div>
+                    }
+
+                    @if (_success)
+                    {
+                        <div class="alert alert-success d-flex align-items-center gap-2 mb-3">
+                            <i class="bi bi-check-circle-fill"></i>
+                            <span>
+                                Inventory deducted successfully for
+                                <strong>@_servings @(_servings == 1 ? "serving" : "servings")</strong>.
+                            </span>
+                        </div>
+                    }
+                    else
+                    {
+                        <p class="mb-3 text-muted">
+                            Enter how many servings to produce. Stock will be deducted
+                            from inventory for every raw ingredient in this recipe
+                            (including nested sub-recipes).
+                        </p>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">
+                                Servings <span class="text-danger">*</span>
+                            </label>
+                            <input type="number"
+                                   class="form-control @(_submitAttempted && _servings <= 0 ? "is-invalid" : "")"
+                                   min="1"
+                                   step="1"
+                                   @bind="_servings" />
+                            @if (_submitAttempted && _servings <= 0)
+                            {
+                                <div class="invalid-feedback">Servings must be at least 1.</div>
+                            }
+                        </div>
+
+                        @if (_flatLines.Count > 0)
+                        {
+                            <details class="mb-3">
+                                <summary class="text-muted small" style="cursor:pointer;">
+                                    Preview deductions (@_flatLines.Count ingredients)
+                                </summary>
+                                <table class="table table-sm table-borderless mt-2 mb-0">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th>Ingredient</th>
+                                            <th class="text-end">Qty × @_servings</th>
+                                            <th>Unit</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var line in _groupedLines)
+                                        {
+                                            <tr>
+                                                <td>@line.IngredientName</td>
+                                                <td class="text-end">@((line.Quantity * _servings).ToString("G29"))</td>
+                                                <td>@line.UnitName</td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </details>
+                        }
+                    }
+                </div>
+
+                <div class="modal-footer">
+                    @if (_success)
+                    {
+                        <button class="btn btn-success" @onclick="Close">
+                            <i class="bi bi-check me-1"></i>Done
+                        </button>
+                    }
+                    else
+                    {
+                        <button class="btn btn-outline-secondary"
+                                @onclick="Close"
+                                disabled="@_working">
+                            Cancel
+                        </button>
+                        <button class="btn btn-success"
+                                @onclick="ProduceAsync"
+                                disabled="@_working">
+                            @if (_working)
+                            {
+                                <span class="spinner-border spinner-border-sm me-1"></span>
+                                <span>Producing…</span>
+                            }
+                            else
+                            {
+                                <i class="bi bi-play-circle me-1"></i>
+                                <span>Produce</span>
+                            }
+                        </button>
+                    }
+                </div>
+
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+
+    [Parameter] public int RecipeId   { get; set; }
+    [Parameter] public string RecipeTitle { get; set; } = "Recipe";
+
+    private bool _visible;
+    private bool _working;
+    private bool _success;
+    private bool _submitAttempted;
+    private string? _errorMessage;
+
+    private decimal _servings = 1;
+    private List<FlatIngredientLine> _flatLines = new();
+
+    // Grouped by IngredientId so the preview table merges duplicate lines
+    private IEnumerable<FlatIngredientLine> _groupedLines =>
+        _flatLines
+            .GroupBy(l => l.IngredientId)
+            .Select(g => new FlatIngredientLine
+            {
+                IngredientId   = g.Key,
+                IngredientName = g.First().IngredientName,
+                Quantity       = g.Sum(l => l.Quantity),
+                UnitId         = g.First().UnitId,
+                UnitName       = g.First().UnitName,
+            });
+
+    /// <summary>Called by RecipeView to open the dialog.</summary>
+    public async Task OpenAsync()
+    {
+        _success = false;
+        _submitAttempted = false;
+        _errorMessage = null;
+        _servings = 1;
+        _flatLines = new();
+
+        try
+        {
+            // Pre-load the flat ingredient list for the preview panel
+            _flatLines = await RecipeService.FlattenIngredientsAsync(RecipeId);
+        }
+        catch (InvalidOperationException ex)
+        {
+            _errorMessage = "Circular reference or recipe not found."; 
+        }
+        catch (Exception ex)
+        {
+            _errorMessage = $"Could not load ingredient list.";
+        }
+
+        _visible = true;
+        StateHasChanged();
+    }
+
+    private void Close()
+    {
+        _visible = false;
+        _success = false;
+        _errorMessage = null;
+    }
+
+    private async Task ProduceAsync()
+    {
+        _submitAttempted = true;
+        _errorMessage = null;
+
+        if (_servings <= 0)
+            return;
+
+        _working = true;
+
+        try
+        {
+            // Flatten at produce-time with the chosen multiplier to get exact scaled quantities.
+            var lines = await RecipeService.FlattenIngredientsAsync(RecipeId, _servings);
+
+            // Group by ingredient so the same ingredient appearing in multiple
+            // sub-recipe branches is combined into a single deduction.
+            var transactions = lines
+                .GroupBy(l => l.IngredientId)
+                .Select(g => new InventoryTransaction
+                {
+                    IngredientId = g.First().IngredientId,
+                    StockChange  = -g.Sum(l => l.Quantity),   // negative = deduction
+                    UnitId       = g.First().UnitId,
+                    Reason       = $"Recipe production: {RecipeTitle}",
+                })
+                .ToList();
+
+            // All deductions committed atomically — any failure (e.g. insufficient
+            // stock) rolls back the entire batch so inventory is never partially deducted.
+            await TransactionService.RecordBatchAsync(transactions);
+
+            _success = true;
+        }
+        catch (InvalidOperationException ex)
+        {
+
+            _errorMessage = "Insufficient stock, circular reference, or recipe not found.";
+        }
+        catch (Exception ex)
+        {
+            _errorMessage = $"Production failed.";
+        }
+        finally
+        {
+            _working = false;
+        }
+    }
+}

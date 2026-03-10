@@ -1,14 +1,19 @@
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using CulinaryCommand.Inventory.Entities;
+using CulinaryCommandApp.Inventory.Entities;
 
-namespace CulinaryCommand.Inventory.Services.Interfaces
+namespace CulinaryCommandApp.Inventory.Services.Interfaces
 {
     public interface IUnitService
     {
         // Returns all units asynchronously as a list of Unit objects.
         Task<List<Unit>> GetAllAsync(CancellationToken cancellationToken = default);
+
+        // returns only the units enabled for a specific location
+        Task<List<Unit>> GetByLocationAsync(int locationId, CancellationToken cancellationToken = default);
+
+        Task SetLocationUnitsAsync(int locationId, IEnumerable<int> unitIds, CancellationToken cancellationToken = default);
 
         // Retrieves a unit by its Id asynchronously; returns null if not found.
         Task<Unit?> GetByIdAsync(int id, CancellationToken cancellationToken = default);

@@ -2,7 +2,7 @@
 
 using CulinaryCommand.Data.Entities;
 
-namespace CulinaryCommand.Inventory.Entities
+namespace CulinaryCommandApp.Inventory.Entities
 {
     public class InventoryBatch
     {

@@ -1,6 +1,6 @@
 using System;
 
-namespace CulinaryCommand.Inventory.DTOs
+namespace CulinaryCommandApp.Inventory.DTOs
 {
     public class InventoryItemDTO
     {
@@ -10,6 +10,7 @@ namespace CulinaryCommand.Inventory.DTOs
         public string Category { get; set; } = string.Empty;
         public decimal CurrentQuantity { get; set; }
         public string Unit { get; set; } = "count";
+        public int UnitId { get; set; }
         public decimal Price { get; set; }
         public decimal ReorderLevel { get; set; }
         public bool IsLowStock { get; set; }

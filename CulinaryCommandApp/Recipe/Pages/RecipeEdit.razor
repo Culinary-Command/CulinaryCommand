@@ -1,0 +1,103 @@
+@page "/recipes/edit/{id:int}"
+@rendermode InteractiveServer
+
+@using CulinaryCommand.Services.UserContextSpace
+@using CulinaryCommandApp.Recipe.Entities
+
+@inject IRecipeService RecipeService
+@inject IUserContextService UserCtx
+@inject LocationState LocationState
+@inject NavigationManager Nav
+
+<PageTitle>Edit Recipe</PageTitle>
+
+@if (!_ready)
+{
+    <div class="d-flex justify-content-center py-5">
+        <div class="spinner-border text-success" role="status">
+            <span class="visually-hidden">Loading…</span>
+        </div>
+    </div>
+}
+else if (!_allowed)
+{
+    <div class="container py-4" style="max-width: 860px;">
+        <div class="alert alert-warning">
+            You need manager or admin permissions to edit recipes.
+        </div>
+    </div>
+}
+else if (_notFound)
+{
+    <div class="container py-4" style="max-width: 860px;">
+        <div class="alert alert-danger">
+            Recipe not found. It may have been deleted.
+            <a href="/recipes" class="alert-link ms-2">Back to Recipes</a>
+        </div>
+    </div>
+}
+else
+{
+    <div class="container py-4" style="max-width: 860px;">
+        <nav aria-label="breadcrumb" class="mb-3">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <a href="/recipes">Recipes</a>
+                </li>
+                <li class="breadcrumb-item active" aria-current="page">Edit — @_model!.Title</li>
+            </ol>
+        </nav>
+
+        <RecipeForm Model="_model!"
+                    FormTitle="Edit Recipe"
+                    OnValidSubmit="HandleSubmit" />
+    </div>
+}
+
+@code {
+
+    [Parameter] public int Id { get; set; }
+
+    private Recipe? _model;
+    private bool _ready;
+    private bool _allowed;
+    private bool _notFound;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var ctx = await UserCtx.GetAsync();
+
+        if (ctx.IsAuthenticated != true)
+        {
+            Nav.NavigateTo("/login", true);
+            return;
+        }
+
+        if (ctx.User is null)
+        {
+            Nav.NavigateTo("/no-access", true);
+            return;
+        }
+
+        _allowed = string.Equals(ctx.User.Role, "Admin",   StringComparison.OrdinalIgnoreCase)
+                || string.Equals(ctx.User.Role, "Manager", StringComparison.OrdinalIgnoreCase);
+
+
+        if (LocationState.ManagedLocations.Count == 0 && ctx.AccessibleLocations.Any())
+            await LocationState.SetLocationsAsync(ctx.AccessibleLocations);
+
+        if (_allowed)
+        {
+            var allowedLocationIds = ctx.AccessibleLocations.Select(l => l.Id);
+            _model = await RecipeService.GetByIdAsync(Id, allowedLocationIds);
+            _notFound = _model is null;
+        }
+
+        _ready = true;
+    }
+
+    private void HandleSubmit()
+    {
+        Nav.NavigateTo("/recipes");
+    }
+}

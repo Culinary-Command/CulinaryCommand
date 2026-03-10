@@ -4,13 +4,16 @@
 @using CulinaryCommand.Services
 @using CulinaryCommand.Data.Enums;
 @using CulinaryCommand.Services.UserContextSpace
+@using CulinaryCommandApp.Recipe.Services;
+@using CulinaryCommandApp.Recipe.Services.Interfaces;
+@using CulinaryCommandApp.Recipe.Entities;
 @inject IUserContextService UserCtx
 @inject NavigationManager Nav
 @inject ILocationService LocationService
 @inject IUserService UserService
 @inject LocationState LocationState
 @inject ITaskAssignmentService TaskService
-@inject RecipeService RecipeService      
+@inject IRecipeService RecipeService
 
 @implements IDisposable
 @rendermode InteractiveServer
@@ -346,11 +349,8 @@ else
 
         try
         {
-            var all = await RecipeService.GetAllAsync();
-            recipes = all
-                .Where(r => r.LocationId == selectedLocationId.Value)
-                .OrderBy(r => r.Title)
-                .ToList();
+            recipes = await RecipeService.GetAllByLocationIdAsync(selectedLocationId.Value);
+            recipes = recipes.OrderBy(r => r.Title).ToList();
         }
         catch
         {

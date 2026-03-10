@@ -1,0 +1,83 @@
+@page "/recipes/create"
+@rendermode InteractiveServer
+
+@using CulinaryCommand.Services.UserContextSpace
+@using CulinaryCommandApp.Recipe.Entities
+
+@inject IUserContextService UserCtx
+@inject LocationState LocationState
+@inject NavigationManager Nav
+
+<PageTitle>New Recipe</PageTitle>
+
+@if (!_ready)
+{
+    <div class="d-flex justify-content-center py-5">
+        <div class="spinner-border text-success" role="status">
+            <span class="visually-hidden">Loading…</span>
+        </div>
+    </div>
+}
+else if (!_allowed)
+{
+    <div class="container py-4" style="max-width: 860px;">
+        <div class="alert alert-warning">
+            You need manager or admin permissions to create recipes.
+        </div>
+    </div>
+}
+else
+{
+    <div class="container py-4" style="max-width: 860px;">
+        <nav aria-label="breadcrumb" class="mb-3">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <a href="/recipes">Recipes</a>
+                </li>
+                <li class="breadcrumb-item active" aria-current="page">New Recipe</li>
+            </ol>
+        </nav>
+
+        <RecipeForm Model="_model"
+                    FormTitle="New Recipe"
+                    OnValidSubmit="HandleSubmit" />
+    </div>
+}
+
+@code {
+
+    private Recipe _model = new();
+    private bool _ready;
+    private bool _allowed;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var ctx = await UserCtx.GetAsync();
+
+        if (ctx.IsAuthenticated != true)
+        {
+            Nav.NavigateTo("/login", true);
+            return;
+        }
+
+        if (ctx.User is null)
+        {
+            Nav.NavigateTo("/no-access", true);
+            return;
+        }
+
+        _allowed = string.Equals(ctx.User.Role, "Admin",   StringComparison.OrdinalIgnoreCase)
+                || string.Equals(ctx.User.Role, "Manager", StringComparison.OrdinalIgnoreCase);
+
+
+        if (LocationState.ManagedLocations.Count == 0 && ctx.AccessibleLocations.Any())
+            await LocationState.SetLocationsAsync(ctx.AccessibleLocations);
+
+        _ready = true;
+    }
+
+    private void HandleSubmit()
+    {
+        Nav.NavigateTo("/recipes");
+    }
+}

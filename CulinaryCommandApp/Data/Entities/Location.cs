@@ -1,6 +1,8 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
+using CulinaryCommandApp.Inventory.Entities;
+using Rec = CulinaryCommandApp.Recipe.Entities;
 
 namespace CulinaryCommand.Data.Entities
 {
@@ -31,7 +33,7 @@ namespace CulinaryCommand.Data.Entities
                 public int CompanyId { get; set; }
                 public Company Company { get; set; }
 
-                public ICollection<Recipe> Recipes { get; set; } = new List<Recipe>();
+                public ICollection<Rec.Recipe> Recipes { get; set; } = new List<Rec.Recipe>();
 
                 // join table combining employees and locations
                 [JsonIgnore]
@@ -53,6 +55,8 @@ namespace CulinaryCommand.Data.Entities
                 [JsonIgnore]
                 public ICollection<CulinaryCommand.Vendor.Entities.LocationVendor> LocationVendors { get; set; } = new List<CulinaryCommand.Vendor.Entities.LocationVendor>();
 
-        }
+                [JsonIgnore]
+                public ICollection<LocationUnit> LocationUnits { get; set; } = new List<LocationUnit>();
 
+        }
 }

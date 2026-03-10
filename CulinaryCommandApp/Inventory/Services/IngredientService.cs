@@ -2,11 +2,11 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using CulinaryCommand.Data;
-using CulinaryCommand.Inventory.Entities;
-using CulinaryCommand.Inventory.Services.Interfaces;
+using CulinaryCommandApp.Inventory.Entities;
+using CulinaryCommandApp.Inventory.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
-namespace CulinaryCommand.Inventory.Services
+namespace CulinaryCommandApp.Inventory.Services
 {
     public class IngredientService : IIngredientService
     {
@@ -25,6 +25,17 @@ namespace CulinaryCommand.Inventory.Services
                 .Distinct()
                 .OrderBy(category => category)
                 .ToListAsync(cancellationToken);
+        }
+
+        public async Task<List<Ingredient>> GetIngredientsByLocationAsync(int locationId, CancellationToken cancellationToken = default)
+        {
+            return await _db.Ingredients
+                        .AsNoTracking()
+                        .Include(i => i.Unit)
+                        .Where(i => i.LocationId == locationId)
+                        .OrderBy(i => i.Category)
+                        .ThenBy(i => i.Name)
+                        .ToListAsync(cancellationToken);
         }
 
         public async Task<List<Ingredient>> GetByCategoryAsync(string category, CancellationToken cancellationToken = default)

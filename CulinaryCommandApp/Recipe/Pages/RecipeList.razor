@@ -1,0 +1,486 @@
+@page "/recipes"
+@rendermode InteractiveServer
+@implements IDisposable
+
+@using CulinaryCommand.Services.UserContextSpace
+@using CulinaryCommandApp.Recipe.Entities
+
+@inject IRecipeService RecipeService
+@inject EnumService EnumService
+@inject IUserContextService UserCtx
+@inject LocationState LocationState
+@inject NavigationManager Nav
+
+<PageTitle>Recipes</PageTitle>
+
+@if (!_ready)
+{
+    <div class="d-flex justify-content-center py-5">
+        <div class="spinner-border text-success" role="status">
+            <span class="visually-hidden">Loading…</span>
+        </div>
+    </div>
+}
+else
+{
+    <div class="recipes-container">
+
+        @* ── Header ── *@
+        <div class="recipes-header">
+            <div class="header-text">
+                <h1>Recipes</h1>
+                <p>Manage your location's recipes and prep items</p>
+            </div>
+        </div>
+
+        @* ── Toolbar: search + type filter + Add button ── *@
+        <div class="recipes-toolbar">
+            <div class="search-bar">
+                <i class="bi bi-search"></i>
+                <input placeholder="Search recipes…"
+                       value="@_searchTerm"
+                       @oninput="e => { _searchTerm = e.Value?.ToString() ?? string.Empty; _currentPage = 1; }" />
+            </div>
+
+            <div class="toolbar-actions">
+                <div class="select-wrap">
+                    <select class="form-select"
+                            value="@_typeFilter"
+                            @onchange="e => { _typeFilter = e.Value?.ToString() ?? string.Empty; _currentPage = 1; }">
+                        <option value="">All types</option>
+                        @foreach (var type in _recipeTypes)
+                        {
+                            <option value="@type">@type</option>
+                        }
+                    </select>
+                </div>
+
+                @if (_priv)
+                {
+                    <button class="btn-add" @onclick='() => Nav.NavigateTo("/recipes/create")'>
+                        <i class="bi bi-plus-lg"></i> New Recipe
+                    </button>
+                }
+            </div>
+        </div>
+
+        @* ── Tabs: All / Sub-Recipes ── *@
+        <div class="tab-row">
+            <button class="tab-btn @(_activeTab == "all" ? "active" : "")"
+                    @onclick='() => SetTab("all")'>
+                All Recipes
+            </button>
+            <button class="tab-btn @(_activeTab == "sub" ? "active" : "")"
+                    @onclick='() => SetTab("sub")'>
+                <i class="bi bi-diagram-3 me-1"></i>Sub-Recipes / Prep Items
+            </button>
+        </div>
+
+        @* ── Table ── *@
+        <div class="recipes-table-container">
+
+            @if (LocationState.CurrentLocation is null)
+            {
+                <div class="empty-state">
+                    <i class="bi bi-building empty-icon"></i>
+                    <p>No location selected. Use the location selector in the header.</p>
+                </div>
+            }
+            else if (!_pagedRecipes.Any() && !_loading)
+            {
+                <div class="empty-state">
+                    <i class="bi bi-journal-x empty-icon"></i>
+                    <p>No recipes found.</p>
+                    @if (_priv)
+                    {
+                        <button class="btn-add" @onclick='() => Nav.NavigateTo("/recipes/create")'>
+                            <i class="bi bi-plus-lg me-1"></i> Create your first recipe
+                        </button>
+                    }
+                </div>
+            }
+            else
+            {
+                <table class="recipes-table">
+                    <thead>
+                        <tr>
+                            <th @onclick='() => SetSort("Title")'>
+                                Title <i class="bi @SortIcon("Title")"></i>
+                            </th>
+                            <th @onclick='() => SetSort("Category")'>
+                                Category <i class="bi @SortIcon("Category")"></i>
+                            </th>
+                            <th @onclick='() => SetSort("RecipeType")'>
+                                Type <i class="bi @SortIcon("RecipeType")"></i>
+                            </th>
+                            <th @onclick='() => SetSort("CostPerYield")'>
+                                Cost / Yield <i class="bi @SortIcon("CostPerYield")"></i>
+                            </th>
+                            <th>Sub-Recipe</th>
+                            <th class="actions-col"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (_loading)
+                        {
+                            <tr>
+                                <td colspan="6" class="text-center py-4">
+                                    <div class="spinner-border spinner-border-sm text-success" role="status"></div>
+                                </td>
+                            </tr>
+                        }
+                        else
+                        {
+                            @foreach (var recipe in _pagedRecipes)
+                            {
+                                <tr>
+                                    <td class="name-cell">
+                                        <span class="item-name">@recipe.Title</span>
+                                    </td>
+                                    <td>
+                                        @if (!string.IsNullOrWhiteSpace(recipe.Category))
+                                        {
+                                            <span class="category-pill">@recipe.Category</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted">—</span>
+                                        }
+                                    </td>
+                                    <td>@(recipe.RecipeType ?? "—")</td>
+                                    <td>
+                                        @if (recipe.CostPerYield.HasValue)
+                                        {
+                                            <span class="cost-badge">
+                                                @recipe.CostPerYield.Value.ToString("C2")
+                                                @if (!string.IsNullOrWhiteSpace(recipe.YieldUnit))
+                                                {
+                                                    <span class="fw-normal ms-1">/ @recipe.YieldUnit</span>
+                                                }
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted">—</span>
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (recipe.IsSubRecipe)
+                                        {
+                                            <span class="sub-badge">
+                                                <i class="bi bi-diagram-3"></i> Yes
+                                            </span>
+                                        }
+                                    </td>
+                                    <td>
+                                        <div class="action-buttons">
+                                            <button class="btn-action"
+                                                    title="View"
+                                                    @onclick='() => Nav.NavigateTo($"/recipes/view/{recipe.RecipeId}")'>
+                                                <i class="bi bi-eye"></i>
+                                            </button>
+                                            @if (_priv)
+                                            {
+                                                <button class="btn-action"
+                                                        title="Edit"
+                                                        @onclick='() => Nav.NavigateTo($"/recipes/edit/{recipe.RecipeId}")'>
+                                                    <i class="bi bi-pencil"></i>
+                                                </button>
+                                                <button class="btn-action delete"
+                                                        title="Delete"
+                                                        @onclick="() => ConfirmDelete(recipe)">
+                                                    <i class="bi bi-trash"></i>
+                                                </button>
+                                            }
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+
+                @* ── Footer / Pagination ── *@
+                <div class="table-footer">
+                    <span class="footer-count">
+                        Showing @(_pagedRecipes.Count) of @_filteredRecipes.Count recipe@(_filteredRecipes.Count == 1 ? "" : "s")
+                    </span>
+
+                    @if (_totalPages > 1)
+                    {
+                        <div class="pagination">
+                            <button class="page-nav"
+                                    disabled="@(_currentPage == 1)"
+                                    @onclick="() => GoToPage(_currentPage - 1)">
+                                <i class="bi bi-chevron-left"></i>
+                            </button>
+
+                            @foreach (var p in GetPageButtons())
+                            {
+                                @if (p == -1)
+                                {
+                                    <span class="page-ellipsis">…</span>
+                                }
+                                else
+                                {
+                                    <button class="page-btn @(p == _currentPage ? "active" : "")"
+                                            @onclick="() => GoToPage(p)">
+                                        @p
+                                    </button>
+                                }
+                            }
+
+                            <button class="page-nav"
+                                    disabled="@(_currentPage == _totalPages)"
+                                    @onclick="() => GoToPage(_currentPage + 1)">
+                                <i class="bi bi-chevron-right"></i>
+                            </button>
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+
+    </div>
+}
+
+@* ── Delete confirmation modal ── *@
+@if (_deleteTarget is not null)
+{
+    <div class="modal fade show d-block" tabindex="-1" style="background:rgba(0,0,0,0.45);" role="dialog">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Delete Recipe</h5>
+                    <button type="button" class="btn-close" @onclick="CancelDelete"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Are you sure you want to delete <strong>@_deleteTarget.Title</strong>?</p>
+                    <p class="text-danger mb-0"><small>This action cannot be undone.</small></p>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-outline-secondary" @onclick="CancelDelete">Cancel</button>
+                    <button class="btn btn-danger" @onclick="ExecuteDelete" disabled="@_deleting">
+                        @if (_deleting)
+                        {
+                            <span class="spinner-border spinner-border-sm me-1" role="status"></span>
+                        }
+                        Delete
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+
+    // ── Auth / location ───────────────────────────────────────────────────
+    private UserContext? _ctx;
+    private bool _priv;
+
+    // ── Data ─────────────────────────────────────────────────────────────
+    private List<Recipe> _allRecipes = new();
+    private List<string> _recipeTypes = new();
+
+    // ── UI state ─────────────────────────────────────────────────────────
+    private bool _ready;
+    private bool _loading;
+    private string _activeTab = "all";
+    private string _searchTerm = string.Empty;
+    private string _typeFilter = string.Empty;
+
+    // ── Sort ─────────────────────────────────────────────────────────────
+    private string _sortColumn = "Title";
+    private bool _sortAsc = true;
+
+    // ── Pagination ───────────────────────────────────────────────────────
+    private const int PageSize = 15;
+    private int _currentPage = 1;
+    private int _totalPages = 1;
+
+    // ── Delete ───────────────────────────────────────────────────────────
+    private Recipe? _deleteTarget;
+    private bool _deleting;
+
+    // ── Computed ─────────────────────────────────────────────────────────
+
+    private List<Recipe> _filteredRecipes
+    {
+        get
+        {
+            var q = _allRecipes.AsEnumerable();
+
+            if (_activeTab == "sub")
+                q = q.Where(r => r.IsSubRecipe);
+
+            if (!string.IsNullOrWhiteSpace(_searchTerm))
+                q = q.Where(r => r.Title.Contains(_searchTerm, StringComparison.OrdinalIgnoreCase));
+
+            if (!string.IsNullOrWhiteSpace(_typeFilter))
+                q = q.Where(r => r.RecipeType == _typeFilter);
+
+            q = _sortColumn switch
+            {
+                "Category"     => _sortAsc ? q.OrderBy(r => r.Category)     : q.OrderByDescending(r => r.Category),
+                "RecipeType"   => _sortAsc ? q.OrderBy(r => r.RecipeType)   : q.OrderByDescending(r => r.RecipeType),
+                "CostPerYield" => _sortAsc ? q.OrderBy(r => r.CostPerYield) : q.OrderByDescending(r => r.CostPerYield),
+                _              => _sortAsc ? q.OrderBy(r => r.Title)        : q.OrderByDescending(r => r.Title),
+            };
+
+            return q.ToList();
+        }
+    }
+
+    private List<Recipe> _pagedRecipes =>
+        _filteredRecipes
+            .Skip((_currentPage - 1) * PageSize)
+            .Take(PageSize)
+            .ToList();
+
+    // ── Lifecycle ────────────────────────────────────────────────────────
+
+    protected override async Task OnInitializedAsync()
+    {
+        _ctx = await UserCtx.GetAsync();
+
+        if (_ctx.IsAuthenticated != true)
+        {
+            Nav.NavigateTo("/login", true);
+            return;
+        }
+
+        if (_ctx.User is null)
+        {
+            Nav.NavigateTo("/no-access", true);
+            return;
+        }
+
+        if (LocationState.ManagedLocations.Count == 0 && _ctx.AccessibleLocations.Any())
+            await LocationState.SetLocationsAsync(_ctx.AccessibleLocations);
+
+        _priv = string.Equals(_ctx.User.Role, "Admin",   StringComparison.OrdinalIgnoreCase)
+             || string.Equals(_ctx.User.Role, "Manager", StringComparison.OrdinalIgnoreCase);
+
+        _recipeTypes = EnumService.GetRecipeTypes();
+
+        LocationState.OnChange += HandleLocationChange;
+
+        await LoadRecipesAsync();
+
+        _ready = true;
+    }
+
+    private async Task LoadRecipesAsync()
+    {
+        _loading = true;
+        StateHasChanged();
+
+        var loc = LocationState.CurrentLocation;
+        _allRecipes = loc is not null
+            ? await RecipeService.GetAllByLocationIdAsync(loc.Id)
+            : new List<Recipe>();
+
+        RecalcPagination();
+        _loading = false;
+    }
+
+    private void RecalcPagination()
+    {
+        var count = _filteredRecipes.Count;
+        _totalPages = Math.Max(1, (int)Math.Ceiling(count / (double)PageSize));
+        if (_currentPage > _totalPages) _currentPage = _totalPages;
+    }
+
+    // ── Handlers ─────────────────────────────────────────────────────────
+
+    private void SetTab(string tab)
+    {
+        _activeTab = tab;
+        _currentPage = 1;
+    }
+
+    private void SetSort(string column)
+    {
+        if (_sortColumn == column)
+            _sortAsc = !_sortAsc;
+        else
+        {
+            _sortColumn = column;
+            _sortAsc = true;
+        }
+        _currentPage = 1;
+    }
+
+    private string SortIcon(string column)
+    {
+        if (_sortColumn != column) return "bi-chevron-expand opacity-50";
+        return _sortAsc ? "bi-chevron-up" : "bi-chevron-down";
+    }
+
+    private void GoToPage(int page)
+    {
+        if (page < 1 || page > _totalPages) return;
+        _currentPage = page;
+    }
+
+    private List<int> GetPageButtons()
+    {
+        // Renders up to 7 buttons with ellipsis when needed: 1 … 4 5 6 … 12
+        var pages = new List<int>();
+        if (_totalPages <= 7)
+        {
+            for (int i = 1; i <= _totalPages; i++) pages.Add(i);
+            return pages;
+        }
+
+        pages.Add(1);
+        if (_currentPage > 3) pages.Add(-1); // ellipsis
+
+        int start = Math.Max(2, _currentPage - 1);
+        int end   = Math.Min(_totalPages - 1, _currentPage + 1);
+        for (int i = start; i <= end; i++) pages.Add(i);
+
+        if (_currentPage < _totalPages - 2) pages.Add(-1); // ellipsis
+        pages.Add(_totalPages);
+        return pages;
+    }
+
+    private void ConfirmDelete(Recipe recipe)
+    {
+        _deleteTarget = recipe;
+    }
+
+    private void CancelDelete()
+    {
+        _deleteTarget = null;
+    }
+
+    private async Task ExecuteDelete()
+    {
+        if (_deleteTarget is null) return;
+
+        _deleting = true;
+        await RecipeService.DeleteAsync(_deleteTarget.RecipeId);
+        _deleteTarget = null;
+        _deleting = false;
+
+        await LoadRecipesAsync();
+        StateHasChanged();
+    }
+
+    private void HandleLocationChange()
+    {
+        _ = InvokeAsync(async () =>
+        {
+            _currentPage = 1;
+            await LoadRecipesAsync();
+            StateHasChanged();
+        });
+    }
+
+    public void Dispose()
+    {
+        LocationState.OnChange -= HandleLocationChange;
+    }
+}

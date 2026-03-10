@@ -1,14 +1,17 @@
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using CulinaryCommand.Inventory.Entities;
+using CulinaryCommandApp.Inventory.Entities;
 
-namespace CulinaryCommand.Inventory.Services.Interfaces
+namespace CulinaryCommandApp.Inventory.Services.Interfaces
 {
     public interface IIngredientService
     {
         // Retrieves all ingredient categories.
         Task<List<string>> GetCategoriesAsync(CancellationToken cancellationToken = default);
+
+        // returns all ingredients belonging to a specific restaurant location. specifically references ingredients populated in /inventory-catalog
+        Task<List<Ingredient>> GetIngredientsByLocationAsync(int locationId, CancellationToken cancellationToken = default);
 
         // Retrieves ingredients that belong to the provided category.
         Task<List<Ingredient>> GetByCategoryAsync(string category, CancellationToken cancellationToken = default);

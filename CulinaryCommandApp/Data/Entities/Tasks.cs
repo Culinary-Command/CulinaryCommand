@@ -1,7 +1,8 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using CulinaryCommand.Data.Enums;
-using InvIngredient = CulinaryCommand.Inventory.Entities.Ingredient;
+using Rec = CulinaryCommandApp.Recipe.Entities;
+using InvIngredient = CulinaryCommandApp.Inventory.Entities.Ingredient;
 
 namespace CulinaryCommand.Data.Entities
 {
@@ -52,7 +53,7 @@ namespace CulinaryCommand.Data.Entities
 
         // Link to recipe if this is a prep task
         public int? RecipeId { get; set; }
-        public Recipe? Recipe { get; set; }
+        public Rec.Recipe? Recipe { get; set; }
 
         // Link to ingredient (Inventory.Entities.Ingredient)
         public int? IngredientId { get; set; }

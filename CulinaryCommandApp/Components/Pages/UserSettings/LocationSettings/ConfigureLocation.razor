@@ -5,6 +5,9 @@
 @using CulinaryCommand.Vendor.Services
 @using CulinaryCommand.Services
 @using CulinaryCommand.Services.UserContextSpace
+@using CulinaryCommandApp.Inventory.Entities
+@using CulinaryCommandApp.Inventory.Services
+@using CulinaryCommandApp.Inventory.Services.Interfaces
 @using Microsoft.AspNetCore.Authorization
 @using System.Net.Http.Json
 @using System.Text.Json
@@ -12,6 +15,7 @@
 
 @inject IVendorService VendorService
 @inject ILocationService LocationService
+@inject IUnitService UnitService
 @inject IUserContextService UserCtx
 @inject NavigationManager Nav
 @inject IConfiguration Config
@@ -129,6 +133,61 @@
             {
                 <div class="card-footer d-flex justify-content-end gap-2">
                     <span class="text-muted align-self-center small">@_locationVendors.Count vendor(s) at this location</span>
+                </div>
+            }
+        </div>
+
+        <!-- Units Section -->
+        <div class="card shadow-sm mt-4">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0"><i class="bi bi-rulers me-2"></i>Measurement Units</h5>
+                <button class="btn btn-success btn-sm" @onclick="OpenAddUnitModal">
+                    <i class="bi bi-plus-circle me-1"></i>Add Unit
+                </button>
+            </div>
+
+            <div class="card-body p-0">
+                @if (!_locationUnits.Any())
+                {
+                    <div class="text-center text-muted py-4">
+                        <i class="bi bi-rulers fs-2 d-block mb-2"></i>
+                        No units assigned to this location yet. Add one to get started.
+                    </div>
+                }
+                else
+                {
+                    <table class="table table-hover mb-0 align-middle">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Name</th>
+                                <th>Abbreviation</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var unit in _locationUnits)
+                            {
+                                <tr>
+                                    <td><strong>@unit.Name</strong></td>
+                                    <td><span class="badge bg-secondary">@unit.Abbreviation</span></td>
+                                    <td class="text-end">
+                                        <button class="btn btn-outline-danger btn-sm"
+                                                @onclick="() => RemoveUnit(unit.Id)"
+                                                title="Remove unit from this location">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                }
+            </div>
+
+            @if (_locationUnits.Any())
+            {
+                <div class="card-footer d-flex justify-content-end gap-2">
+                    <span class="text-muted align-self-center small">@_locationUnits.Count unit(s) at this location</span>
                 </div>
             }
         </div>
@@ -261,15 +320,66 @@
     </div>
 }
 
+<!-- Add Unit Modal -->
+@if (_showAddUnitModal)
+{
+    <div class="modal fade show d-block" tabindex="-1" style="background:rgba(0,0,0,0.4);">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Add Unit to Location</h5>
+                    <button type="button" class="btn-close" @onclick="CloseAddUnitModal"></button>
+                </div>
+                <div class="modal-body">
+                    @if (!_availableUnitsToAdd.Any())
+                    {
+                        <p class="text-muted">All available units are already assigned to this location.</p>
+                    }
+                    else
+                    {
+                        <div class="mb-3">
+                            <label class="form-label">Select a unit</label>
+                            <select class="form-select" @bind="_selectedUnitId">
+                                <option value="0">-- Select Unit --</option>
+                                @foreach (var unit in _availableUnitsToAdd)
+                                {
+                                    <option value="@unit.Id">@unit.Name (@unit.Abbreviation)</option>
+                                }
+                            </select>
+                        </div>
+                    }
+                    <div class="d-flex justify-content-end gap-2">
+                        <button type="button" class="btn btn-secondary" @onclick="CloseAddUnitModal">Cancel</button>
+                        <button type="button" class="btn btn-success"
+                                disabled="@(_selectedUnitId == 0 || _addingUnit)"
+                                @onclick="AddUnit">
+                            @if (_addingUnit)
+                            {
+                                <span class="spinner-border spinner-border-sm me-1" role="status"></span>
+                            }
+                            Add Unit
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
 @code {
     [Parameter] public int LocationId { get; set; }
 
     private Location? _location;
     private List<Vendor> _locationVendors = new();
+    private List<Unit> _locationUnits = new();
+    private List<Unit> _availableUnitsToAdd = new();
 
     private bool _hydrated;
     private bool _showAddVendorModal;
     private bool _creatingVendor;
+    private bool _showAddUnitModal;
+    private bool _addingUnit;
+    private int _selectedUnitId;
 
     private Vendor _newVendor = new();
     private int? _companyId;
@@ -313,6 +423,7 @@
         if (_location is not null && _companyId.HasValue)
         {
             _locationVendors = await VendorService.GetVendorsByLocationAsync(LocationId);
+            _locationUnits   = await UnitService.GetByLocationAsync(LocationId);
         }
 
         _hydrated = true;
@@ -443,6 +554,47 @@
 
         _creatingVendor = false;
         _showAddVendorModal = false;
+        StateHasChanged();
+    }
+
+    // ── Units ─────────────────────────────────────────────────────────────────
+
+    private async Task OpenAddUnitModal()
+    {
+        var all = await UnitService.GetAllAsync();
+        var assignedIds = _locationUnits.Select(u => u.Id).ToHashSet();
+        _availableUnitsToAdd = all.Where(u => !assignedIds.Contains(u.Id)).ToList();
+        _selectedUnitId = 0;
+        _showAddUnitModal = true;
+    }
+
+    private void CloseAddUnitModal()
+    {
+        _showAddUnitModal = false;
+        _selectedUnitId = 0;
+    }
+
+    private async Task AddUnit()
+    {
+        if (_selectedUnitId == 0) return;
+
+        _addingUnit = true;
+
+        var currentIds = _locationUnits.Select(u => u.Id).ToList();
+        currentIds.Add(_selectedUnitId);
+        await UnitService.SetLocationUnitsAsync(LocationId, currentIds);
+        _locationUnits = await UnitService.GetByLocationAsync(LocationId);
+
+        _addingUnit = false;
+        _showAddUnitModal = false;
+        StateHasChanged();
+    }
+
+    private async Task RemoveUnit(int unitId)
+    {
+        var remaining = _locationUnits.Select(u => u.Id).Where(id => id != unitId);
+        await UnitService.SetLocationUnitsAsync(LocationId, remaining);
+        _locationUnits = await UnitService.GetByLocationAsync(LocationId);
         StateHasChanged();
     }
 }
