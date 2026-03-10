@@ -1,7 +1,9 @@
+@using Amazon.Runtime.Internal.UserAgent
 @using Microsoft.AspNetCore.Components
 @using CulinaryCommand.Services.UserContextSpace
 @inject IUserContextService UserCtx
 @inject NavigationManager Nav
+@inject IJSRuntime JSRuntime
 
 
 
@@ -47,16 +49,21 @@
     private string? message;
     private string? screenshotBase64;
     private string currentPage => Nav?.Uri ?? "";
-    private string deviceType => GetDeviceType();
+    private string deviceType = "Unknown";
     private string timestamp => DateTime.Now.ToString("yyyy-MM-dd HH:mm");
-
-
 
     protected override async Task OnInitializedAsync()
     {
         if (UserCtx != null)
         {
             _ctx = await UserCtx.GetAsync();
+        }
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender) {
+        if (firstRender)
+        {
+            deviceType = await GetDeviceTypeAsync();
         }
     }
 
@@ -95,9 +102,9 @@
         }
     }
 
-    private string GetDeviceType()
+    private async Task<string> GetDeviceTypeAsync()
     {
-        // Basic device detection
-        return "Unknown";
+        string? userAgent = await JSRuntime.InvokeAsync<string>("eval", "navigator.userAgent");
+        return  userAgent;
     }
 }
