@@ -26,7 +26,7 @@ namespace CulinaryCommandApp.Recipe.Services.Interfaces
         /// Use this to refresh the concurrency token without overwriting the caller's
         /// in-flight edits.
         /// </summary>
-        Task<byte[]?> GetRowVersionAsync(int id);
+        Task<DateTime?> GetRowVersionAsync(int id);
 
         /// <summary>
         /// Recursively flattens all raw ingredient lines of a recipe (including sub-recipes)

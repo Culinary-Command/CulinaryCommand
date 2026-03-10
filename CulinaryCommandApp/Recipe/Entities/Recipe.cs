@@ -31,9 +31,10 @@ namespace CulinaryCommandApp.Recipe.Entities
 
         public DateTime? CreatedAt { get; set; }
 
-        // Required to handle concurrent changes
-        [Timestamp]
-        public byte[] RowVersion { get; set; } = Array.Empty<byte>();
+        // Optimistic concurrency token — backed by a MySQL timestamp(6) column
+        // (ON UPDATE CURRENT_TIMESTAMP(6)), materialised as DateTime by the Pomelo provider.
+        [ConcurrencyCheck]
+        public DateTime RowVersion { get; set; }
 
         // Navigation
         public ICollection<RecipeIngredient> RecipeIngredients { get; set; } = new List<RecipeIngredient>();

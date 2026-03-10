@@ -727,7 +727,7 @@ else {
             }
 
             // Stamp the new token so EF Core's concurrency check will pass.
-            Model.RowVersion = freshToken;
+            Model.RowVersion = freshToken.Value;
 
             // Restore the user's in-flight edits (unchanged by the fetch above).
             Model.Title           = titleSnapshot;

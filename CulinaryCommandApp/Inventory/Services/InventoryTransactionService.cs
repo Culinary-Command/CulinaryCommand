@@ -42,7 +42,7 @@ namespace CulinaryCommandApp.Inventory.Services
             await using var dbTransaction = await _db.Database.BeginTransactionAsync(cancellationToken);
 
             var rows = await _db.Database.ExecuteSqlInterpolatedAsync(
-                $"UPDATE Ingredients SET StockQuantity = StockQuantity + {transactionAmount} WHERE Id = {transaction.IngredientId} AND StockQuantity + {transactionAmount} >= 0",
+                $"UPDATE Ingredients SET StockQuantity = StockQuantity + {transactionAmount} WHERE IngredientId = {transaction.IngredientId} AND StockQuantity + {transactionAmount} >= 0",
                 cancellationToken);
 
             if (rows == 0)
@@ -109,7 +109,7 @@ namespace CulinaryCommandApp.Inventory.Services
                         transaction.IngredientId, delta);
 
                     var rows = await _db.Database.ExecuteSqlInterpolatedAsync(
-                        $"UPDATE Ingredients SET StockQuantity = StockQuantity + {delta} WHERE Id = {transaction.IngredientId} AND StockQuantity + {delta} >= 0",
+                        $"UPDATE Ingredients SET StockQuantity = StockQuantity + {delta} WHERE IngredientId = {transaction.IngredientId} AND StockQuantity + {delta} >= 0",
                         cancellationToken);
 
                     if (rows == 0)

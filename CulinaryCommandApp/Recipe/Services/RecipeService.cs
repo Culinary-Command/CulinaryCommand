@@ -83,7 +83,7 @@ namespace CulinaryCommandApp.Recipe.Services
         // ── Ingredient Flattening ────────────────────────────────────────────
 
         /// <inheritdoc/>
-        public async Task<byte[]?> GetRowVersionAsync(int id)
+        public async Task<DateTime?> GetRowVersionAsync(int id)
         {
             return await _db.Recipes
                 .AsNoTracking()
@@ -107,6 +107,7 @@ namespace CulinaryCommandApp.Recipe.Services
                     $"Circular sub-recipe reference detected at recipe ID {recipeId}.");
 
             var recipe = await _db.Recipes
+                .AsNoTracking()
                 .Include(r => r.RecipeIngredients)
                     .ThenInclude(ri => ri.Ingredient)
                 .Include(r => r.RecipeIngredients)

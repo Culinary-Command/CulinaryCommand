@@ -129,9 +129,9 @@ namespace CulinaryCommandApp.Inventory.Services
             entity.StockQuantity = dto.CurrentQuantity;
             entity.Price = dto.Price;
             entity.ReorderLevel = dto.ReorderLevel;
-            // Category and Unit mapping: if you have Unit lookup by name to Id, handle here.
-            // For now assume Category stored on entity and UnitId unchanged.
             entity.Category = dto.Category;
+            entity.UnitId = dto.UnitId;
+            entity.VendorId = dto.VendorId;
 
             await _db.SaveChangesAsync();
 
@@ -143,12 +143,14 @@ namespace CulinaryCommandApp.Inventory.Services
                 Category = entity.Category ?? string.Empty,
                 CurrentQuantity = entity.StockQuantity,
                 Unit = entity.Unit != null ? entity.Unit.Name : "count",
+                UnitId = entity.UnitId,
                 Price = entity.Price ?? 0m,
                 ReorderLevel = entity.ReorderLevel,
                 IsLowStock = entity.StockQuantity <= entity.ReorderLevel,
                 OutOfStockDate = null,
                 LastOrderDate = null,
-                Notes = entity.Notes ?? string.Empty
+                Notes = entity.Notes ?? string.Empty,
+                VendorId = entity.VendorId,
             };
         }
      }
