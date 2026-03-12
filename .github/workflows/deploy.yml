@@ -75,6 +75,9 @@ jobs:
             REMOTE_APP_DIR: /var/www/culinarycommand
             SERVICE_NAME: culinarycommand
         steps:
+            - name: Checkout
+              uses: actions/checkout@v4
+
             - name: Download publish artifacts
               uses: actions/download-artifact@v4
               with:
