@@ -13,18 +13,73 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-    deploy:
+    build:
         runs-on: ubuntu-latest
         env:
             AWS_REGION: us-east-2
-            AWS_ACCOUNT_NUMBER: 578513450318
+            AWS_ACCOUNT_NUMBER: ${{ vars.AWS_ACCOUNT_NUMBER }}
+            PROJECT_PATH: CulinaryCommandApp/CulinaryCommand.csproj
+            PUBLISH_DIR: ./publish
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v4
+
+            - name: Configure AWS credentials
+              uses: aws-actions/configure-aws-credentials@v4
+              with:
+                role-to-assume: arn:aws:iam::${{ env.AWS_ACCOUNT_NUMBER }}:role/culinary-command-iac-role
+                aws-region: ${{ env.AWS_REGION }}
+
+            - name: Setup .NET
+              uses: actions/setup-dotnet@v4
+              with:
+                dotnet-version: 9.0.x
+
+            - name: Install dotnet-ef global tool
+              run: dotnet tool install --global dotnet-ef --version 9.*
+
+            - name: Add .NET tools to PATH
+              run: echo "${HOME}/.dotnet/tools" >> $GITHUB_PATH
+
+            - name: Build and publish Blazor Server
+              run: |
+                dotnet restore "${{ env.PROJECT_PATH }}"
+                dotnet publish "${{ env.PROJECT_PATH }}" -c Release -o "${{ env.PUBLISH_DIR }}"
+
+            - name: Create EF Core migrations bundle
+              env:
+                ConnectionStrings__DefaultConnection: "Server=${{ secrets.RDS_HOST }};Port=3306;Database=${{ secrets.RDS_DB_NAME }};Uid=${{ secrets.RDS_DB_USER }};Pwd=${{ secrets.RDS_DB_PASSWORD }};SslMode=Required;"
+              run: |
+                dotnet ef migrations bundle \
+                  --project "${{ env.PROJECT_PATH }}" \
+                  --output "${{ env.PUBLISH_DIR }}/efbundle" \
+                  --configuration Release \
+                  --self-contained \
+                  --runtime linux-x64
+
+            - name: Upload publish artifacts
+              uses: actions/upload-artifact@v4
+              with:
+                name: publish-${{ github.sha }}
+                path: ${{ env.PUBLISH_DIR }}
+                retention-days: 1
+
+    deploy:
+        runs-on: ubuntu-latest
+        needs: build
+        env:
+            AWS_REGION: us-east-2
+            AWS_ACCOUNT_NUMBER: ${{ vars.AWS_ACCOUNT_NUMBER }}
             PROJECT_PATH: CulinaryCommandApp/CulinaryCommand.csproj
             PUBLISH_DIR: ./publish
             REMOTE_APP_DIR: /var/www/culinarycommand
             SERVICE_NAME: culinarycommand
         steps:
-            - name: Checkout
-              uses: actions/checkout@v4
+            - name: Download publish artifacts
+              uses: actions/download-artifact@v4
+              with:
+                name: publish-${{ github.sha }}
+                path: ${{ env.PUBLISH_DIR }}
 
             - name: Add host key
               run: |
@@ -80,33 +135,6 @@ jobs:
             - name: Display output variables
               working-directory: terraform
               run: terraform output -no-color
-
-            - name: Setup .NET
-              uses: actions/setup-dotnet@v4
-              with:
-                dotnet-version: 9.0.x
-
-            - name: Install dotnet-ef global tool
-              run: dotnet tool install --global dotnet-ef --version 9.*
-
-            - name: Add .NET tools to PATH
-              run: echo "${HOME}/.dotnet/tools" >> $GITHUB_PATH
-
-            - name: Build and publish Blazor Server
-              run: |
-                dotnet restore "${{ env.PROJECT_PATH }}"
-                dotnet publish "${{ env.PROJECT_PATH }}" -c Release -o "${{ env.PUBLISH_DIR }}"
-
-            - name: Create EF Core migrations bundle
-              env:
-                ConnectionStrings__DefaultConnection: "Server=${{ secrets.RDS_HOST }};Port=3306;Database=${{ secrets.RDS_DB_NAME }};Uid=${{ secrets.RDS_DB_USER }};Pwd=${{ secrets.RDS_DB_PASSWORD }};SslMode=Required;"
-              run: |
-                dotnet ef migrations bundle \
-                  --project "${{ env.PROJECT_PATH }}" \
-                  --output "${{ env.PUBLISH_DIR }}/efbundle" \
-                  --configuration Release \
-                  --self-contained \
-                  --runtime linux-x64
 
             - name: Start SSH agent
               uses: webfactory/ssh-agent@v0.9.0
@@ -183,3 +211,42 @@ jobs:
                   rm -rf ~/deploy/${{ github.sha }} && \
                   sudo systemctl restart '${{ env.SERVICE_NAME }}' && \
                   sudo systemctl --no-pager --lines=5 status '${{ env.SERVICE_NAME }}' || true"
+    deploy-autoscaling-group:
+        runs-on: ubuntu-latest
+        needs: build
+        env:
+            AWS_REGION: us-east-2
+            AWS_ACCOUNT_NUMBER: ${{ vars.AWS_ACCOUNT_NUMBER }}
+            PUBLISH_DIR: ./publish
+            S3_BUCKET: ${{ vars.S3_DEPLOYMENT_BUCKET }}
+        steps:
+            - name: Configure AWS credentials
+              uses: aws-actions/configure-aws-credentials@v4
+              with:
+                role-to-assume: arn:aws:iam::${{ env.AWS_ACCOUNT_NUMBER }}:role/culinary-command-iac-role
+                aws-region: ${{ env.AWS_REGION }}
+
+            - name: Download artifacts
+              uses: actions/download-artifact@v4
+              with:
+                name: publish-${{ github.sha }}
+                path: ${{ env.PUBLISH_DIR }}
+
+            - name: Package artifacts
+              run: |
+                cd "${{ env.PUBLISH_DIR }}"
+                zip -r ../culinarycommand-${{ github.sha }}.zip .
+
+            - name: Upload to S3
+              run: |
+                aws s3 cp culinarycommand-${{ github.sha }}.zip \
+                  s3://${{ env.S3_BUCKET }}/releases/${{ github.sha }}/app.zip
+                aws s3 cp culinarycommand-${{ github.sha }}.zip \
+                  s3://${{ env.S3_BUCKET }}/releases/latest/app.zip
+
+            # - name: Trigger ASG instance refresh
+            #   run: |
+            #     aws autoscaling start-instance-refresh \
+            #       --auto-scaling-group-name culinary-command-asg \
+            #       --preferences '{"MinHealthyPercentage": 50, "InstanceWarmup": 120}' \
+            #       --region ${{ env.AWS_REGION }}
