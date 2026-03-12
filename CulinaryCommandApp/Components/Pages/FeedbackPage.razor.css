@@ -1,0 +1,153 @@
+.feedback-page {
+    padding: 24px;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.feedback-filters {
+    display: flex;
+    gap: 16px;
+    align-items: flex-end;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+    padding: 16px;
+    background: #f5f5f5;
+    border-radius: 8px;
+}
+
+.filter-group {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.filter-group label {
+    font-size: 13px;
+    font-weight: 600;
+    color: #555;
+}
+
+.filter-group input,
+.filter-group select {
+    padding: 7px 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 14px;
+    background: #fff;
+}
+
+.filter-clear-btn {
+    padding: 7px 16px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    background: #fff;
+    cursor: pointer;
+    font-size: 14px;
+    color: #555;
+}
+
+.filter-clear-btn:hover {
+    background: #e8e8e8;
+}
+
+.feedback-summary {
+    margin-bottom: 12px;
+    font-size: 14px;
+    color: #666;
+}
+
+.feedback-table-wrapper {
+    overflow-x: auto;
+}
+
+.feedback-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+}
+
+.feedback-table thead tr {
+    background: #f0f0f0;
+}
+
+.feedback-table th {
+    text-align: left;
+    padding: 10px 12px;
+    font-weight: 600;
+    color: #444;
+    border-bottom: 2px solid #ddd;
+}
+
+.feedback-table td {
+    padding: 10px 12px;
+    border-bottom: 1px solid #eee;
+    vertical-align: top;
+}
+
+.feedback-table tbody tr:hover {
+    background: #fafafa;
+}
+
+.feedback-td-time  { white-space: nowrap; color: #888; font-size: 13px; }
+.feedback-td-email { color: #555; font-size: 13px; }
+.feedback-td-page  { color: #888; font-size: 12px; max-width: 120px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.feedback-td-message { max-width: 300px; }
+
+.feedback-badge {
+    display: inline-block;
+    padding: 3px 8px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.badge-bug     { background: #fde8e8; color: #c0392b; }
+.badge-feature { background: #e8f4fd; color: #1a73e8; }
+.badge-general { background: #e8f5e9; color: #2e7d32; }
+
+.feedback-thumb {
+    width: 48px;
+    height: 36px;
+    object-fit: cover;
+    border-radius: 4px;
+    cursor: pointer;
+    border: 1px solid #ddd;
+}
+
+.feedback-no-screenshot { color: #ccc; }
+
+.feedback-delete-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    opacity: 0.5;
+    padding: 0;
+}
+
+.feedback-delete-btn:hover { opacity: 1; }
+
+.feedback-loading,
+.feedback-empty {
+    color: #888;
+    padding: 24px 0;
+}
+
+.screenshot-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.75);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
+    cursor: pointer;
+}
+
+.screenshot-modal-img {
+    max-width: 90vw;
+    max-height: 90vh;
+    border-radius: 8px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+}

@@ -32,7 +32,9 @@ namespace CulinaryCommand.Data
         public DbSet<PO.PurchaseOrderLine> PurchaseOrderLines => Set<PO.PurchaseOrderLine>();
         public DbSet<V.Vendor> Vendors => Set<V.Vendor>();
         public DbSet<V.LocationVendor> LocationVendors => Set<V.LocationVendor>();
+        public DbSet<Feedback> Feedbacks { get; set; }
         public DbSet<LocationUnit> LocationUnits => Set<LocationUnit>();
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

@@ -1,0 +1,165 @@
+@page "/feedback"
+@using CulinaryCommand.Data.Entities
+@using CulinaryCommand.Services
+@inject IFeedbackService FeedbackSvc
+
+<div class="feedback-page">
+    <h2>Feedback</h2>
+
+    <div class="feedback-filters">
+        <div class="filter-group">
+            <label>From</label>
+            <input type="date" @bind="filterFrom" />
+        </div>
+        <div class="filter-group">
+            <label>To</label>
+            <input type="date" @bind="filterTo" />
+        </div>
+        <div class="filter-group">
+            <label>Type</label>
+            <select @bind="filterType">
+                <option value="">All</option>
+                <option value="Bug">🐛 Bug</option>
+                <option value="Feature">✨ Feature Request</option>
+                <option value="General">💬 General</option>
+            </select>
+        </div>
+        <div class="filter-group">
+            <label>Role</label>
+            <select @bind="filterRole">
+                <option value="">All</option>
+                <option value="Employee">Employee</option>
+                <option value="Manager">Manager</option>
+                <option value="Admin">Admin</option>
+            </select>
+        </div>
+        <button class="filter-clear-btn" @onclick="ClearFilters">Clear</button>
+    </div>
+
+    @if (isLoading)
+    {
+        <p class="feedback-loading">Loading feedback...</p>
+    }
+    else if (!Filtered.Any())
+    {
+        <p class="feedback-empty">No feedback matches your filters.</p>
+    }
+    else
+    {
+        <div class="feedback-summary">
+            Showing <strong>@Filtered.Count()</strong> of <strong>@allFeedback.Count</strong> submissions
+        </div>
+
+        <div class="feedback-table-wrapper">
+            <table class="feedback-table">
+                <thead>
+                    <tr>
+                        <th>Time</th>
+                        <th>Type</th>
+                        <th>Role</th>
+                        <th>User</th>
+                        <th>Page</th>
+                        <th>Message</th>
+                        <th>Screenshot</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var f in Filtered)
+                    {
+                        <tr>
+                            <td class="feedback-td-time">@f.SubmittedAt.ToLocalTime().ToString("MM/dd/yy HH:mm")</td>
+                            <td><span class="feedback-badge @GetTypeBadgeClass(f.FeedbackType)">@GetTypeEmoji(f.FeedbackType) @f.FeedbackType</span></td>
+                            <td>@f.UserRole</td>
+                            <td class="feedback-td-email">@f.UserEmail</td>
+                            <td class="feedback-td-page" title="@f.Page">@TrimPage(f.Page)</td>
+                            <td class="feedback-td-message">@f.Message</td>
+                            <td>
+                                @if (!string.IsNullOrEmpty(f.ScreenshotBase64))
+                                {
+                                    <img class="feedback-thumb" src="data:image/png;base64,@f.ScreenshotBase64" @onclick="() => OpenScreenshot(f.ScreenshotBase64)" />
+                                }
+                                else
+                                {
+                                    <span class="feedback-no-screenshot">—</span>
+                                }
+                            </td>
+                            <td>
+                                <button class="feedback-delete-btn" @onclick="() => DeleteFeedback(f.Id)">🗑</button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+</div>
+
+@if (screenshotModal != null)
+{
+    <div class="screenshot-overlay" @onclick="CloseScreenshot">
+        <img class="screenshot-modal-img" src="data:image/png;base64,@screenshotModal" />
+    </div>
+}
+
+@code {
+    private List<Feedback> allFeedback = new();
+    private bool isLoading = true;
+
+    private DateTime? filterFrom;
+    private DateTime? filterTo;
+    private string filterType = "";
+    private string filterRole = "";
+    private string? screenshotModal;
+
+    private IEnumerable<Feedback> Filtered => allFeedback
+        .Where(f => filterFrom == null || f.SubmittedAt.ToLocalTime().Date >= filterFrom.Value.Date)
+        .Where(f => filterTo == null || f.SubmittedAt.ToLocalTime().Date <= filterTo.Value.Date)
+        .Where(f => string.IsNullOrEmpty(filterType) || f.FeedbackType == filterType)
+        .Where(f => string.IsNullOrEmpty(filterRole) || f.UserRole == filterRole);
+
+    protected override async Task OnInitializedAsync()
+    {
+        allFeedback = await FeedbackSvc.GetAllFeedbackAsync();
+        isLoading = false;
+    }
+
+    private async Task DeleteFeedback(int id)
+    {
+        await FeedbackSvc.DeleteFeedbackAsync(id);
+        allFeedback = await FeedbackSvc.GetAllFeedbackAsync();
+    }
+
+    private void ClearFilters()
+    {
+        filterFrom = null;
+        filterTo = null;
+        filterType = "";
+        filterRole = "";
+    }
+
+    private void OpenScreenshot(string base64) => screenshotModal = base64;
+    private void CloseScreenshot() => screenshotModal = null;
+
+    private string TrimPage(string page)
+    {
+        try { return "/" + new Uri(page).AbsolutePath.TrimStart('/'); }
+        catch { return page; }
+    }
+
+    private string GetTypeBadgeClass(string type) => type switch
+    {
+        "Bug" => "badge-bug",
+        "Feature" => "badge-feature",
+        "General" => "badge-general",
+        _ => ""
+    };
+
+    private string GetTypeEmoji(string type) => type switch
+    {
+        "Bug" => "🐛",
+        "Feature" => "✨",
+        "General" => "💬",
+        _ => ""
+    };
+}
