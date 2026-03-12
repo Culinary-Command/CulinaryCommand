@@ -18,6 +18,9 @@ namespace CulinaryCommand.Data
         public DbSet<Location> Locations => Set<Location>();
         public DbSet<User> Users => Set<User>();
         public DbSet<Tasks> Tasks => Set<Tasks>();
+        public DbSet<TaskTemplate> TaskTemplates => Set<TaskTemplate>();
+        public DbSet<TaskList> TaskLists => Set<TaskList>();
+        public DbSet<TaskListItem> TaskListItems => Set<TaskListItem>();
         public DbSet<Company> Companies => Set<Company>();
         public DbSet<CulinaryCommandApp.Inventory.Entities.Ingredient> Ingredients => Set<CulinaryCommandApp.Inventory.Entities.Ingredient>();
         public DbSet<CulinaryCommandApp.Recipe.Entities.Recipe> Recipes => Set<CulinaryCommandApp.Recipe.Entities.Recipe>();
@@ -140,6 +143,28 @@ namespace CulinaryCommand.Data
                 .HasForeignKey(t => t.RecipeId)
                 .OnDelete(DeleteBehavior.SetNull)
                 .IsRequired(false);
+
+            // Configure relationship: each TaskListItem belongs to one TaskList,
+            // and each TaskList can contain many TaskListItems
+            modelBuilder.Entity<TaskListItem>()
+                .HasOne(x => x.TaskList)
+                .WithMany(x => x.Items)
+                .HasForeignKey(x => x.TaskListId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            // Configure relationship: each TaskListItem points to one TaskTemplate,
+            // and each TaskTemplate can appear in many TaskListItems
+            modelBuilder.Entity<TaskListItem>()
+                .HasOne(x => x.TaskTemplate)
+                .WithMany(x => x.TaskListItems)
+                .HasForeignKey(x => x.TaskTemplateId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            // Prevent duplicate entries so the same template can't be added
+            // to the same task list more than once
+            modelBuilder.Entity<TaskListItem>()
+                .HasIndex(x => new { x.TaskListId, x.TaskTemplateId })
+                .IsUnique();
 
             // RecipeIngredient to parent Recipe
             modelBuilder.Entity<CulinaryCommandApp.Recipe.Entities.RecipeIngredient>()
