@@ -250,6 +250,6 @@ jobs:
             - name: Trigger ASG instance refresh
               run: |
                 aws autoscaling start-instance-refresh \
-                  --auto-scaling-group-name culinary-command-asg \
+                  --auto-scaling-group-name culinary-command-app-autoscaling-group \
                   --preferences '{"MinHealthyPercentage": 50, "InstanceWarmup": 120}' \
                   --region ${{ env.AWS_REGION }}
