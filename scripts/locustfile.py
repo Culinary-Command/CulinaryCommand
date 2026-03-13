@@ -8,6 +8,16 @@ import os
 
 load_dotenv()
 
+# Fetch token once at startup and share across all simulated users
+# to avoid Cognito rate-limiting (429) during user spawn
+_shared_token: str | None = None
+
+def get_shared_token() -> str:
+    global _shared_token
+    if _shared_token is None:
+        _shared_token = get_cognito_token()
+    return _shared_token
+
 def get_secret_hash(username):
     client_id = os.getenv("COGNITO_CLIENT_ID")
     client_secret = os.getenv("COGNITO_CLIENT_SECRET")
@@ -17,7 +27,7 @@ def get_secret_hash(username):
         client_secret.encode("utf-8"),
         msg=message.encode("utf-8"),
         digestmod=hashlib.sha256
-    ).digest()
+    ).digest()  # type: ignore
     return base64.b64encode(dig).decode()
 
 def get_cognito_token():
@@ -35,10 +45,10 @@ def get_cognito_token():
     return response["AuthenticationResult"]["IdToken"]
 
 class LocustLoadTesting(HttpUser):
-    wait_time = between(1, 3)
+    wait_time = between(0.5, 1)
 
     def on_start(self):
-        token = get_cognito_token()
+        token = get_shared_token()
 
         self.client.headers.update({
             "Authorization": f"Bearer {token}"
@@ -48,9 +58,11 @@ class LocustLoadTesting(HttpUser):
     def browse_recipes(self):
         self.client.get("/recipes", name="Browse Recipes")
     
+    @task(1)
     def view_recipe(self):
         recipe_id = 2
         self.client.get(f"/recipes/view/{recipe_id}", name="View Recipe")
     
+    @task(1)
     def view_dashboard(self):
         self.client.get("/dashboard", name="View Dashboard")

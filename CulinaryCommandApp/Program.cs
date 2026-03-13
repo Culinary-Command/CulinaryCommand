@@ -173,6 +173,19 @@ builder.Services.AddScoped<IFeedbackService, FeedbackService>();
 builder.Services.AddSingleton<ITaskNotificationService, TaskNotificationService>();
 builder.Services.AddHttpClient();
 
+if (builder.Environment.IsDevelopment())
+{
+    var dp = Path.Combine(builder.Environment.ContentRootPath, ".dpkeys");
+    builder.Services.AddDataProtection()
+        .PersistKeysToFileSystem(new DirectoryInfo(dp))
+        .SetApplicationName("CulinaryCommand");
+}
+else
+{
+    builder.Services.AddDataProtection()
+        .PersistKeysToAWSSystemsManager("/culinarycommand/prod/DataProtection")
+        .SetApplicationName("CulinaryCommand");
+}
 
 builder.Services.Configure<ForwardedHeadersOptions>(o =>
 {
@@ -184,16 +197,6 @@ builder.Services.Configure<ForwardedHeadersOptions>(o =>
     o.KnownNetworks.Clear();
     o.KnownProxies.Clear();
 });
-
-var env = builder.Environment;
-
-if (builder.Environment.IsDevelopment())
-{
-    var dp = Path.Combine(builder.Environment.ContentRootPath, ".dpkeys");
-    builder.Services.AddDataProtection()
-        .PersistKeysToFileSystem(new DirectoryInfo(dp))
-        .SetApplicationName("CulinaryCommand");
-}
 
 //
 // =====================
