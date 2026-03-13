@@ -247,9 +247,9 @@ jobs:
                 aws s3 cp culinarycommand-${{ github.sha }}.zip \
                   s3://${{ env.S3_BUCKET }}/releases/latest/app.zip
 
-            # - name: Trigger ASG instance refresh
-            #   run: |
-            #     aws autoscaling start-instance-refresh \
-            #       --auto-scaling-group-name culinary-command-asg \
-            #       --preferences '{"MinHealthyPercentage": 50, "InstanceWarmup": 120}' \
-            #       --region ${{ env.AWS_REGION }}
+            - name: Trigger ASG instance refresh
+              run: |
+                aws autoscaling start-instance-refresh \
+                  --auto-scaling-group-name culinary-command-asg \
+                  --preferences '{"MinHealthyPercentage": 50, "InstanceWarmup": 120}' \
+                  --region ${{ env.AWS_REGION }}
