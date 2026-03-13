@@ -11,8 +11,9 @@
 @inject ITaskAssignmentService TaskService
 @inject LocationState LocationState
 @inject NavigationManager Nav
+@inject ITaskNotificationService TaskNotifier
 
-@implements IDisposable
+@implements IDisposable 
 @rendermode InteractiveServer
 
 <PageTitle>My Tasks</PageTitle>
@@ -67,6 +68,9 @@ else
     {
         _ctx = await UserCtx.GetAsync();
 
+        TaskNotifier.OnTasksChanged -= HandleTasksNotification;
+        TaskNotifier.OnTasksChanged += HandleTasksNotification;
+
         // If not authenticated, bounce to Cognito login
         if (_ctx.IsAuthenticated != true)
         {
@@ -97,6 +101,17 @@ else
         await LoadTasksAsync();
 
         ready = true;
+    }
+
+    private async Task HandleTasksNotification(int locationId) 
+    {
+        // only handle notifications for location we are viewing
+        if (locationId != selectedLocationId) return;
+
+        await InvokeAsync(async() => {
+            await LoadTasksAsync();
+            StateHasChanged();
+        });
     }
 
     private async Task LoadTasksAsync()
@@ -161,5 +176,7 @@ else
     public void Dispose()
     {
         LocationState.OnChange -= HandleLocationStateChanged;
+        TaskNotifier.OnTasksChanged -= HandleTasksNotification;
+
     }
 }

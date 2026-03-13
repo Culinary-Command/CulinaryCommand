@@ -170,6 +170,7 @@ builder.Services.AddSingleton<EnumService>();
 builder.Services.AddScoped<IVendorService, VendorService>();
 builder.Services.AddScoped<LogoDevService>();
 builder.Services.AddScoped<IFeedbackService, FeedbackService>();
+builder.Services.AddSingleton<ITaskNotificationService, TaskNotificationService>();
 builder.Services.AddHttpClient();
 
 
