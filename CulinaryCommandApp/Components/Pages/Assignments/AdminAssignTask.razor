@@ -14,6 +14,7 @@
 @inject LocationState LocationState
 @inject ITaskAssignmentService TaskService
 @inject IRecipeService RecipeService
+@inject ITaskNotificationService TaskNotifier
 
 @implements IDisposable
 @rendermode InteractiveServer
@@ -415,6 +416,9 @@ else
             Notes = string.Empty
             // RecipeId left null; choose fresh per task
         };
+
+        //
+        await TaskNotifier.NotifyTasksChangedAsync(selectedLocationId.Value);
 
         await InvokeAsync(StateHasChanged);
     }

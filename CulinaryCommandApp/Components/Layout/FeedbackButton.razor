@@ -1,0 +1,202 @@
+@using Amazon.Runtime.Internal.UserAgent
+@using Microsoft.AspNetCore.Components
+@using CulinaryCommand.Services.UserContextSpace
+@using CulinaryCommand.Data.Entities
+@inject IUserContextService UserCtx
+@inject NavigationManager Nav
+@inject IJSRuntime JSRuntime
+@inject IFeedbackService FeedbackSvc
+
+<div>
+    <button class="feedback-btn" @onclick="ShowDialog">Feedback</button>
+
+    @if (showDialog)
+    {
+    <div class="feedback-dialog">
+        <div class="feedback-content">
+            <h3>Submit Feedback</h3>
+
+            <div>
+                <label>Type</label>
+                <div class="feedback-type-buttons">
+                    <button class="feedback-type-btn @(feedbackType == "Bug" ? "active" : "")"
+                            @onclick='() => feedbackType = "Bug"'>
+                        Bug
+                    </button>
+                    <button class="feedback-type-btn @(feedbackType == "Feature" ? "active" : "")"
+                            @onclick='() => feedbackType = "Feature"'>
+                        Feature Request
+                    </button>
+                    <button class="feedback-type-btn @(feedbackType == "General" ? "active" : "")"
+                            @onclick='() => feedbackType = "General"'>
+                        General
+                    </button>
+                </div>
+            </div>
+
+            <div>
+                <label>Message</label>
+                <textarea @bind="message" placeholder="@GetPlaceholder()" />
+            </div>
+
+            @* <div>
+                label>Screenshot (optional)</label>
+                <input type="file" @onchange="OnScreenshotChange" />
+            </div>  *@
+
+            <div>
+                <label>Screenshot (optional)</label>
+                <InputFile OnChange="OnScreenshotChange" accept="image/*" />
+            </div>
+
+            <div>
+                <button @onclick="SubmitFeedback" disabled="@(feedbackType == null || string.IsNullOrWhiteSpace(message))">Submit</button>
+                <button @onclick="CloseDialog">Cancel</button>
+            </div>
+        </div>
+    </div>
+    }
+
+    @if (showConfirmation)
+    {
+        <div class="feedback-confirmation">
+            Feedback submitted!
+        </div>
+    }
+</div>
+
+
+@code {
+    private bool showDialog;
+    private bool showConfirmation;
+    private UserContext? _ctx;
+
+    private string? userRole;
+    private string? message;
+    
+    private string? screenshotBase64;
+    private string currentPage => Nav?.Uri ?? "";
+    private string deviceType = "Unknown";
+    private string timestamp => DateTime.Now.ToString("yyyy-MM-dd HH:mm");
+
+    private string? feedbackType;
+
+    private string GetPlaceholder() => feedbackType switch
+    {
+        "Bug"     => "Describe what happened and steps to reproduce...",
+        "Feature" => "Describe the feature and why it would be helpful...",
+        "General" => "Share your thoughts...",
+        _         => "Select a type above first..."
+    };
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (UserCtx != null)
+        {
+            _ctx = await UserCtx.GetAsync();
+        }
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender) {
+        if (firstRender)
+        {
+            deviceType = await GetDeviceTypeAsync();
+        }
+    }
+
+    private void ShowDialog()
+    {
+        showDialog = true;
+        showConfirmation = false;
+    }
+
+    private void CloseDialog()
+    {
+        showDialog = false;
+        feedbackType = null;
+    }
+
+    private async Task SubmitFeedback()
+    {
+        Console.WriteLine($"DBG: Screenshot length at submit: {screenshotBase64?.Length}");
+        // Don't hide dialog yet — keep screenshotBase64 alive
+        await FeedbackSvc.SubmitFeedbackAsync(new Feedback
+        {
+            UserId = _ctx?.User?.Id,
+            UserEmail = _ctx?.User?.Email,
+            UserRole = _ctx?.User?.Role,
+            FeedbackType = feedbackType!,
+            Page = currentPage,
+            Device = deviceType,
+            Message = message!,
+            ScreenshotBase64 = screenshotBase64
+        });
+
+        // Now safe to hide and show confirmation
+        showDialog = false;
+        showConfirmation = true;
+        StateHasChanged();
+
+        await Task.Delay(3500);
+
+        feedbackType = null;
+        showConfirmation = false;
+        userRole = string.Empty;
+        message = string.Empty;
+        screenshotBase64 = null;
+
+        StateHasChanged();
+    }
+
+    @* private void OnScreenshotChange(ChangeEventArgs e)
+    {
+        var file = e.Value as Microsoft.AspNetCore.Components.Forms.IBrowserFile;
+        if (file != null)
+        {
+            using var stream = file.OpenReadStream();
+            var buffer = new byte[file.Size];
+            stream.Read(buffer, 0, (int)file.Size);
+            screenshotBase64 = Convert.ToBase64String(buffer);
+        }
+    } *@
+
+    @* private async Task OnScreenshotChange(ChangeEventArgs e)
+    {
+        var file = e.Value as Microsoft.AspNetCore.Components.Forms.IBrowserFile;
+        if (file != null)
+        {
+            using var stream = file.OpenReadStream(maxAllowedSize: 5 * 1024 * 1024); // 5MB limit
+            using var ms = new MemoryStream();
+            await stream.CopyToAsync(ms);
+            screenshotBase64 = Convert.ToBase64String(ms.ToArray());
+        }
+    } *@
+
+    private async Task OnScreenshotChange(InputFileChangeEventArgs e)
+    {
+        var file = e.File;
+        Console.WriteLine($"DBG: File received: {file?.Name}, Size: {file?.Size}");
+        
+        if (file != null && file.Size > 0)
+        {
+            try
+            {
+                using var stream = file.OpenReadStream(maxAllowedSize: 5 * 1024 * 1024);
+                using var ms = new MemoryStream();
+                await stream.CopyToAsync(ms);
+                screenshotBase64 = Convert.ToBase64String(ms.ToArray());
+                Console.WriteLine($"DBG: Base64 length: {screenshotBase64?.Length}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"DBG: Screenshot read error: {ex.Message}");
+            }
+        }
+    }
+
+    private async Task<string> GetDeviceTypeAsync()
+    {
+        string? userAgent = await JSRuntime.InvokeAsync<string>("eval", "navigator.userAgent");
+        return  userAgent;
+    }
+}
