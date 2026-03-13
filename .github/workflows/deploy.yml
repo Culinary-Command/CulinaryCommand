@@ -64,156 +64,156 @@ jobs:
                 path: ${{ env.PUBLISH_DIR }}
                 retention-days: 1
 
-    deploy:
-        runs-on: ubuntu-latest
-        needs: build
-        env:
-            AWS_REGION: us-east-2
-            AWS_ACCOUNT_NUMBER: ${{ vars.AWS_ACCOUNT_NUMBER }}
-            PROJECT_PATH: CulinaryCommandApp/CulinaryCommand.csproj
-            PUBLISH_DIR: ./publish
-            REMOTE_APP_DIR: /var/www/culinarycommand
-            SERVICE_NAME: culinarycommand
-        steps:
-            - name: Checkout
-              uses: actions/checkout@v4
+    # deploy:
+    #     runs-on: ubuntu-latest
+    #     needs: build
+    #     env:
+    #         AWS_REGION: us-east-2
+    #         AWS_ACCOUNT_NUMBER: ${{ vars.AWS_ACCOUNT_NUMBER }}
+    #         PROJECT_PATH: CulinaryCommandApp/CulinaryCommand.csproj
+    #         PUBLISH_DIR: ./publish
+    #         REMOTE_APP_DIR: /var/www/culinarycommand
+    #         SERVICE_NAME: culinarycommand
+    #     steps:
+    #         - name: Checkout
+    #           uses: actions/checkout@v4
 
-            - name: Download publish artifacts
-              uses: actions/download-artifact@v4
-              with:
-                name: publish-${{ github.sha }}
-                path: ${{ env.PUBLISH_DIR }}
+    #         - name: Download publish artifacts
+    #           uses: actions/download-artifact@v4
+    #           with:
+    #             name: publish-${{ github.sha }}
+    #             path: ${{ env.PUBLISH_DIR }}
 
-            - name: Add host key
-              run: |
-                mkdir -p ~/.ssh
-                for i in {1..5}; do
-                  if ssh-keyscan -H "${{ secrets.LIGHTSAIL_HOST }}" >> ~/.ssh/known_hosts 2>/dev/null; then
-                    echo "Host key added."
-                    break
-                  fi
-                  echo "ssh-keyscan failed (attempt $i), retrying in 5s..."
-                  sleep 5
-                done
+    #         - name: Add host key
+    #           run: |
+    #             mkdir -p ~/.ssh
+    #             for i in {1..5}; do
+    #               if ssh-keyscan -H "${{ secrets.LIGHTSAIL_HOST }}" >> ~/.ssh/known_hosts 2>/dev/null; then
+    #                 echo "Host key added."
+    #                 break
+    #               fi
+    #               echo "ssh-keyscan failed (attempt $i), retrying in 5s..."
+    #               sleep 5
+    #             done
 
-            - name: Configure AWS credentials
-              uses: aws-actions/configure-aws-credentials@v4
-              with:
-                role-to-assume: arn:aws:iam::${{ env.AWS_ACCOUNT_NUMBER }}:role/culinary-command-iac-role
-                aws-region: ${{ env.AWS_REGION }}
+    #         - name: Configure AWS credentials
+    #           uses: aws-actions/configure-aws-credentials@v4
+    #           with:
+    #             role-to-assume: arn:aws:iam::${{ env.AWS_ACCOUNT_NUMBER }}:role/culinary-command-iac-role
+    #             aws-region: ${{ env.AWS_REGION }}
 
-            - name: Setup Terraform
-              uses: hashicorp/setup-terraform@v3
+    #         - name: Setup Terraform
+    #           uses: hashicorp/setup-terraform@v3
 
-            - name: Terraform Init
-              working-directory: terraform
-              env:
-                TF_IN_AUTOMATION: true
-                TF_INPUT: false
-              run: terraform init -input=false -no-color
+    #         - name: Terraform Init
+    #           working-directory: terraform
+    #           env:
+    #             TF_IN_AUTOMATION: true
+    #             TF_INPUT: false
+    #           run: terraform init -input=false -no-color
 
-            - name: Terraform Plan
-              working-directory: terraform
-              env:
-                TF_IN_AUTOMATION: true
-                TF_INPUT: false
-                TF_VAR_lightsail_instance_name: culinary-command
-                TF_VAR_blueprint_id: ubuntu_22_04
-                TF_VAR_bundle_id: nano_2_0
-                TF_VAR_key_pair_name: culinary-command-key
-              run: terraform plan -input=false -no-color -out tfplan
+    #         - name: Terraform Plan
+    #           working-directory: terraform
+    #           env:
+    #             TF_IN_AUTOMATION: true
+    #             TF_INPUT: false
+    #             TF_VAR_lightsail_instance_name: culinary-command
+    #             TF_VAR_blueprint_id: ubuntu_22_04
+    #             TF_VAR_bundle_id: nano_2_0
+    #             TF_VAR_key_pair_name: culinary-command-key
+    #           run: terraform plan -input=false -no-color -out tfplan
 
-            - name: Terraform Apply
-              if: github.ref == 'refs/heads/main'
-              working-directory: terraform
-              env:
-                  TF_IN_AUTOMATION: true
-                  TF_INPUT: false
-                  TF_VAR_lightsail_instance_name: culinary-command
-                  TF_VAR_blueprint_id: ubuntu_22_04
-                  TF_VAR_bundle_id: nano_2_0
-                  TF_VAR_key_pair_name: culinary-command-key
-              run: terraform apply -input=false -auto-approve tfplan
+    #         - name: Terraform Apply
+    #           if: github.ref == 'refs/heads/main'
+    #           working-directory: terraform
+    #           env:
+    #               TF_IN_AUTOMATION: true
+    #               TF_INPUT: false
+    #               TF_VAR_lightsail_instance_name: culinary-command
+    #               TF_VAR_blueprint_id: ubuntu_22_04
+    #               TF_VAR_bundle_id: nano_2_0
+    #               TF_VAR_key_pair_name: culinary-command-key
+    #           run: terraform apply -input=false -auto-approve tfplan
 
-            - name: Display output variables
-              working-directory: terraform
-              run: terraform output -no-color
+    #         - name: Display output variables
+    #           working-directory: terraform
+    #           run: terraform output -no-color
 
-            - name: Start SSH agent
-              uses: webfactory/ssh-agent@v0.9.0
-              with:
-                ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+    #         - name: Start SSH agent
+    #           uses: webfactory/ssh-agent@v0.9.0
+    #           with:
+    #             ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
-            - name: Upload artifacts to Lightsail instance
-              run: |
-                REMOTE_TMP="~/deploy/${{ github.sha }}"
-                ssh ${{ secrets.LIGHTSAIL_USER }}@${{ secrets.LIGHTSAIL_HOST}} "mkdir -p $REMOTE_TMP"
-                rsync -az --delete --exclude='.env' "${{ env.PUBLISH_DIR }}/" "${{ secrets.LIGHTSAIL_USER }}@${{ secrets.LIGHTSAIL_HOST }}:$REMOTE_TMP/"
+    #         - name: Upload artifacts to Lightsail instance
+    #           run: |
+    #             REMOTE_TMP="~/deploy/${{ github.sha }}"
+    #             ssh ${{ secrets.LIGHTSAIL_USER }}@${{ secrets.LIGHTSAIL_HOST}} "mkdir -p $REMOTE_TMP"
+    #             rsync -az --delete --exclude='.env' "${{ env.PUBLISH_DIR }}/" "${{ secrets.LIGHTSAIL_USER }}@${{ secrets.LIGHTSAIL_HOST }}:$REMOTE_TMP/"
 
-            - name: Construct environment variables
-              run: |
-                ssh ${{ secrets.LIGHTSAIL_USER }}@${{ secrets.LIGHTSAIL_HOST }} << "REMOTE_EOF"
-                  sudo mkdir -p /var/www/culinarycommand
-                  sudo tee /var/www/culinarycommand/.env > /dev/null << EOF
-                  ASPNETCORE_ENVIRONMENT=Production
-                  ASPNETCORE_URLS=http://0.0.0.0:5000
-                  ConnectionStrings__DefaultConnection="Server=${{ secrets.RDS_HOST }};Port=3306;Database=${{ secrets.RDS_DB_NAME }};Uid=${{ secrets.RDS_DB_USER }};Pwd=${{ secrets.RDS_DB_PASSWORD }};SslMode=Required;"
-                  GOOGLE_API_KEY=${{ secrets.GOOGLE_API_KEY }}
-                  COGNITO_CLIENT_SECRET=${{ secrets.COGNITO_CLIENT_SECRET }}
-                  Authentication__Cognito__ClientId=${{ secrets.COGNITO_CLIENT_ID }}
-                  Authentication__Cognito__ClientSecret=${{ secrets.COGNITO_CLIENT_SECRET }}
-                  Authentication__Cognito__Domain=${{ secrets.COGNITO_DOMAIN }}
-                  Authentication__Cognito__UserPoolId=${{ secrets.COGNITO_USER_POOL_ID }}
-                  AWS__Region=${{ env.AWS_REGION }}
-                  LogoDev__PublishableKey=${{ secrets.LOGODEV_PUBLISHABLE_KEY }}
-                  LogoDev__SecretKey=${{ secrets.LOGODEV_SECRET_KEY }}
-                EOF
-                  sudo chown ${{ secrets.LIGHTSAIL_USER }}:${{ secrets.LIGHTSAIL_USER }} /var/www/culinarycommand/.env
-                  sudo chmod 640 /var/www/culinarycommand/.env
+    #         - name: Construct environment variables
+    #           run: |
+    #             ssh ${{ secrets.LIGHTSAIL_USER }}@${{ secrets.LIGHTSAIL_HOST }} << "REMOTE_EOF"
+    #               sudo mkdir -p /var/www/culinarycommand
+    #               sudo tee /var/www/culinarycommand/.env > /dev/null << EOF
+    #               ASPNETCORE_ENVIRONMENT=Production
+    #               ASPNETCORE_URLS=http://0.0.0.0:5000
+    #               ConnectionStrings__DefaultConnection="Server=${{ secrets.RDS_HOST }};Port=3306;Database=${{ secrets.RDS_DB_NAME }};Uid=${{ secrets.RDS_DB_USER }};Pwd=${{ secrets.RDS_DB_PASSWORD }};SslMode=Required;"
+    #               GOOGLE_API_KEY=${{ secrets.GOOGLE_API_KEY }}
+    #               COGNITO_CLIENT_SECRET=${{ secrets.COGNITO_CLIENT_SECRET }}
+    #               Authentication__Cognito__ClientId=${{ secrets.COGNITO_CLIENT_ID }}
+    #               Authentication__Cognito__ClientSecret=${{ secrets.COGNITO_CLIENT_SECRET }}
+    #               Authentication__Cognito__Domain=${{ secrets.COGNITO_DOMAIN }}
+    #               Authentication__Cognito__UserPoolId=${{ secrets.COGNITO_USER_POOL_ID }}
+    #               AWS__Region=${{ env.AWS_REGION }}
+    #               LogoDev__PublishableKey=${{ secrets.LOGODEV_PUBLISHABLE_KEY }}
+    #               LogoDev__SecretKey=${{ secrets.LOGODEV_SECRET_KEY }}
+    #             EOF
+    #               sudo chown ${{ secrets.LIGHTSAIL_USER }}:${{ secrets.LIGHTSAIL_USER }} /var/www/culinarycommand/.env
+    #               sudo chmod 640 /var/www/culinarycommand/.env
 
-                  sudo tee /var/www/culinarycommand/.env.export > /dev/null << EOF
-                  ASPNETCORE_ENVIRONMENT=Production
-                  ASPNETCORE_URLS=http://0.0.0.0:5000
-                  export ConnectionStrings__DefaultConnection="Server=${{ secrets.RDS_HOST }};Port=3306;Database=${{ secrets.RDS_DB_NAME }};Uid=${{ secrets.RDS_DB_USER }};Pwd=${{ secrets.RDS_DB_PASSWORD }};SslMode=Required;"
-                  export GOOGLE_API_KEY="${{ secrets.GOOGLE_API_KEY }}"
-                  export COGNITO_CLIENT_SECRET="${{ secrets.COGNITO_CLIENT_SECRET }}"
-                  export Authentication__Cognito__ClientId="${{ secrets.COGNITO_CLIENT_ID }}"
-                  export Authentication__Cognito__ClientSecret="${{ secrets.COGNITO_CLIENT_SECRET }}"
-                  export Authentication__Cognito__Domain="${{ secrets.COGNITO_DOMAIN }}"
-                  export Authentication__Cognito__UserPoolId="${{ secrets.COGNITO_USER_POOL_ID }}"
-                  export AWS__Region="${{ env.AWS_REGION }}"
-                  export LogoDev__PublishableKey="${{ secrets.LOGODEV_PUBLISHABLE_KEY }}"
-                  export LogoDev__SecretKey="${{ secrets.LOGODEV_SECRET_KEY }}"
-                EOF
-                  sudo chown ${{ secrets.LIGHTSAIL_USER }}:${{ secrets.LIGHTSAIL_USER }} /var/www/culinarycommand/.env.export
-                  sudo chmod 640 /var/www/culinarycommand/.env.export
-                REMOTE_EOF
+    #               sudo tee /var/www/culinarycommand/.env.export > /dev/null << EOF
+    #               ASPNETCORE_ENVIRONMENT=Production
+    #               ASPNETCORE_URLS=http://0.0.0.0:5000
+    #               export ConnectionStrings__DefaultConnection="Server=${{ secrets.RDS_HOST }};Port=3306;Database=${{ secrets.RDS_DB_NAME }};Uid=${{ secrets.RDS_DB_USER }};Pwd=${{ secrets.RDS_DB_PASSWORD }};SslMode=Required;"
+    #               export GOOGLE_API_KEY="${{ secrets.GOOGLE_API_KEY }}"
+    #               export COGNITO_CLIENT_SECRET="${{ secrets.COGNITO_CLIENT_SECRET }}"
+    #               export Authentication__Cognito__ClientId="${{ secrets.COGNITO_CLIENT_ID }}"
+    #               export Authentication__Cognito__ClientSecret="${{ secrets.COGNITO_CLIENT_SECRET }}"
+    #               export Authentication__Cognito__Domain="${{ secrets.COGNITO_DOMAIN }}"
+    #               export Authentication__Cognito__UserPoolId="${{ secrets.COGNITO_USER_POOL_ID }}"
+    #               export AWS__Region="${{ env.AWS_REGION }}"
+    #               export LogoDev__PublishableKey="${{ secrets.LOGODEV_PUBLISHABLE_KEY }}"
+    #               export LogoDev__SecretKey="${{ secrets.LOGODEV_SECRET_KEY }}"
+    #             EOF
+    #               sudo chown ${{ secrets.LIGHTSAIL_USER }}:${{ secrets.LIGHTSAIL_USER }} /var/www/culinarycommand/.env.export
+    #               sudo chmod 640 /var/www/culinarycommand/.env.export
+    #             REMOTE_EOF
 
-            - name: RDS port check (via peering)
-              run: |
-                ssh ${{ secrets.LIGHTSAIL_USER }}@${{ secrets.LIGHTSAIL_HOST }} "\
-                  command -v nc >/dev/null || (sudo apt-get update && sudo apt-get install -y netcat-openbsd); \
-                  nc -vz ${{ secrets.RDS_HOST }} 3306 || (echo 'RDS port is not reachable over peering' && exit 1)"
+    #         - name: RDS port check (via peering)
+    #           run: |
+    #             ssh ${{ secrets.LIGHTSAIL_USER }}@${{ secrets.LIGHTSAIL_HOST }} "\
+    #               command -v nc >/dev/null || (sudo apt-get update && sudo apt-get install -y netcat-openbsd); \
+    #               nc -vz ${{ secrets.RDS_HOST }} 3306 || (echo 'RDS port is not reachable over peering' && exit 1)"
 
-            - name: Run EF migrations bundle on Lightsail
-              run: |
-                ssh ${{ secrets.LIGHTSAIL_USER }}@${{ secrets.LIGHTSAIL_HOST }} "\
-                  sudo systemctl stop '${{ env.SERVICE_NAME }}' || true && \
-                  cd \$HOME/deploy/${{ github.sha }} && \
-                  set -a && . /var/www/culinarycommand/.env.export && set +a && \
-                  command -v ./efbundle >/dev/null || chmod +x ./efbundle && \
-                  ./efbundle && \
-                  sudo systemctl start '${{ env.SERVICE_NAME }}' || true"
+    #         - name: Run EF migrations bundle on Lightsail
+    #           run: |
+    #             ssh ${{ secrets.LIGHTSAIL_USER }}@${{ secrets.LIGHTSAIL_HOST }} "\
+    #               sudo systemctl stop '${{ env.SERVICE_NAME }}' || true && \
+    #               cd \$HOME/deploy/${{ github.sha }} && \
+    #               set -a && . /var/www/culinarycommand/.env.export && set +a && \
+    #               command -v ./efbundle >/dev/null || chmod +x ./efbundle && \
+    #               ./efbundle && \
+    #               sudo systemctl start '${{ env.SERVICE_NAME }}' || true"
 
-            - name: Activate release and restart service
-              run: |
-                ssh ${{ secrets.LIGHTSAIL_USER }}@${{ secrets.LIGHTSAIL_HOST }} "\
-                  sudo mkdir -p '${{ env.REMOTE_APP_DIR }}' && \
-                  sudo rsync -a --delete --exclude='.env' ~/deploy/${{ github.sha }}/ '${{ env.REMOTE_APP_DIR }}'/ && \
-                  sudo chown -R www-data:www-data '${{ env.REMOTE_APP_DIR }}' && \
-                  rm -rf ~/deploy/${{ github.sha }} && \
-                  sudo systemctl restart '${{ env.SERVICE_NAME }}' && \
-                  sudo systemctl --no-pager --lines=5 status '${{ env.SERVICE_NAME }}' || true"
+    #         - name: Activate release and restart service
+    #           run: |
+    #             ssh ${{ secrets.LIGHTSAIL_USER }}@${{ secrets.LIGHTSAIL_HOST }} "\
+    #               sudo mkdir -p '${{ env.REMOTE_APP_DIR }}' && \
+    #               sudo rsync -a --delete --exclude='.env' ~/deploy/${{ github.sha }}/ '${{ env.REMOTE_APP_DIR }}'/ && \
+    #               sudo chown -R www-data:www-data '${{ env.REMOTE_APP_DIR }}' && \
+    #               rm -rf ~/deploy/${{ github.sha }} && \
+    #               sudo systemctl restart '${{ env.SERVICE_NAME }}' && \
+    #               sudo systemctl --no-pager --lines=5 status '${{ env.SERVICE_NAME }}' || true"
     deploy-autoscaling-group:
         runs-on: ubuntu-latest
         needs: build
