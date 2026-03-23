@@ -57,6 +57,12 @@
                     <i class="fas fa-building me-2"></i>Company
                 </button>
             </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link @(ActiveTab == "inventory-config" ? "active" : "")"
+                        @onclick="@(() => NavigateToTab("inventory-config"))" type="button">
+                    <i class="bi bi-rulers me-2"></i>Inventory Config
+                </button>
+            </li>
         </ul>
 
         <!-- Tab Content -->
@@ -85,6 +91,10 @@
                     
                 case "company":
                     <SettingsCompany />
+                    break;
+
+                case "inventory-config":
+                    <SettingsInventoryConfigurations />
                     break;
 
                 default:
