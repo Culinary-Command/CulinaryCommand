@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Identity;
 using CulinaryCommand.Models;
 using CulinaryCommandApp.Services;
 using System.ComponentModel.DataAnnotations;
+using System.Net;
 
 namespace CulinaryCommand.Services
 {
@@ -31,6 +32,7 @@ namespace CulinaryCommand.Services
         Task<User?> GetUserByInviteTokenAsync(string token);
         Task<bool> ActivateUserAsync(string token, string password);
         Task<User> InviteUserAsync(string firstName, string lastName, string email, string role, int companyId, int createdByUserId, List<int> locationIds);
+        Task ResendInviteAsync(int userId, int requestedByUserId);
     }
 
     public class UserService : IUserService
@@ -39,13 +41,14 @@ namespace CulinaryCommand.Services
         private readonly AppDbContext _context;
         private readonly IEmailSender _emailSender;
         private readonly CognitoProvisioningService _cognito;
+        private readonly IConfiguration _config;
 
-
-        public UserService(AppDbContext context, IEmailSender emailSender, CognitoProvisioningService cognito)
+        public UserService(AppDbContext context, IEmailSender emailSender, CognitoProvisioningService cognito, IConfiguration config)
         {
             _context = context;
             _emailSender = emailSender;
             _cognito = cognito;
+            _config = config;
         }
 
         public async Task<User> CreateUserAsync(User user)
@@ -463,19 +466,36 @@ namespace CulinaryCommand.Services
             if (string.IsNullOrWhiteSpace(user.InviteToken))
                 throw new InvalidOperationException("User does not have an invite token.");
 
-            string link = $"https://culinary-command.com/account/setup?token={user.InviteToken}";
+            var baseUrl = _config["App:PublicBaseUrl"]?.TrimEnd('/');
+            if (string.IsNullOrWhiteSpace(baseUrl))
+                throw new InvalidOperationException("Missing configuration: App:PublicBaseUrl");
 
-            string subject = "Your CulinaryCommand Account Invitation";
-            string body = $@"
+            var token = Uri.EscapeDataString(user.InviteToken);
+            var link = $"{baseUrl}/account/setup?token={token}";
+
+            var companyName = WebUtility.HtmlEncode(user.Company?.Name ?? "your company");
+
+            var subject = "You're invited to CulinaryCommand";
+            var body = $@"
+                <div style='font-family:Arial,sans-serif;line-height:1.5'>
                 <h2>Welcome to CulinaryCommand!</h2>
-                <p>You have been invited to join <strong>{user.Company?.Name}</strong>.</p>
-                <p>Click the button below to set your password and activate your account:</p>
-                <p><a href='{link}' style='padding:10px 20px;background:#4CAF50;color:white;text-decoration:none;border-radius:4px;'>Set Your Password</a></p>
-                <p>If the button doesn't work, use this link:</p>
-                <p>{link}</p>
-            ";
+                <p>You’ve been invited to join <strong>{companyName}</strong>.</p>
 
-            // implement actual email send (SendGrid, SMTP, Mailgun, whatever)
+                <p style='margin:24px 0'>
+                    <a href='{link}'
+                    style='display:inline-block;padding:10px 18px;background:#16a34a;color:white;text-decoration:none;border-radius:8px;'>
+                    Set up your account
+                    </a>
+                </p>
+
+                <p>If the button doesn’t work, paste this link into your browser:</p>
+                <p><a href='{link}'>{link}</a></p>
+
+                <p style='color:#6b7280;font-size:12px;margin-top:24px'>
+                    This link expires in 7 days.
+                </p>
+                </div>";
+
             await _emailSender.SendEmailAsync(user.Email!, subject, body);
         }
 
@@ -512,64 +532,93 @@ namespace CulinaryCommand.Services
         }
 
         public async Task<User> InviteUserAsync(
-                string firstName,
-                string lastName,
-                string email,
-                string role,
-                int companyId,
-                int createdByUserId,
-                List<int> locationIds)
+            string firstName,
+            string lastName,
+            string email,
+            string role,
+            int companyId,
+            int createdByUserId,
+            List<int> locationIds)
         {
             if (string.IsNullOrWhiteSpace(email)) throw new InvalidOperationException("Email is required.");
             if (locationIds == null || locationIds.Count == 0) throw new InvalidOperationException("At least one location must be selected.");
 
             email = email.Trim().ToLowerInvariant();
 
-            // create invited user for ONE location (your existing method)
-            var primaryLocId = locationIds[0];
-
-            var user = await CreateInvitedUserForLocationAsync(new CreateUserForLocationRequest
+            var strategy = _context.Database.CreateExecutionStrategy();
+            return await strategy.ExecuteAsync(async () =>
             {
-                FirstName = firstName?.Trim() ?? "",
-                LastName = lastName?.Trim() ?? "",
-                Email = email,
-                Role = role,
-                LocationId = primaryLocId
-            }, companyId, createdByUserId);
+                await using var tx = await _context.Database.BeginTransactionAsync();
 
-            // now assign any additional locations (since CreateInvitedUserForLocationAsync only attaches one)
-            var extraLocs = locationIds.Skip(1).ToList();
-            if (extraLocs.Count > 0)
-            {
-                // add userlocations for extras
-                foreach (var locId in extraLocs)
+                var primaryLocId = locationIds[0];
+
+                var user = await CreateInvitedUserForLocationAsync(new CreateUserForLocationRequest
                 {
-                    _context.UserLocations.Add(new UserLocation
-                    {
-                        UserId = user.Id,
-                        LocationId = locId
-                    });
+                    FirstName = firstName?.Trim() ?? "",
+                    LastName = lastName?.Trim() ?? "",
+                    Email = email,
+                    Role = role,
+                    LocationId = primaryLocId
+                }, companyId, createdByUserId);
 
-                    // if manager, add manager mapping too
-                    if (string.Equals(role, "Manager", StringComparison.OrdinalIgnoreCase))
+                var extraLocs = locationIds.Skip(1).ToList();
+                if (extraLocs.Count > 0)
+                {
+                    foreach (var locId in extraLocs)
                     {
-                        _context.ManagerLocations.Add(new ManagerLocation
-                        {
-                            UserId = user.Id,
-                            LocationId = locId
-                        });
+                        _context.UserLocations.Add(new UserLocation { UserId = user.Id, LocationId = locId });
+
+                        if (string.Equals(role, "Manager", StringComparison.OrdinalIgnoreCase))
+                            _context.ManagerLocations.Add(new ManagerLocation { UserId = user.Id, LocationId = locId });
                     }
+                    await _context.SaveChangesAsync();
                 }
 
-                await _context.SaveChangesAsync();
-            }
+                // ensure Company is present for email template
+                user.Company ??= await _context.Companies.FirstOrDefaultAsync(c => c.Id == companyId);
 
-            // send invite email
-            await SendInviteEmailAsync(user);
+                try
+                {
+                    await SendInviteEmailAsync(user);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Invite email failed for {user.Email}: {ex}");
+                    throw;
+                }
 
-            return user;
+                await tx.CommitAsync();
+                return user;
+            });
         }
 
+        public async Task ResendInviteAsync(int userId, int requestedByUserId)
+        {
+            // Load user + company (for email template)
+            var user = await _context.Users
+                .Include(u => u.Company)
+                .FirstOrDefaultAsync(u => u.Id == userId);
+
+            if (user == null)
+                throw new InvalidOperationException("User not found.");
+
+            // Only resend for users who haven't activated yet
+            if (user.IsActive == true)
+                throw new InvalidOperationException("User is already active.");
+
+            // Ensure they have an invite token (generate a fresh one every resend)
+            user.InviteToken = Guid.NewGuid().ToString("N");
+            user.InviteTokenExpires = DateTime.UtcNow.AddDays(7);
+            user.UpdatedAt = DateTime.UtcNow;
+
+            // Optional: track who resent it (if you have a column for this, otherwise remove)
+            // user.InviteResentByUserId = requestedByUserId;
+            // user.InviteResentAt = DateTime.UtcNow;
+
+            await _context.SaveChangesAsync();
+
+            await SendInviteEmailAsync(user);
+        }
 
     }
 }

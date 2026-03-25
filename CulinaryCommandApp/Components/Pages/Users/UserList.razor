@@ -150,6 +150,17 @@ else
                                                         disabled="@(!priv)">
                                                     Delete
                                                 </button>
+                                                @if (!u.IsActive)
+                                                {
+                                                    <button type="button"
+                                                        class="btn btn-sm btn-outline-primary"
+                                                        disabled="@(_resendingId == u.Id)"
+                                                        @onclick="() => ResendInvite(u.Id)"
+                                                        @onclick:stopPropagation="true"
+                                                        @onclick:preventDefault="true">
+                                                    @(_resendingId == u.Id ? "Sending..." : "Resend Invite")
+                                                </button>
+                                                }
                                             </div>
 
                                         </div>
@@ -188,6 +199,10 @@ else
     private string? _toast;
     private CancellationTokenSource? _toastCts;
     private Dictionary<int, string> _locNamesById = new();
+    private int? _resendingId;
+    private string? _error;
+    private readonly SemaphoreSlim _loadGate = new(1, 1);
+    private bool _disposed;
 
 
     protected override async Task OnInitializedAsync()
@@ -218,7 +233,7 @@ else
 
         LocationState.OnChange += RefreshUsers;
 
-        await LoadUsersAsync();
+        await LoadUsersSafeAsync();
     }
 
     private void UpdatePriv()
@@ -244,15 +259,31 @@ else
 
     private void RefreshUsers()
     {
-        _ = InvokeAsync(async () =>
+        // run on the Blazor sync context, but DO NOT start overlapping DB calls
+        _ = InvokeAsync(RefreshUsersAsync);
+    }
+
+    private async Task RefreshUsersAsync()
+    {
+        await LoadUsersSafeAsync();
+        if (!_disposed) StateHasChanged();
+    }
+
+    private async Task LoadUsersSafeAsync()
+    {
+        await _loadGate.WaitAsync();
+        try
         {
             await LoadUsersAsync();
 
             _locNamesById = LocationState.ManagedLocations
+                .Where(l => l != null)
                 .ToDictionary(l => l.Id, l => l.Name);
-
-            StateHasChanged();
-        });
+        }
+        finally
+        {
+            _loadGate.Release();
+        }
     }
 
 
@@ -264,7 +295,7 @@ else
         if (!priv) return;
 
         await Users.DeleteUserAsync(id);
-        await LoadUsersAsync();
+        await LoadUsersSafeAsync();
         await InvokeAsync(StateHasChanged);
     }
 
@@ -289,9 +320,11 @@ else
 
     public void Dispose()
     {
+        _disposed = true;
         LocationState.OnChange -= RefreshUsers;
         _toastCts?.Cancel();
         _toastCts?.Dispose();
+        _loadGate.Dispose();
     }
 
     private async Task CopyInvite(string url)
@@ -351,5 +384,35 @@ else
             "employee" => "bg-secondary",
             _ => "bg-dark"
         };
+    }
+
+    private async Task ResendInvite(int userId)
+    {
+        _error = null;
+        _resendingId = userId;
+
+        try
+        {
+            var ctx = await UserCtx.GetAsync();
+            if (ctx?.User is null)
+                throw new InvalidOperationException("Not authenticated.");
+
+            await Users.ResendInviteAsync(userId, ctx.User.Id);
+
+            // refresh list so new token appears + pending stays accurate
+            await LoadUsersSafeAsync();
+
+            ShowToast("Invite resent!");
+        }
+        catch (Exception ex)
+        {
+            _error = ex.Message;
+            ShowToast("Invite resend failed");
+        }
+        finally
+        {
+            _resendingId = null;
+            StateHasChanged();
+        }
     }
 }
