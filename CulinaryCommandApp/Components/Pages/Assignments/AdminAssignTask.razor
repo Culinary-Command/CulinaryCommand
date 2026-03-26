@@ -7,6 +7,7 @@
 @using CulinaryCommandApp.Recipe.Services;
 @using CulinaryCommandApp.Recipe.Services.Interfaces;
 @using CulinaryCommandApp.Recipe.Entities;
+@using CulinaryCommand.Data.Models
 @inject IUserContextService UserCtx
 @inject NavigationManager Nav
 @inject ILocationService LocationService
@@ -16,6 +17,7 @@
 @inject IRecipeService RecipeService
 @inject ITaskNotificationService TaskNotifier
 @inject ITaskLibraryService TaskLibraryService
+@inject IJSRuntime JS
 
 @implements IDisposable
 @rendermode InteractiveServer
@@ -35,6 +37,19 @@ else if (!allowed)
 else
 {
     <div class="container-fluid px-3 px-lg-4 mt-4 assign-task-page">
+        @if (!string.IsNullOrWhiteSpace(createTemplateSuccess))
+            {
+                <div class="alert alert-success">
+                    @createTemplateSuccess
+                </div>
+            }
+
+            @if (!string.IsNullOrWhiteSpace(createTemplateError))
+            {
+                <div class="alert alert-danger">
+                    @createTemplateError
+                </div>
+            }
         <div class="d-flex flex-column flex-lg-row justify-content-between align-items-lg-center gap-3 mb-4">
             <div>
                 <div class="text-uppercase text-muted small fw-semibold mb-1">Kitchen Operations</div>
@@ -76,15 +91,21 @@ else
                                     <h5 class="fw-semibold mb-1">Task Lists</h5>
                                     <div class="text-muted small">Reusable groups like Dish Closing or Morning Prep</div>
                                 </div>
-                                <span class="badge text-bg-primary">@taskLists.Count</span>
+
+                                <div class="d-flex align-items-center gap-2">
+                                    <span class="badge text-bg-primary">@taskLists.Count</span>
+                                    <button class="btn btn-primary btn-sm" @onclick="OpenCreateTaskListModal">
+                                        + New List
+                                    </button>
+                                </div>
                             </div>
 
                             <div class="input-group input-group-sm mb-3">
                                 <span class="input-group-text bg-white"><i class="bi bi-search"></i></span>
                                 <input class="form-control"
-                                       placeholder="Search lists..."
-                                       @bind="taskListSearch"
-                                       @bind:event="oninput" />
+                                    placeholder="Search lists..."
+                                    @bind="taskListSearch"
+                                    @bind:event="oninput" />
                             </div>
 
                             <div style="max-height: 320px; overflow-y: auto;">
@@ -100,16 +121,41 @@ else
                                             <div class="d-flex justify-content-between align-items-start gap-3">
                                                 <div>
                                                     <div class="fw-semibold">@list.Name</div>
-                                                    <div class="text-muted small mb-2">@list.Description</div>
+
+                                                    @if (!string.IsNullOrWhiteSpace(list.Description))
+                                                    {
+                                                        <div class="text-muted small mb-2">@list.Description</div>
+                                                    }
+
                                                     <span class="badge bg-white text-secondary border">
-                                                        @(list.Items?.Count ?? 0) task@( (list.Items?.Count ?? 0) == 1 ? "" : "s")
+                                                        @(list.Items?.Count ?? 0) task@((list.Items?.Count ?? 0) == 1 ? "" : "s")
                                                     </span>
                                                 </div>
 
-                                                <button class="btn btn-success btn-sm"
-                                                        @onclick="() => SelectTaskListAsync(list.Id)">
-                                                    Assign List
-                                                </button>
+                                                <div class="d-flex flex-wrap gap-2 justify-content-end">
+                                                    <button class="btn btn-success btn-sm"
+                                                            @onclick="() => SelectTaskListAsync(list.Id)">
+                                                        Assign List
+                                                    </button>
+
+                                                    <button type="button"
+                                                            class="btn btn-outline-secondary btn-sm"
+                                                            @onclick="() => OpenManageTaskListTemplatesModal(list)">
+                                                        Manage Tasks
+                                                    </button>
+
+                                                    <button type="button"
+                                                            class="btn btn-outline-primary btn-sm"
+                                                            @onclick="() => OpenEditTaskListModal(list)">
+                                                        Edit
+                                                    </button>
+
+                                                    <button type="button"
+                                                            class="btn btn-outline-danger btn-sm"
+                                                            @onclick="() => ConfirmArchiveTaskList(list.Id)">
+                                                        Delete
+                                                    </button>
+                                                </div>
                                             </div>
                                         </div>
                                     }
@@ -126,7 +172,13 @@ else
                                     <h5 class="fw-semibold mb-1">Task Library</h5>
                                     <div class="text-muted small">Select one or more reusable tasks</div>
                                 </div>
-                                <span class="badge text-bg-success">@taskTemplates.Count</span>
+
+                                <div class="d-flex align-items-center gap-2">
+                                    <span class="badge text-bg-success">@taskTemplates.Count</span>
+                                    <button class="btn btn-success btn-sm" @onclick="OpenCreateTemplateModal">
+                                        + New Template
+                                    </button>
+                                </div>
                             </div>
 
                             <div class="input-group input-group-sm mb-3">
@@ -159,9 +211,9 @@ else
                                             <div class="d-flex justify-content-between align-items-start gap-3">
                                                 <div class="d-flex gap-2">
                                                     <input class="form-check-input mt-1"
-                                                           type="checkbox"
-                                                           checked="@isSelected"
-                                                           @onchange="() => ToggleTemplateSelection(template.Id)" />
+                                                        type="checkbox"
+                                                        checked="@isSelected"
+                                                        @onchange="() => ToggleTemplateSelection(template.Id)" />
 
                                                     <div>
                                                         <div class="fw-semibold">@template.Name</div>
@@ -184,7 +236,20 @@ else
                                                         </div>
                                                     </div>
                                                 </div>
+
+                                                <button type="button"
+                                                        class="btn btn-outline-primary btn-sm"
+                                                        @onclick="() => OpenEditTemplateModal(template)">
+                                                    Edit
+                                                </button>
+                                                <button type="button"
+                                                        class="btn btn-outline-danger btn-sm"
+                                                        @onclick="() => ConfirmArchive(template.Id)">
+                                                    Delete
+                                                </button>
+
                                             </div>
+                                            
                                         </div>
                                     }
                                 }
@@ -472,6 +537,41 @@ else
     </div>
 }
 
+<CreateTaskTemplateModal
+    IsOpen="@showCreateTemplateModal"
+    LocationId="@(selectedLocationId ?? 0)"
+    CreatedByUserId="@_ctx?.User?.Id"
+    OnClose="CloseCreateTemplateModal"
+    OnSave="SaveTemplate" />
+
+<EditTaskTemplateModal
+    IsOpen="@showEditTemplateModal"
+    Template="@editingTemplate"
+    OnClose="CloseEditTemplateModal"
+    OnSave="SaveEditedTemplate" />
+
+<CreateTaskListModal
+    IsOpen="@showCreateTaskListModal"
+    LocationId="@(selectedLocationId ?? 0)"
+    CreatedByUserId="@_ctx?.User?.Id"
+    OnClose="CloseCreateTaskListModal"
+    OnSave="SaveTaskList" />
+
+<EditTaskListModal
+    IsOpen="@showEditTaskListModal"
+    TaskList="@editingTaskList"
+    OnClose="CloseEditTaskListModal"
+    OnSave="SaveEditedTaskList" />
+
+<ManageTaskListTemplatesModal
+    IsOpen="@showManageTaskListTemplatesModal"
+    TaskList="@managingTaskList"
+    AvailableTemplates="@taskTemplates"
+    CurrentTemplates="@selectedTaskListTemplates"
+    OnAddTemplates="AddTemplatesToManagingTaskList"
+    RemoveTemplate="RemoveTemplateFromManagingTaskList"
+    OnClose="CloseManageTaskListTemplatesModal" />
+
 @code {
     private UserContext? _ctx;
     private bool ready;
@@ -499,6 +599,19 @@ else
     private readonly List<string> priorityOptions = new() { "Low", "Normal", "High", "Critical" };
     private readonly List<string> statusBuckets = new() { "Pending", "In Progress", "Completed" };
 
+    private bool showCreateTemplateModal;
+    private string? createTemplateError;
+    private string? createTemplateSuccess;
+    private bool showEditTemplateModal;
+    private TaskTemplate? editingTemplate;
+    private bool showCreateTaskListModal;
+    private bool showEditTaskListModal;
+    private bool showManageTaskListTemplatesModal;
+
+    private TaskList? editingTaskList;
+    private TaskList? managingTaskList;
+
+    private List<TaskTemplate> selectedTaskListTemplates = new();
     protected override async Task OnInitializedAsync()
     {
         _ctx = await UserCtx.GetAsync();
@@ -802,6 +915,273 @@ else
         selectedTemplateIds.Clear();
     }
 
+    private void OpenCreateTemplateModal()
+    {
+        createTemplateError = null;
+        createTemplateSuccess = null;
+        showCreateTemplateModal = true;
+    }
+
+    private Task CloseCreateTemplateModal()
+    {
+        showCreateTemplateModal = false;
+        return Task.CompletedTask;
+    }
+
+    private async Task SaveTemplate(CreateTaskTemplateRequest request)
+    {
+        createTemplateError = null;
+        createTemplateSuccess = null;
+
+        try
+        {
+            var createdTemplate = await TaskLibraryService.CreateTemplateAsync(request);
+
+            showCreateTemplateModal = false;
+            await LoadTaskTemplatesAsync();
+
+            createTemplateSuccess = $"Template '{createdTemplate.Name}' created successfully.";
+        }
+        catch (Exception ex)
+        {
+            createTemplateError = ex.Message;
+        }
+
+        await InvokeAsync(StateHasChanged);
+    }
+
+    private void OpenEditTemplateModal(TaskTemplate template)
+    {
+        createTemplateError = null;
+        createTemplateSuccess = null;
+
+        editingTemplate = template;
+        showEditTemplateModal = true;
+    }
+
+    private Task CloseEditTemplateModal()
+    {
+        showEditTemplateModal = false;
+        editingTemplate = null;
+        return Task.CompletedTask;
+    }
+
+    private async Task SaveEditedTemplate(UpdateTaskTemplateRequest request)
+    {
+        createTemplateError = null;
+        createTemplateSuccess = null;
+
+        try
+        {
+            var updatedTemplate = await TaskLibraryService.UpdateTemplateAsync(request);
+
+            showEditTemplateModal = false;
+            editingTemplate = null;
+
+            await LoadTaskTemplatesAsync();
+
+            createTemplateSuccess = $"Template '{updatedTemplate.Name}' updated successfully.";
+        }
+        catch (Exception ex)
+        {
+            createTemplateError = ex.Message;
+        }
+
+        await InvokeAsync(StateHasChanged);
+    }
+
+    private async Task ArchiveTemplate(int templateId)
+    {
+        try
+        {
+            await TaskLibraryService.ArchiveTemplateAsync(templateId);
+            await LoadTaskTemplatesAsync();
+
+            createTemplateSuccess = "Template removed successfully.";
+        }
+        catch (Exception ex)
+        {
+            createTemplateError = ex.Message;
+        }
+    }
+
+    private async Task ConfirmArchive(int templateId)
+    {
+        var confirm = await JS.InvokeAsync<bool>("confirm", "Delete this template?");
+        
+        if (confirm)
+        {
+            await ArchiveTemplate(templateId);
+        }
+    }
+
+    private void OpenCreateTaskListModal()
+    {
+        createTemplateError = null;
+        createTemplateSuccess = null;
+        showCreateTaskListModal = true;
+    }
+
+    private Task CloseCreateTaskListModal()
+    {
+        showCreateTaskListModal = false;
+        return Task.CompletedTask;
+    }
+
+    private async Task SaveTaskList(CreateTaskListRequest request)
+    {
+        createTemplateError = null;
+        createTemplateSuccess = null;
+
+        try
+        {
+            var createdTaskList = await TaskLibraryService.CreateTaskListAsync(request);
+
+            showCreateTaskListModal = false;
+            await LoadTaskListsAsync();
+
+            createTemplateSuccess = $"Task list '{createdTaskList.Name}' created successfully.";
+        }
+        catch (Exception ex)
+        {
+            createTemplateError = ex.Message;
+        }
+
+        await InvokeAsync(StateHasChanged);
+    }
+
+    private void OpenEditTaskListModal(TaskList taskList)
+    {
+        createTemplateError = null;
+        createTemplateSuccess = null;
+        editingTaskList = taskList;
+        showEditTaskListModal = true;
+    }
+
+    private Task CloseEditTaskListModal()
+    {
+        showEditTaskListModal = false;
+        editingTaskList = null;
+        return Task.CompletedTask;
+    }
+
+    private async Task SaveEditedTaskList(UpdateTaskListRequest request)
+    {
+        createTemplateError = null;
+        createTemplateSuccess = null;
+
+        try
+        {
+            var updatedTaskList = await TaskLibraryService.UpdateTaskListAsync(request);
+
+            showEditTaskListModal = false;
+            editingTaskList = null;
+
+            await LoadTaskListsAsync();
+
+            createTemplateSuccess = $"Task list '{updatedTaskList.Name}' updated successfully.";
+        }
+        catch (Exception ex)
+        {
+            createTemplateError = ex.Message;
+        }
+
+        await InvokeAsync(StateHasChanged);
+    }
+
+    private async Task ConfirmArchiveTaskList(int taskListId)
+    {
+        var confirm = await JS.InvokeAsync<bool>("confirm", "Delete this task list?");
+        if (confirm)
+        {
+            await ArchiveTaskList(taskListId);
+        }
+    }
+
+    private async Task ArchiveTaskList(int taskListId)
+    {
+        createTemplateError = null;
+        createTemplateSuccess = null;
+
+        try
+        {
+            await TaskLibraryService.ArchiveTaskListAsync(taskListId);
+            await LoadTaskListsAsync();
+
+            createTemplateSuccess = "Task list removed successfully.";
+        }
+        catch (Exception ex)
+        {
+            createTemplateError = ex.Message;
+        }
+
+        await InvokeAsync(StateHasChanged);
+    }
+
+    private async Task OpenManageTaskListTemplatesModal(TaskList taskList)
+    {
+        createTemplateError = null;
+        createTemplateSuccess = null;
+
+        managingTaskList = taskList;
+        selectedTaskListTemplates = await TaskLibraryService.GetTemplatesForTaskListAsync(taskList.Id);
+        showManageTaskListTemplatesModal = true;
+    }
+
+    private Task CloseManageTaskListTemplatesModal()
+    {
+        showManageTaskListTemplatesModal = false;
+        managingTaskList = null;
+        selectedTaskListTemplates = new List<TaskTemplate>();
+        return Task.CompletedTask;
+    }
+
+    private async Task AddTemplatesToManagingTaskList(List<int> templateIds)
+    {
+        if (managingTaskList == null || !templateIds.Any())
+            return;
+
+        createTemplateError = null;
+        createTemplateSuccess = null;
+
+        try
+        {
+            await TaskLibraryService.AddTemplatesToTaskListAsync(managingTaskList.Id, templateIds);
+            selectedTaskListTemplates = await TaskLibraryService.GetTemplatesForTaskListAsync(managingTaskList.Id);
+            await LoadTaskListsAsync();
+
+            createTemplateSuccess = "Templates added to task list.";
+        }
+        catch (Exception ex)
+        {
+            createTemplateError = ex.Message;
+        }
+
+        await InvokeAsync(StateHasChanged);
+    }
+
+    private async Task RemoveTemplateFromManagingTaskList(int templateId)
+    {
+        if (managingTaskList == null)
+            return;
+
+        createTemplateError = null;
+        createTemplateSuccess = null;
+
+        try
+        {
+            await TaskLibraryService.RemoveTemplateFromTaskListAsync(managingTaskList.Id, templateId);
+            selectedTaskListTemplates = await TaskLibraryService.GetTemplatesForTaskListAsync(managingTaskList.Id);
+
+            createTemplateSuccess = "Template removed from task list.";
+        }
+        catch (Exception ex)
+        {
+            createTemplateError = ex.Message;
+        }
+
+        await InvokeAsync(StateHasChanged);
+    }
     private string SelectedLocationName =>
         LocationState.CurrentLocation?.Name ?? "Select a location";
 

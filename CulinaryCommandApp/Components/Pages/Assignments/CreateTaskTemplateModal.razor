@@ -1,0 +1,134 @@
+@using CulinaryCommand.Data.Enums
+@using CulinaryCommand.Data.Models
+@using Microsoft.AspNetCore.Components.Forms
+
+@if (IsOpen)
+{
+    <div class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0,0,0,.45);">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content border-0 shadow rounded-4">
+                <div class="modal-header">
+                    <h5 class="modal-title">Create Task Template</h5>
+                    <button type="button" class="btn-close" @onclick="Close"></button>
+                </div>
+
+                <EditForm Model="Model" OnValidSubmit="HandleSubmit">
+                    <DataAnnotationsValidator />
+                    <ValidationSummary />
+
+                    <div class="modal-body">
+                        <div class="row g-3">
+
+                            <div class="col-12 col-md-6">
+                                <label class="form-label">Task Name</label>
+                                <InputText class="form-control" @bind-Value="Model.Name" />
+                            </div>
+
+                            <div class="col-12 col-md-6">
+                                <label class="form-label">Station</label>
+                                <InputSelect class="form-select" @bind-Value="Model.Station">
+                                    @foreach (var station in StationOptions)
+                                    {
+                                        <option value="@station">@station</option>
+                                    }
+                                </InputSelect>
+                            </div>
+
+                            <div class="col-12 col-md-6">
+                                <label class="form-label">Task Type</label>
+                                <InputSelect class="form-select" @bind-Value="Model.Kind">
+                                    <option value="@WorkTaskKind.Generic">General</option>
+                                    <option value="@WorkTaskKind.PrepFromRecipe">Prep from Recipe</option>
+                                </InputSelect>
+                            </div>
+
+                            <div class="col-12 col-md-6">
+                                <label class="form-label">Priority</label>
+                                <InputSelect class="form-select" @bind-Value="Model.Priority">
+                                    @foreach (var p in PriorityOptions)
+                                    {
+                                        <option value="@p">@p</option>
+                                    }
+                                </InputSelect>
+                            </div>
+
+                            <div class="col-12 col-md-6">
+                                <label class="form-label">Estimated Minutes</label>
+                                <InputNumber class="form-control" @bind-Value="Model.DefaultEstimatedMinutes" />
+                            </div>
+
+                            <div class="col-12">
+                                <label class="form-label">Notes</label>
+                                <InputTextArea class="form-control" rows="3" @bind-Value="Model.Notes" />
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-secondary" @onclick="Close" disabled="@IsSaving">
+                            Cancel
+                        </button>
+                        <button type="submit" class="btn btn-success" disabled="@IsSaving">
+                            @(IsSaving ? "Saving..." : "Create Template")
+                        </button>
+                    </div>
+                </EditForm>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter] public bool IsOpen { get; set; }
+    [Parameter] public int LocationId { get; set; }
+    [Parameter] public int? CreatedByUserId { get; set; }
+
+    [Parameter] public EventCallback OnClose { get; set; }
+    [Parameter] public EventCallback<CreateTaskTemplateRequest> OnSave { get; set; }
+
+    private CreateTaskTemplateRequest Model = new();
+    private bool IsSaving;
+
+    private readonly List<string> StationOptions = new()
+    {
+        "Prep", "Grill", "Saute", "Expo", "Pastry", "Dish"
+    };
+
+    private readonly List<string> PriorityOptions = new()
+    {
+        "Low", "Normal", "High", "Critical"
+    };
+
+    protected override void OnParametersSet()
+    {
+        if (IsOpen)
+        {
+            Model = new CreateTaskTemplateRequest
+            {
+                LocationId = LocationId,
+                CreatedByUserId = CreatedByUserId,
+                Station = "Prep",
+                Priority = "Normal",
+                Kind = WorkTaskKind.Generic
+            };
+        }
+    }
+
+    private async Task HandleSubmit()
+    {
+        IsSaving = true;
+
+        Model.LocationId = LocationId;
+        Model.CreatedByUserId = CreatedByUserId;
+
+        await OnSave.InvokeAsync(Model);
+
+        IsSaving = false;
+    }
+
+    private async Task Close()
+    {
+        await OnClose.InvokeAsync();
+    }
+}
