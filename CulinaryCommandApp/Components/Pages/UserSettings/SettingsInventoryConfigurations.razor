@@ -22,19 +22,12 @@
             </div>
         </div>
     }
-    else if (!_allowed)
-    {
-        <div class="alert alert-warning">
-            <i class="bi bi-exclamation-triangle me-2"></i>
-            You do not have permission to manage inventory configurations. Manager or Admin role required.
-        </div>
-    }
     else
     {
         <!-- Unit of Measurement Form -->
         <div class="security-section mb-4">
             <h5 class="mb-1">
-                <i class="bi bi-rulers me-2"></i>Unit of Measurement
+                Unit of Measurement
             </h5>
             <p class="text-muted small mb-3">Define standard units for ingredients and recipes in your kitchen</p>
 
@@ -54,11 +47,11 @@
                         <div class="form-text">Short form for display</div>
                         <ValidationMessage For="() => _form.Abbreviation" />
                     </div>
-                    <div class="col-md-6">
+                    @* <div class="col-md-6">
                         <label class="form-label">Conversion Factor</label>
                         <InputNumber class="form-control" @bind-Value="_form.ConversionFactor" />
                         <div class="form-text">Multiplier relative to base unit (e.g. 1000 for kg if gram is base)</div>
-                    </div>
+                    </div> *@
                 </div>
 
                 @if (!string.IsNullOrEmpty(_saveError))
@@ -202,12 +195,8 @@
 
         if (_ctx.User is not null)
         {
-            var role = _ctx.User.Role ?? string.Empty;
-            _allowed = role.Equals("Admin", StringComparison.OrdinalIgnoreCase)
-                    || role.Equals("Manager", StringComparison.OrdinalIgnoreCase);
-
-            if (_allowed)
-                _units = await UnitService.GetAllAsync();
+            _allowed = true;
+            _units = await UnitService.GetAllAsync();
         }
 
         _ready = true;
