@@ -1,0 +1,80 @@
+@using CulinaryCommand.Data.Models
+@using Microsoft.AspNetCore.Components.Forms
+
+@if (IsOpen)
+{
+    <div class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0,0,0,.45);">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 shadow rounded-4">
+                <div class="modal-header">
+                    <h5 class="modal-title">Create Task List</h5>
+                    <button type="button" class="btn-close" @onclick="Close"></button>
+                </div>
+
+                <EditForm Model="Model" OnValidSubmit="HandleSubmit">
+                    <DataAnnotationsValidator />
+                    <ValidationSummary />
+
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label class="form-label">Task List Name</label>
+                            <InputText class="form-control" @bind-Value="Model.Name" />
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Notes</label>
+                            <InputTextArea class="form-control" rows="3" @bind-Value="Model.Description" />
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-secondary" @onclick="Close" disabled="@IsSaving">
+                            Cancel
+                        </button>
+                        <button type="submit" class="btn btn-success" disabled="@IsSaving">
+                            @(IsSaving ? "Saving..." : "Create Task List")
+                        </button>
+                    </div>
+                </EditForm>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter] public bool IsOpen { get; set; }
+    [Parameter] public int LocationId { get; set; }
+    [Parameter] public int? CreatedByUserId { get; set; }
+    [Parameter] public EventCallback OnClose { get; set; }
+    [Parameter] public EventCallback<CreateTaskListRequest> OnSave { get; set; }
+
+    private CreateTaskListRequest Model = new();
+    private bool IsSaving;
+
+    protected override void OnParametersSet()
+    {
+        if (IsOpen)
+        {
+            Model = new CreateTaskListRequest
+            {
+                LocationId = LocationId,
+                CreatedByUserId = CreatedByUserId,
+                IsActive = true
+            };
+        }
+    }
+
+    private async Task HandleSubmit()
+    {
+        IsSaving = true;
+        Model.LocationId = LocationId;
+        Model.CreatedByUserId = CreatedByUserId;
+        await OnSave.InvokeAsync(Model);
+        IsSaving = false;
+    }
+
+    private async Task Close()
+    {
+        await OnClose.InvokeAsync();
+    }
+}

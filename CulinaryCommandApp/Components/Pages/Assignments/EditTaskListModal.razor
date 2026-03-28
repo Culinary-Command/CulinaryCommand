@@ -1,0 +1,80 @@
+@using CulinaryCommand.Data.Entities
+@using CulinaryCommand.Data.Models
+@using Microsoft.AspNetCore.Components.Forms
+
+@if (IsOpen && TaskList != null)
+{
+    <div class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0,0,0,.45);">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 shadow rounded-4">
+                <div class="modal-header">
+                    <h5 class="modal-title">Edit Task List</h5>
+                    <button type="button" class="btn-close" @onclick="Close"></button>
+                </div>
+
+                <EditForm Model="Model" OnValidSubmit="HandleSubmit">
+                    <DataAnnotationsValidator />
+                    <ValidationSummary />
+
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label class="form-label">Task List Name</label>
+                            <InputText class="form-control" @bind-Value="Model.Name" />
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Notes</label>
+                            <InputTextArea class="form-control" rows="3" @bind-Value="Model.Description" />
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-secondary" @onclick="Close" disabled="@IsSaving">
+                            Cancel
+                        </button>
+                        <button type="submit" class="btn btn-primary" disabled="@IsSaving">
+                            @(IsSaving ? "Saving..." : "Save Changes")
+                        </button>
+                    </div>
+                </EditForm>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter] public bool IsOpen { get; set; }
+    [Parameter] public TaskList? TaskList { get; set; }
+    [Parameter] public EventCallback OnClose { get; set; }
+    [Parameter] public EventCallback<UpdateTaskListRequest> OnSave { get; set; }
+
+    private UpdateTaskListRequest Model = new();
+    private bool IsSaving;
+
+    protected override void OnParametersSet()
+    {
+        if (IsOpen && TaskList != null)
+        {
+            Model = new UpdateTaskListRequest
+            {
+                Id = TaskList.Id,
+                Name = TaskList.Name,
+                Description = TaskList.Description,
+                LocationId = TaskList.LocationId,
+                IsActive = TaskList.IsActive
+            };
+        }
+    }
+
+    private async Task HandleSubmit()
+    {
+        IsSaving = true;
+        await OnSave.InvokeAsync(Model);
+        IsSaving = false;
+    }
+
+    private async Task Close()
+    {
+        await OnClose.InvokeAsync();
+    }
+}
