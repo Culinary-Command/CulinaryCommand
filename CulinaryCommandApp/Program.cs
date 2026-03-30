@@ -35,7 +35,7 @@ var builder = WebApplication.CreateBuilder(args);
 // =====================
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
-
+builder.Services.AddBlazorBootstrap();
 //
 // =====================
 // Cognito Authentication (MUST be before Build)
@@ -122,8 +122,12 @@ builder.Services.AddAuthorization();
 // =====================
 // AI Services
 // =====================
-builder.Services.AddSingleton<Client>(_ => new Client());
-builder.Services.AddScoped<AIReportingService>();
+builder.Services.AddSingleton<Client>(sp =>
+{
+    var apiKey = builder.Configuration["Google:ApiKey"]
+        ?? throw new InvalidOperationException("Missing config: Google:ApiKey");
+    return new Client(apiKey: apiKey);
+});builder.Services.AddScoped<AIReportingService>();
 
 //
 // =====================
