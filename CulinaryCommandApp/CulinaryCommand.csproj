@@ -15,7 +15,6 @@
     <PackageReference Include="AWSSDK.CognitoIdentityProvider" Version="4.0.5.1" />
     <PackageReference Include="AWSSDK.Extensions.NETCore.Setup" Version="4.0.3.22" />
     <PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
-    <PackageReference Include="Blazor.Bootstrap" Version="3.5.0" />
     <PackageReference Include="Google.GenAI" Version="0.13.1" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.Cookies" Version="2.3.9" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="9.0.0" />
@@ -29,7 +28,6 @@
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.IdentityModel.Protocols.OpenIdConnect" Version="8.15.0" />
-    <PackageReference Include="Plotly.Blazor" Version="7.0.0" />
     <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="9.0.0" />
     <Content Include="AIDashboard\**\*"> 
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory> 

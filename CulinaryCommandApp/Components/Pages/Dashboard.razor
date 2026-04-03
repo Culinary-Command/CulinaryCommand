@@ -6,20 +6,10 @@
 @using CulinaryCommandApp.AIDashboard.Services.Reporting
 @using CulinaryCommandApp.AIDashboard.Services.DTOs
 @using CulinaryCommand.Services
-@using CulinaryCommandApp.Inventory.Services.Interfaces
-@using CulinaryCommandApp.Inventory.Services
-@using CulinaryCommandApp.Inventory.DTOs
-@using CulinaryCommand.Data
-@using CulinaryCommand.PurchaseOrder.Entities
-@using Microsoft.EntityFrameworkCore
 @inject Microsoft.AspNetCore.Hosting.IWebHostEnvironment Env
-@inject AppDbContext Db
 @inject NavigationManager Nav
 @inject AIReportingService ReportingService
 @inject IUserContextService UserCtx
-@inject IInventoryManagementService InventorySvc
-@inject ITaskAssignmentService TaskSvc
-@inject LocationState LocationState
 
 @if (!_ready)
 {
@@ -28,7 +18,7 @@
 else if (!_isSignedIn)
 {
     <div class="text-center mt-5">
-        You're not signed in.
+        You’re not signed in.
         <button class="btn btn-success" @onclick="NavigateToSignIn">Go to Sign In</button>
     </div>
 }
@@ -50,148 +40,6 @@ else
 
         <hr />
 
-        <!-- ── Charts Row ───────────────────────────────────────────── -->
-        <div class="row g-4 mt-2">
-
-            <!-- Low Stock Items -->
-            <div class="col-lg-8">
-                <div class="card h-100">
-                    <div class="card-header fw-semibold text-danger">Low Stock Items (@_lowStockItems.Count)</div>
-                    <div class="card-body p-0">
-                        @if (_lowStockItems.Any())
-                        {
-                            <div class="table-responsive">
-                                <table class="table table-sm table-hover mb-0">
-                                    <thead class="table-light">
-                                        <tr>
-                                            <th>Ingredient</th>
-                                            <th>Category</th>
-                                            <th>In Stock</th>
-                                            <th>Reorder Level</th>
-                                            <th>Unit</th>
-                                            <th>Vendor</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @foreach (var item in _lowStockItems)
-                                        {
-                                            <tr class="table-warning">
-                                                <td>@item.Name</td>
-                                                <td>@item.Category</td>
-                                                <td>@item.CurrentQuantity.ToString("0.##")</td>
-                                                <td>@item.ReorderLevel.ToString("0.##")</td>
-                                                <td>@item.Unit</td>
-                                                <td>@(item.VendorName ?? "—")</td>
-                                            </tr>
-                                        }
-                                    </tbody>
-                                </table>
-                            </div>
-                        }
-                        else
-                        {
-                            <p class="text-muted p-3 mb-0">All inventory items are sufficiently stocked.</p>
-                        }
-                    </div>
-                </div>
-            </div>
-
-            <!-- Task Status Breakdown -->
-            <div class="col-lg-4">
-                <div class="card h-100">
-                    <div class="card-header fw-semibold">Task Status Breakdown</div>
-                    <div class="card-body">
-                        @if (_taskData.Any())
-                        {
-                            <PlotlyChart @bind-Config="_chartConfig"
-                                         @bind-Layout="_taskLayout"
-                                         @bind-Data="_taskChartData" />
-                        }
-                        else
-                        {
-                            <p class="text-muted">No tasks for this location.</p>
-                        }
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- ── Employee Task Completion ────────────────────────────── -->
-        <div class="row g-4 mt-2">
-            <div class="col-lg-5">
-                <div class="card h-100">
-                    <div class="card-header fw-semibold">Tasks Completed per Employee</div>
-                    <div class="card-body p-0">
-                        @if (_employeeTaskCounts.Any())
-                        {
-                            <table class="table table-sm table-hover mb-0">
-                                <thead class="table-light">
-                                    <tr>
-                                        <th>Employee</th>
-                                        <th class="text-center">Completed</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach (var e in _employeeTaskCounts)
-                                    {
-                                        <tr>
-                                            <td>@e.Name</td>
-                                            <td class="text-center">
-                                                <span class="badge text-bg-success">@e.Count</span>
-                                            </td>
-                                        </tr>
-                                    }
-                                </tbody>
-                            </table>
-                        }
-                        else
-                        {
-                            <p class="text-muted p-3 mb-0">No completed tasks yet.</p>
-                        }
-                    </div>
-                </div>
-            </div>
-        </div>
-
-
-        <!-- ── Recent Activity ─────────────────────────────────────── -->
-        <div class="card mt-4">
-            <div class="card-header d-flex justify-content-between align-items-center">
-                <span class="fw-semibold">Recent Activity</span>
-                <small class="text-muted">Last 7 days</small>
-            </div>
-            <div class="card-body p-0">
-                @if (!_activityFeed.Any())
-                {
-                    <p class="text-muted p-3 mb-0">No recent activity.</p>
-                }
-                else
-                {
-                    <ul class="list-group list-group-flush">
-                        @foreach (var item in _activityFeed)
-                        {
-                            <li class="list-group-item d-flex align-items-start gap-3 py-3">
-                                <span class="badge rounded-pill @item.BadgeClass fs-6 mt-1">
-                                    <i class="bi @item.Icon"></i>
-                                </span>
-                                <div class="flex-grow-1">
-                                    <div>@item.Text</div>
-                                    @if (!string.IsNullOrWhiteSpace(item.Who))
-                                    {
-                                        <small class="text-muted">@item.Who</small>
-                                    }
-                                </div>
-                                <small class="text-muted text-nowrap">@TimeAgo(item.When)</small>
-                            </li>
-                        }
-                    </ul>
-                }
-            </div>
-        </div>
-
-        <hr />
-
-        <!-- ── AI Weekly Analysis ───────────────────────────────────── -->
         <div class="card mt-4">
             <div class="card-body">
                 <h5 class="card-title">Weekly Report Analysis</h5>
@@ -292,54 +140,20 @@ else
 }
 
 @code {
-    // ── Auth ─────────────────────────────────────────────────────────
     private bool _ready;
     private bool _isSignedIn;
     private string? _role;
-    private int? _locationId;
 
-    // ── AI ───────────────────────────────────────────────────────────
     private bool _aiLoading;
     private string? _aiAnalysis;
     private AIAnalysisResultDTO? _aiAnalysisObj;
     private bool _aiLoadedOnce;
 
-    // ── Inventory ────────────────────────────────────────────────────
-    private List<InventoryItemDTO> _inventoryData = new();
-    private List<InventoryItemDTO> _lowStockItems = new();
-
-    // ── Activity feed ────────────────────────────────────────────────
-    private record ActivityItem(string Icon, string BadgeClass, string Text, string? Who, DateTime When);
-    private List<ActivityItem> _activityFeed = new();
-
-    // ── Task chart ───────────────────────────────────────────────────
-    private List<CulinaryCommand.Data.Entities.Tasks> _taskData = new();
-    private IList<ITrace> _taskChartData = new List<ITrace>();
-    private Layout _taskLayout = new();
-
-    // ── Employee task completion ──────────────────────────────────────
-    private record EmployeeCount(string Name, int Count);
-    private List<EmployeeCount> _employeeTaskCounts = new();
-
-    // Shared config
-    private Config _chartConfig = new() { Responsive = true };
-
-    // ── Lifecycle ────────────────────────────────────────────────────
     protected override async Task OnInitializedAsync()
     {
         var ctx = await UserCtx.GetAsync();
         _isSignedIn = ctx.User?.Id != null;
         _role = ctx.User?.Role;
-
-        await LocationState.SetLocationsAsync(ctx.AccessibleLocations);
-        _locationId = LocationState.CurrentLocation?.Id;
-
-        if (_isSignedIn && _locationId.HasValue)
-        {
-            await LoadInventoryChartAsync(_locationId.Value);
-            await LoadTaskChartAsync(_locationId.Value);
-            await LoadActivityFeedAsync(_locationId.Value);
-        }
 
         _ready = true;
     }
@@ -354,163 +168,35 @@ else
             _aiLoading = true;
             StateHasChanged();
 
-            try
-            {
-                if (!string.IsNullOrWhiteSpace(_aiAnalysis))
+            try{
+               if (!string.IsNullOrWhiteSpace(_aiAnalysis))
                 {
                     var csvPath = Path.Combine(Env.ContentRootPath, "AIDashboard", "Services", "Reporting", "test_data.csv");
                     _aiAnalysis = await ReportingService.AnalyzeCsvAsync(csvPath);
-
+                    
+                    // Try to deserialize the returned JSON into the DTO so we can render structured cards UI.
                     if (!string.IsNullOrWhiteSpace(_aiAnalysis))
                     {
                         var options = new System.Text.Json.JsonSerializerOptions { PropertyNameCaseInsensitive = true };
                         _aiAnalysisObj = System.Text.Json.JsonSerializer.Deserialize<AIAnalysisResultDTO>(_aiAnalysis, options);
                     }
-                }
+                } 
             }
-            catch (Exception e)
+            catch(Exception e)
             {
                 Console.WriteLine($"AI Analysis failed: {e.Message}");
                 _aiAnalysisObj = null;
                 _aiAnalysis = null;
+
             }
-            finally
-            {
+            finally {
                 _aiLoading = false;
                 StateHasChanged();
             }
+            _aiLoading = false;
+            //_aiAnalysisObj = null;          //  Uncoomment above and delete curent like to activate AI
+            StateHasChanged();
         }
-    }
-
-    // ── Data loaders ─────────────────────────────────────────────────
-    private async Task LoadInventoryChartAsync(int locationId)
-    {
-        _inventoryData = await InventorySvc.GetItemsByLocationAsync(locationId);
-        _lowStockItems = _inventoryData
-            .Where(i => i.IsLowStock)
-            .OrderBy(i => i.CurrentQuantity)
-            .ToList();
-    }
-
-    private async Task LoadTaskChartAsync(int locationId)
-    {
-        _taskData = await TaskSvc.GetByLocationAsync(locationId);
-
-        var groups = _taskData
-            .GroupBy(t => string.IsNullOrWhiteSpace(t.Status) ? "Unknown" : t.Status)
-            .ToDictionary(g => g.Key, g => g.Count());
-
-        _taskChartData = new List<ITrace>
-        {
-            new Pie
-            {
-                Labels = groups.Keys.Select(k => (object)k).ToList(),
-                Values = groups.Values.Select(v => (object)v).ToList(),
-                Hole   = (decimal?)0.4
-            }
-        };
-
-        _taskLayout = new Layout
-        {
-            PaperBgColor = "transparent",
-            PlotBgColor  = "transparent",
-            Margin       = new Plotly.Blazor.LayoutLib.Margin { T = 10, B = 10, L = 10, R = 10 },
-            ShowLegend   = true
-        };
-
-        _employeeTaskCounts = _taskData
-            .Where(t => string.Equals(t.Status, "Completed", StringComparison.OrdinalIgnoreCase)
-                        && t.User != null)
-            .GroupBy(t => t.User!.Name ?? "Unknown")
-            .Select(g => new EmployeeCount(g.Key, g.Count()))
-            .OrderByDescending(e => e.Count)
-            .ToList();
-
-    }
-
-    private async Task LoadActivityFeedAsync(int locationId)
-    {
-        var cutoff = DateTime.UtcNow.AddDays(-7);
-        var items = new List<ActivityItem>();
-
-        // Completed tasks from already-loaded task data
-        var completedTasks = _taskData
-            .Where(t => string.Equals(t.Status, "Completed", StringComparison.OrdinalIgnoreCase)
-                        && t.UpdatedAt >= cutoff)
-            .OrderByDescending(t => t.UpdatedAt)
-            .Take(10);
-
-        foreach (var t in completedTasks)
-        {
-            var who = t.User?.Name ?? "Someone";
-            items.Add(new ActivityItem(
-                Icon:       "bi-check-circle-fill",
-                BadgeClass: "text-bg-success",
-                Text:       $"Task \"{t.Name}\" marked complete",
-                Who:        who,
-                When:       t.UpdatedAt
-            ));
-        }
-
-        // Tasks created in the last 7 days (non-completed)
-        var newTasks = _taskData
-            .Where(t => !string.Equals(t.Status, "Completed", StringComparison.OrdinalIgnoreCase)
-                        && t.CreatedAt >= cutoff)
-            .OrderByDescending(t => t.CreatedAt)
-            .Take(5);
-
-        foreach (var t in newTasks)
-        {
-            items.Add(new ActivityItem(
-                Icon:       "bi-clipboard-plus",
-                BadgeClass: "text-bg-primary",
-                Text:       $"New task assigned: \"{t.Name}\"",
-                Who:        t.User?.Name,
-                When:       t.CreatedAt
-            ));
-        }
-
-        // Recent purchase orders
-        var recentOrders = await Db.PurchaseOrders
-            .Where(po => po.LocationId == locationId && po.CreatedAt >= cutoff)
-            .OrderByDescending(po => po.CreatedAt)
-            .Take(5)
-            .ToListAsync();
-
-        foreach (var po in recentOrders)
-        {
-            var statusLabel = po.Status switch
-            {
-                PurchaseOrderStatus.Draft             => "created (Draft)",
-                PurchaseOrderStatus.Submitted         => "submitted",
-                PurchaseOrderStatus.PartiallyReceived => "partially received",
-                PurchaseOrderStatus.Received          => "received",
-                PurchaseOrderStatus.Cancelled         => "cancelled",
-                _                                     => po.Status.ToString()
-            };
-
-            items.Add(new ActivityItem(
-                Icon:       "bi-cart",
-                BadgeClass: "text-bg-warning",
-                Text:       $"Purchase order {po.OrderNumber} {statusLabel} — {po.VendorName}",
-                Who:        null,
-                When:       po.CreatedAt
-            ));
-        }
-
-        _activityFeed = items
-            .OrderByDescending(i => i.When)
-            .Take(15)
-            .ToList();
-    }
-
-    private static string TimeAgo(DateTime utc)
-    {
-        var diff = DateTime.UtcNow - utc;
-        if (diff.TotalMinutes < 1)  return "just now";
-        if (diff.TotalMinutes < 60) return $"{(int)diff.TotalMinutes}m ago";
-        if (diff.TotalHours   < 24) return $"{(int)diff.TotalHours}h ago";
-        return $"{(int)diff.TotalDays}d ago";
     }
 
     private void NavigateToSignIn()

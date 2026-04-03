@@ -57,6 +57,9 @@ namespace CulinaryCommandApp.Recipe.Services
 
         public async Task CreateAsync(Rec.Recipe recipe)
         {
+            if (string.IsNullOrWhiteSpace(recipe.Category))
+                throw new Exception("Category is required.");
+
             _db.Recipes.Add(recipe);
             await _db.SaveChangesAsync();
         }
