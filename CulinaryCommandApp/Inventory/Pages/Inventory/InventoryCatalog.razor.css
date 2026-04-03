@@ -28,24 +28,24 @@
 }
 
 .inventory-header {
-    background: var(--card);
-    border-radius: 16px;
-    padding: 22px 26px;
-    box-shadow: var(--shadow);
-    border: 1px solid var(--border);
-    margin-bottom: 18px;
+    padding: 8px 0 18px 16px;
+    border-left: 4px solid #2ca259;
+    margin-bottom: 20px;
 }
 
 .header-text h1 {
     font-family: "Space Grotesk", "Source Sans 3", sans-serif;
-    font-size: 1.6rem;
+    font-size: 1.5rem;
+    font-weight: 700;
     margin: 0 0 4px;
+    color: #1f2a37;
+    letter-spacing: -0.01em;
 }
 
 .header-text p {
     margin: 0;
-    color: var(--muted);
-    font-size: 0.95rem;
+    color: #6b7280;
+    font-size: 0.88rem;
 }
 
 .inventory-toolbar {
@@ -192,7 +192,6 @@
 }
 
 .inventory-table thead {
-    background: var(--green);
     color: var(--ink);
 }
 
@@ -204,6 +203,7 @@
     letter-spacing: 0.02em;
     text-transform: uppercase;
     cursor: pointer;
+    background-color: #2ca259;
 }
 
 .inventory-table thead th i {
@@ -355,7 +355,7 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    color: var(--green);
+    color: #2ca259;
     font-size: 0.85rem;
     font-weight: 600;
     transition: all 0.2s ease;
@@ -363,15 +363,15 @@
 
 .page-btn:hover,
 .page-nav:hover {
-    background: var(--green);
+    background: #2ca259;
     color: #ffffff;
-    border-color: var(--green);
+    border-color: #2ca259;
     box-shadow: 0 6px 12px rgba(10, 143, 60, 0.25);
 }
 
 .page-btn.active {
-    background: var(--green);
-    border-color: var(--green);
+    background: #2ca259;
+    border-color: #2ca259;
     color: #ffffff;
     box-shadow: 0 6px 12px rgba(10, 143, 60, 0.25);
 }
