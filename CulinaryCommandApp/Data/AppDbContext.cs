@@ -4,6 +4,7 @@ using CulinaryCommandApp.Inventory.Entities;
 using CulinaryCommandApp.Recipe.Entities;
 using PO = CulinaryCommand.PurchaseOrder.Entities;
 using V = CulinaryCommand.Vendor.Entities;
+using CulinaryCommand.Models;
 
 
 namespace CulinaryCommand.Data
@@ -23,6 +24,7 @@ namespace CulinaryCommand.Data
         public DbSet<TaskListItem> TaskListItems => Set<TaskListItem>();
         public DbSet<Company> Companies => Set<Company>();
         public DbSet<CulinaryCommandApp.Inventory.Entities.Ingredient> Ingredients => Set<CulinaryCommandApp.Inventory.Entities.Ingredient>();
+        public DbSet<StorageLocation> StorageLocations => Set<StorageLocation>();
         public DbSet<CulinaryCommandApp.Recipe.Entities.Recipe> Recipes => Set<CulinaryCommandApp.Recipe.Entities.Recipe>();
         public DbSet<CulinaryCommandApp.Recipe.Entities.RecipeIngredient> RecipeIngredients => Set<CulinaryCommandApp.Recipe.Entities.RecipeIngredient>();
         public DbSet<CulinaryCommandApp.Recipe.Entities.RecipeStep> RecipeSteps => Set<CulinaryCommandApp.Recipe.Entities.RecipeStep>();

@@ -5,14 +5,19 @@ namespace CulinaryCommandApp.Inventory.Entities
 {
     public class Ingredient
     {
-        public int Id {get; set;}
+        public int Id { get; set; }
 
         // display name of the ingredient (ex: "flour", "eggs")
         public string Name { get; set; } = string.Empty;
 
+
         // fk to the location this ingredient belongs to
         public int LocationId { get; set; }
         public Location? Location { get; set; }
+
+        // optional fk to the storage location (sub-location) for this ingredient
+        public int? StorageLocationId { get; set; }
+        public StorageLocation? StorageLocation { get; set; }
 
         // optional fk to the vendor that supplies this ingredient
         public int? VendorId { get; set; }

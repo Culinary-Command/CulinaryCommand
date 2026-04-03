@@ -23,6 +23,7 @@ using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.DataProtection;
 using CulinaryCommand.Vendor.Services;
 using System.IO;
+using CulinaryCommandApp.Inventory.Entities;
 
 
 
@@ -156,6 +157,7 @@ builder.Services.AddScoped<CognitoProvisioningService>();
 builder.Services.AddScoped<IRecipeService, RecipeService>();
 builder.Services.AddScoped<UnitService>();
 builder.Services.AddScoped<IngredientService>();
+builder.Services.AddScoped<StorageLocationService>();
 builder.Services.AddScoped<IIngredientService, IngredientService>();
 builder.Services.AddScoped<ILocationService, LocationService>();
 builder.Services.AddScoped<LocationState>();

@@ -20,5 +20,8 @@ namespace CulinaryCommandApp.Inventory.DTOs
         public int? VendorId { get; set; }
         public string? VendorName { get; set; }
         public string? VendorLogoUrl { get; set; }
+
+        public int? StorageLocationId { get; set; }
+        public string? StorageLocationName { get; set; }
     }
 }
