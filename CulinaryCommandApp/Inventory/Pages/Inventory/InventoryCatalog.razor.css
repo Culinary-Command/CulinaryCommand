@@ -28,24 +28,24 @@
 }
 
 .inventory-header {
-    background: var(--card);
-    border-radius: 16px;
-    padding: 22px 26px;
-    box-shadow: var(--shadow);
-    border: 1px solid var(--border);
-    margin-bottom: 18px;
+    padding: 8px 0 18px 16px;
+    border-left: 4px solid #2ca259;
+    margin-bottom: 20px;
 }
 
 .header-text h1 {
     font-family: "Space Grotesk", "Source Sans 3", sans-serif;
-    font-size: 1.6rem;
+    font-size: 1.5rem;
+    font-weight: 700;
     margin: 0 0 4px;
+    color: #1f2a37;
+    letter-spacing: -0.01em;
 }
 
 .header-text p {
     margin: 0;
-    color: var(--muted);
-    font-size: 0.95rem;
+    color: #6b7280;
+    font-size: 0.88rem;
 }
 
 .inventory-toolbar {
@@ -192,7 +192,6 @@
 }
 
 .inventory-table thead {
-    background: var(--green);
     color: var(--ink);
 }
 
@@ -204,6 +203,7 @@
     letter-spacing: 0.02em;
     text-transform: uppercase;
     cursor: pointer;
+    background-color: #2ca259;
 }
 
 .inventory-table thead th i {
@@ -230,8 +230,9 @@
     text-align: center;
 }
 
-.actions-col {
-    width: 100px;
+.ellipsis-col {
+    width: 40px;
+    text-align: center;
 }
 
 .name-cell .item-name {
@@ -245,85 +246,136 @@
     margin-top: 2px;
 }
 
+.unit-col,
+.inventory-table thead th.unit-col {
+    text-align: center;
+}
+
+.unit-badge {
+    display: inline-block;
+    padding: 3px 9px;
+    border-radius: 6px;
+    border: 1px solid #d1d5db;
+    font-size: 0.78rem;
+    font-family: "Source Sans 3", "Segoe UI", sans-serif;
+    font-weight: 500;
+    color: #4b5563;
+    letter-spacing: 0.03em;
+    background: transparent;
+}
+
 .category-pill {
     display: inline-flex;
     align-items: center;
-    padding: 6px 12px;
+    padding: 4px 10px;
     border-radius: 999px;
     font-size: 0.75rem;
-    font-weight: 700;
-    background: var(--pill);
-    color: #1f2a37;
+    font-weight: 600;
+    color: #374151;
 }
 
-.category-grains {
-    background: #fbbf24;
-    color: #78350f;
-}
+.category-produce       { background: #dcfce7; }
+.category-dairy-eggs    { background: #fef9c3; }
+.category-cheese        { background: #fef3c7; }
+.category-meat          { background: #ffe4e6; }
+.category-seafood       { background: #dbeafe; }
+.category-bakery        { background: #fce7f3; }
+.category-pasta-grains  { background: #fef08a; }
+.category-dry-goods     { background: #e5e7eb; }
+.category-spices        { background: #fde8d8; }
+.category-condiments    { background: #d1fae5; }
+.category-syrups        { background: #ede9fe; }
+.category-desserts      { background: #fce7f3; }
+.category-beer          { background: #fef3c7; }
+.category-wine          { background: #f3e8ff; }
+.category-spirits       { background: #e0e7ff; }
+.category-beverages     { background: #cffafe; }
+.category-prepared      { background: #f1f5f9; }
+.category-default       { background: #e5e7eb; }
 
-.category-dairy {
-    background: #a855f7;
-    color: #fafafa;
-}
-
-.category-oils {
-    background: #eab308;
-    color: #713f12;
-}
-
-.category-vegetables {
-    background: #22c55e;
-    color: #fafafa;
-}
-
-.category-meat {
-    background: #ef4444;
-    color: #fafafa;
-}
-
-.category-default {
-    background: #6b7280;
-    color: #ffffff;
-}
-
-.action-buttons {
-    display: flex;
-    gap: 8px;
-}
-
-.btn-action {
-    width: 32px;
-    height: 32px;
-    border-radius: 8px;
-    border: 1px solid #d1d5db;
-    background: #f3f4f6;
+.ellipsis-btn {
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
+    border: none;
+    background: transparent;
+    color: #9ca3af;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    color: var(--ink);
-    transition: all 0.2s ease;
+    font-size: 1rem;
+    opacity: 0;
+    transition: opacity 0.15s ease, background 0.15s ease;
+    cursor: pointer;
+}
+
+.ellipsis-btn:hover {
+    background: transparent;
+    color: #1f2a37;
+}
+
+.data-row:hover .ellipsis-btn {
+    opacity: 1;
+}
+
+.row-menu-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 200;
+}
+
+.row-menu-dialog {
+    position: fixed;
+    z-index: 201;
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 14px;
+    box-shadow: 0 20px 50px rgba(31, 42, 55, 0.15);
+    padding: 8px;
+    min-width: 180px;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.row-menu-label {
+    font-size: 0.78rem;
     font-weight: 600;
+    color: #9ca3af;
+    padding: 6px 12px 8px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    border-bottom: 1px solid #f3f4f6;
+    margin-bottom: 4px;
 }
 
-.btn-action:hover {
-    color: var(--ink);
-    border-color: #9ca3af;
-    background: #e5e7eb;
-    transform: translateY(-1px);
-    box-shadow: 0 6px 12px rgba(107, 114, 128, 0.2);
+.row-menu-action {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 12px;
+    border: none;
+    background: transparent;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    color: #1f2a37;
+    font-family: "Source Sans 3", "Segoe UI", sans-serif;
+    cursor: pointer;
+    text-align: left;
+    transition: background 0.15s ease;
+    width: 100%;
 }
 
-.btn-action.delete {
-    background: #ef4444;
-    border-color: #ef4444;
-    color: var(--ink);
+.row-menu-action:hover {
+    background: #f9fafb;
 }
 
-.btn-action.delete:hover {
-    color: var(--ink);
-    border-color: #dc2626;
-    background: #dc2626;
-    box-shadow: 0 6px 12px rgba(239, 68, 68, 0.3);
+.row-menu-action.delete {
+    color: #dc2626;
+}
+
+.row-menu-action.delete:hover {
+    background: #fef2f2;
 }
 
 .table-footer {
@@ -355,7 +407,7 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    color: var(--green);
+    color: #2ca259;
     font-size: 0.85rem;
     font-weight: 600;
     transition: all 0.2s ease;
@@ -363,15 +415,15 @@
 
 .page-btn:hover,
 .page-nav:hover {
-    background: var(--green);
+    background: #2ca259;
     color: #ffffff;
-    border-color: var(--green);
+    border-color: #2ca259;
     box-shadow: 0 6px 12px rgba(10, 143, 60, 0.25);
 }
 
 .page-btn.active {
-    background: var(--green);
-    border-color: var(--green);
+    background: #2ca259;
+    border-color: #2ca259;
     color: #ffffff;
     box-shadow: 0 6px 12px rgba(10, 143, 60, 0.25);
 }

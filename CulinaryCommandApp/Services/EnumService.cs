@@ -9,12 +9,22 @@ namespace CulinaryCommand.Services
             return new List<string>
             {
                 Category.Produce,
-                Category.Dairy,
-                Category.Meat,
+                Category.DairyEggs,
+                Category.Cheese,
+                Category.MeatPoultry,
+                Category.Seafood,
+                Category.Bakery,
+                Category.PastaGrains,
                 Category.DryGoods,
-                Category.Beverages,
+                Category.Spices,
                 Category.Condiments,
-                Category.Spices
+                Category.SyrupsMixes,
+                Category.Desserts,
+                Category.Beer,
+                Category.Wine,
+                Category.Spirits,
+                Category.Beverages,
+                Category.Prepared
             };
         }
 

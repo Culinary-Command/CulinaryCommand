@@ -16,6 +16,7 @@
 @inject StorageLocationService StorageLocService
 @inject IUserContextService UserCtx
 @inject NavigationManager Nav
+@inject IJSRuntime JS
 
 <div class="inventory-container">
     @if (!_ready)
@@ -46,7 +47,6 @@
         }
         else
         {
-
             <div class="inventory-toolbar">
                 <div class="search-bar">
                     <i class="bi bi-search"></i>
@@ -87,12 +87,11 @@
                             </th>
                             <th @onclick='() => SortBy("name")'>Item Name <i class="bi bi-arrow-down-up"></i></th>
                             <th>Category</th>
-                            <th>Unit</th>
-                            <th @onclick='() => SortBy("price")'>Cost/Unit <i class="bi bi-arrow-down-up"></i></th>
+                            <th class="unit-col">Unit</th>
                             <th @onclick='() => SortBy("supplier")'>Supplier <i class="bi bi-arrow-down-up"></i></th>
                             <th>Location</th>
                             <th>Notes</th>
-                            <th class="actions-col">Actions</th>
+                            <th class="ellipsis-col"></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -118,7 +117,7 @@
                         {
                             @foreach (var item in pagedItems)
                             {
-                                <tr>
+                                <tr class="data-row">
                                     <td class="checkbox-col">
                                         <input type="checkbox" checked="@selectedIds.Contains(item.Id)"
                                                @onchange="(e) => ToggleSelection(item.Id, e)" />
@@ -132,20 +131,14 @@
                                     <td>
                                         <span class="category-pill @GetCategoryClass(item.Category)">@item.Category</span>
                                     </td>
-                                    <td>@item.Unit</td>
-                                    <td>$@item.Price.ToString("F2")</td>
+                                    <td class="unit-col"><span class="unit-badge">@item.Unit</span></td>
                                     <td>@(item.VendorName ?? "—")</td>
                                     <td>@(item.StorageLocationName ?? "—")</td>
-                                    <td>@(string.IsNullOrWhiteSpace(item.Notes) ? "—" : item.Notes)</td>
-                                    <td class="actions-col">
-                                        <div class="action-buttons">
-                                            <button class="btn-action" @onclick="() => EditItem(item)" title="Edit">
-                                                <i class="bi bi-pencil"></i>
-                                            </button>
-                                            <button class="btn-action delete" @onclick="() => DeleteItem(item)" title="Delete">
-                                                <i class="bi bi-trash"></i>
-                                            </button>
-                                        </div>
+                                    <td>@(string.IsNullOrWhiteSpace(item.Notes) ? "-" : item.Notes)</td>
+                                    <td class="ellipsis-col">
+                                        <button class="ellipsis-btn" @onclick="(e) => ToggleMenu(item.Id, e)" @onclick:stopPropagation="true">
+                                            <i class="bi bi-three-dots-vertical"></i>
+                                        </button>
                                     </td>
                                 </tr>
                             }
@@ -177,8 +170,25 @@
                 </div>
             </div>
 
-        }
-        @* end @if (LocationState.CurrentLocation is not null) *@
+            @if (_openMenuId is not null)
+            {
+                <div class="row-menu-backdrop" @onclick="CloseMenu"></div>
+                <div class="row-menu-dialog" style="top: @(_menuY)px; left: @(_menuX)px;">
+                    @{ var _menuItem = pagedItems.FirstOrDefault(i => i.Id == _openMenuId); }
+                    @if (_menuItem is not null)
+                    {
+                        <div class="row-menu-label">@_menuItem.Name</div>
+                        <button class="row-menu-action" @onclick="() => { EditItem(_menuItem); CloseMenu(); }">
+                            <i class="bi bi-pencil-square"></i> Edit Item
+                        </button>
+                        <button class="row-menu-action delete" @onclick="() => { _ = DeleteItem(_menuItem); CloseMenu(); }">
+                            <i class="bi bi-trash3"></i> Delete Item
+                        </button>
+                    }
+                </div>
+            }
+
+        } @* end @if (LocationState.CurrentLocation is not null) *@
 
     } @* end else (_allowed) *@
 
@@ -322,6 +332,29 @@
     private HashSet<int> selectedIds = new();
     private List<string> categories = new();
     private List<string> storageLocations = new();
+
+    private int? _openMenuId = null;
+    private double _menuX = 0;
+    private double _menuY = 0;
+
+    private async Task ToggleMenu(int id, MouseEventArgs e)
+    {
+        if (_openMenuId == id)
+        {
+            _openMenuId = null;
+            return;
+        }
+        _openMenuId = id;
+        // Clamp to viewport so the dialog never clips off-screen
+        var dialogWidth = 190;
+        var dialogHeight = 110;
+        var viewportWidth = await JS.InvokeAsync<double>("eval", "window.innerWidth");
+        var viewportHeight = await JS.InvokeAsync<double>("eval", "window.innerHeight");
+        _menuX = Math.Min(e.ClientX - dialogWidth, viewportWidth - dialogWidth - 8);
+        _menuY = Math.Min(e.ClientY, viewportHeight - dialogHeight - 8);
+    }
+
+    private void CloseMenu() => _openMenuId = null;
 
     private bool showModal = false;
     private bool showStorageLocationModal = false;
@@ -476,12 +509,24 @@ i.VendorName).ToList(),
 
     private string GetCategoryClass(string? category) => category switch
     {
-        "Grains & Pasta" => "category-grains",
-        "Dairy" => "category-dairy",
-        "Oils & Sauces" => "category-oils",
-        "Vegetables" => "category-vegetables",
+        "Produce"        => "category-produce",
+        "Dairy & Eggs"   => "category-dairy-eggs",
+        "Cheese"         => "category-cheese",
         "Meat & Poultry" => "category-meat",
-        _ => "category-default"
+        "Seafood"        => "category-seafood",
+        "Bakery"         => "category-bakery",
+        "Pasta & Grains" => "category-pasta-grains",
+        "Dry Goods"      => "category-dry-goods",
+        "Spices"         => "category-spices",
+        "Condiments"     => "category-condiments",
+        "Syrups & Mixes" => "category-syrups",
+        "Desserts"       => "category-desserts",
+        "Beer"           => "category-beer",
+        "Wine"           => "category-wine",
+        "Spirits"        => "category-spirits",
+        "Beverages"      => "category-beverages",
+        "Prepared"       => "category-prepared",
+        _                => "category-default"
     };
 
     private bool IsPageSelected => pagedItems.Count > 0 && pagedItems.All(i => selectedIds.Contains(i.Id));
@@ -581,22 +626,6 @@ i.VendorName).ToList(),
             {
                 await InventoryService.AddItemAsync(modalItem);
             }
-            @* else
-            {
-                var dto = new InventoryItemDTO
-                {
-                    Id = editingItem.Id,
-                    Name = modalItem.Name,
-                    SKU = modalItem.SKU ?? "",
-                    Category = modalItem.Category ?? "",
-                    Price = modalItem.Price,
-                    CurrentQuantity = modalItem.CurrentQuantity,
-                    ReorderLevel = modalItem.ReorderLevel,
-                    UnitId = modalItem.UnitId,
-                    VendorId = modalItem.VendorId,
-                };
-                await InventoryService.UpdateItemAsync(dto);
-            } *@
             else
             {
                 // Resolve StorageLocationName -> StorageLocationId
@@ -619,7 +648,7 @@ i.VendorName).ToList(),
                     ReorderLevel = modalItem.ReorderLevel,
                     UnitId = modalItem.UnitId,
                     VendorId = modalItem.VendorId,
-                    StorageLocationId = storageLocId,  // ← add this
+                    StorageLocationId = storageLocId,
                 };
                 await InventoryService.UpdateItemAsync(dto);
             }
