@@ -8,9 +8,12 @@
 @using CulinaryCommandApp.Inventory.Services.Interfaces
 @using CulinaryCommand.Services
 @using CulinaryCommand.Services.UserContextSpace
+@using CulinaryCommand.Vendor.Services
+@using CulinaryCommand.Vendor.Entities
 
 @inject IInventoryManagementService InventoryService
 @inject IUnitService UnitService
+@inject IVendorService VendorService
 @inject LocationState LocationState
 @inject EnumService EnumService
 @inject StorageLocationService StorageLocService
@@ -132,7 +135,17 @@
                                         <span class="category-pill @GetCategoryClass(item.Category)">@item.Category</span>
                                     </td>
                                     <td class="unit-col"><span class="unit-badge">@item.Unit</span></td>
-                                    <td>@(item.VendorName ?? "—")</td>
+                                    <td>
+                                        @if (!string.IsNullOrEmpty(item.VendorLogoUrl))
+                                        {
+                                            <img src="@item.VendorLogoUrl" alt="@item.VendorName" title="@item.VendorName"
+                                                 style="width:32px;height:32px;object-fit:contain;" />
+                                        }
+                                        else
+                                        {
+                                            @(item.VendorName ?? "—")
+                                        }
+                                    </td>
                                     <td>@(item.StorageLocationName ?? "—")</td>
                                     <td>@(string.IsNullOrWhiteSpace(item.Notes) ? "-" : item.Notes)</td>
                                     <td class="ellipsis-col">
@@ -243,6 +256,16 @@
                     <label>SKU</label>
                     <input type="text" class="form-control" @bind="modalItem.SKU" />
                 </div>
+                <div class="form-group mb-3">
+                    <label>Supplier</label>
+                    <select class="form-control" @bind="modalItem.VendorId">
+                        <option value="">— No Supplier —</option>
+                        @foreach (var vendor in _vendors)
+                        {
+                            <option value="@vendor.Id">@vendor.Name</option>
+                        }
+                    </select>
+                </div>
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-group mb-3">
@@ -320,6 +343,7 @@
     private List<InventoryItemDTO> filteredItems = new();
     private List<InventoryItemDTO> pagedItems = new();
     private List<Unit> _units = new();
+    private List<Vendor> _vendors = new();
     private bool isLoading = true;
     private string searchTerm = "";
     private string selectedCategory = "";
@@ -435,6 +459,7 @@
         }
 
         itemCatalog = await InventoryService.GetItemsByLocationAsync(locId.Value);
+        _vendors = await VendorService.GetVendorsByLocationAsync(locId.Value);
 
         // Always start from the preset list so the modal always has options.
         // Merge in any DB-side categories not in the preset (e.g. legacy or custom data).
