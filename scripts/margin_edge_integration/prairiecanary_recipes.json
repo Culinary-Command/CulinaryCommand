@@ -1,0 +1,5579 @@
+{
+  "metadata": {
+    "createdFrom": [
+      "Printed Recipes - Portrait (1).pdf",
+      "Printed Recipes - Portrait (2).pdf",
+      "Printed Recipes - Portrait (3).pdf",
+      "Printed Recipes - Portrait (4).pdf",
+      "Printed Recipes - Portrait (5).pdf"
+    ],
+    "totalRecipePagesParsed": 127,
+    "uniqueRecipes": 106,
+    "dedupeRule": "Deduplicated by normalized recipe title; when duplicates existed, kept the most recent printedDate version, then the version with the longer method text."
+  },
+  "recipes": [
+    {
+      "title": "Airliners",
+      "sourceRestaurant": "Prairie Canary",
+      "sourceFile": "Printed Recipes - Portrait (2).pdf",
+      "printedDate": "11/05/2025",
+      "category": "Prepared items",
+      "recipeType": "Batch",
+      "allergens": "",
+      "equipment": "",
+      "shelfLife": "",
+      "yieldsText": "1 Each",
+      "yieldAmount": 1,
+      "yieldUnit": "Each",
+      "ingredients": [
+        {
+          "raw": "2.25 Pound Chicken, Whole",
+          "qty": 2.25,
+          "unit": "Pound",
+          "item": "Chicken, Whole"
+        }
+      ],
+      "methodText": "The purpose of this recipe is to calculate the cost of one chicken\nbreast generated from a whole chicken for use in other recipes\ncalling for an Airliner breast. Here is the total calcuation:\nIngredient:Chicken, Whole\nQuantity:2.25 lb\nUnit:Pound\nYield:100 % (not 22 %)\nNotes:\"Half of one 4.5 lb chicken yields one 8 oz airliner\nbreast.\"\n1 breast 8 oz",
+      "methodLines": [
+        "The purpose of this recipe is to calculate the cost of one chicken",
+        "breast generated from a whole chicken for use in other recipes",
+        "calling for an Airliner breast. Here is the total calcuation:",
+        "Ingredient:Chicken, Whole",
+        "Quantity:2.25 lb",
+        "Unit:Pound",
+        "Yield:100 % (not 22 %)",
+        "Notes:\"Half of one 4.5 lb chicken yields one 8 oz airliner",
+        "breast.\"",
+        "1 breast 8 oz"
+      ]
+    },
+    {
+      "title": "Alfredo Sauce",
+      "sourceRestaurant": "Prairie Canary",
+      "sourceFile": "Printed Recipes - Portrait (2).pdf",
+      "printedDate": "11/05/2025",
+      "category": "Prepared items",
+      "recipeType": "Batch",
+      "allergens": "",
+      "equipment": "",
+      "shelfLife": "7 Days",
+      "yieldsText": "3 Gallons",
+      "yieldAmount": 3,
+      "yieldUnit": "Gallons",
+      "ingredients": [
+        {
+          "raw": "8 Ounce Garlic, Peeled",
+          "qty": 8,
+          "unit": "Ounce",
+          "item": "Garlic, Peeled"
+        },
+        {
+          "raw": "1 Cup Onions, Yellow",
+          "qty": 1,
+          "unit": "Cup",
+          "item": "Onions, Yellow"
+        },
+        {
+          "raw": "1 Ounce Oil, Canola",
+          "qty": 1,
+          "unit": "Ounce",
+          "item": "Oil, Canola"
+        },
+        {
+          "raw": "1 Quart San Antonio Winery Velvet California Chablis 18L",
+          "qty": 1,
+          "unit": "Quart",
+          "item": "San Antonio Winery Velvet California Chablis 18L"
+        },
+        {
+          "raw": "6 Quart Heavy Cream",
+          "qty": 6,
+          "unit": "Quart",
+          "item": "Heavy Cream"
+        },
+        {
+          "raw": "2.5 Pound Cheese, Parmesan Grated",
+          "qty": 2.5,
+          "unit": "Pound",
+          "item": "Cheese, Parmesan Grated"
+        },
+        {
+          "raw": "1 Gallon Milk, Whole",
+          "qty": 1,
+          "unit": "Gallon",
+          "item": "Milk, Whole"
+        },
+        {
+          "raw": "1 Tablespoon Spice, Kosher Salt",
+          "qty": 1,
+          "unit": "Tablespoon",
+          "item": "Spice, Kosher Salt"
+        },
+        {
+          "raw": "0.5 Table- spoon Spice, Pepper Black Ground",
+          "qty": 0.5,
+          "unit": "",
+          "item": "Table- spoon Spice, Pepper Black Ground"
+        },
+        {
+          "raw": "6 Fluid OunceSlury",
+          "qty": 6,
+          "unit": "",
+          "item": "Fluid OunceSlury"
+        },
+        {
+          "raw": "0.5 Pound Butter, Salted",
+          "qty": 0.5,
+          "unit": "Pound",
+          "item": "Butter, Salted"
+        }
+      ],
+      "methodText": "No Method",
+      "methodLines": [
+        "No Method"
+      ]
+    },
+    {
+      "title": "Almond Butter",
+      "sourceRestaurant": "Hometown Heroes",
+      "sourceFile": "Printed Recipes - Portrait (3).pdf",
+      "printedDate": "04/08/2026",
+      "category": "Prepared items",
+      "recipeType": "Batch",
+      "allergens": "",
+      "equipment": "",
+      "shelfLife": "",
+      "yieldsText": "4 Quarts",
+      "yieldAmount": 4,
+      "yieldUnit": "Quarts",
+      "ingredients": [
+        {
+          "raw": "4 Bag Almonds, Lightly Salted",
+          "qty": 4,
+          "unit": "Bag",
+          "item": "Almonds, Lightly Salted"
+        }
+      ],
+      "methodText": "Pour almonds into a blender and blend on high until completely liquified.",
+      "methodLines": [
+        "Pour almonds into a blender and blend on high until completely liquified."
+      ]
+    },
+    {
+      "title": "Avocado Crema",
+      "sourceRestaurant": "Hometown Heroes",
+      "sourceFile": "Printed Recipes - Portrait (4).pdf",
+      "printedDate": "04/08/2026",
+      "category": "Prepared items",
+      "recipeType": "Batch",
+      "allergens": "",
+      "equipment": "",
+      "shelfLife": "",
+      "yieldsText": "1.5 Cups",
+      "yieldAmount": 1.5,
+      "yieldUnit": "Cups",
+      "ingredients": [
+        {
+          "raw": "1 Cup Sour Cream",
+          "qty": 1,
+          "unit": "Cup",
+          "item": "Sour Cream"
+        },
+        {
+          "raw": "2 Each Avocados, Fresh",
+          "qty": 2,
+          "unit": "Each",
+          "item": "Avocados, Fresh"
+        },
+        {
+          "raw": "1 Teaspoon Salt and pepper mixture",
+          "qty": 1,
+          "unit": "Teaspoon",
+          "item": "Salt and pepper mixture"
+        },
+        {
+          "raw": "1 Teaspoon Garlic, Fresh",
+          "qty": 1,
+          "unit": "Teaspoon",
+          "item": "Garlic, Fresh"
+        },
+        {
+          "raw": "1 Each Limes, Fresh",
+          "qty": 1,
+          "unit": "Each",
+          "item": "Limes, Fresh"
+        }
+      ],
+      "methodText": "No Method",
+      "methodLines": [
+        "No Method"
+      ]
+    },
+    {
+      "title": "Bordelasie Sauce",
+      "sourceRestaurant": "Hometown Heroes",
+      "sourceFile": "Printed Recipes - Portrait (4).pdf",
+      "printedDate": "04/08/2026",
+      "category": "Prepared items",
+      "recipeType": "Batch",
+      "allergens": "",
+      "equipment": "",
+      "shelfLife": "",
+      "yieldsText": "64 Fluid Ounces",
+      "yieldAmount": 64,
+      "yieldUnit": "Fluid Ounces",
+      "ingredients": [
+        {
+          "raw": "1 Bottle Lapis Luna Cabernet Sauvi- gnon",
+          "qty": 1,
+          "unit": "Bottle",
+          "item": "Lapis Luna Cabernet Sauvi- gnon"
+        },
+        {
+          "raw": "8 Ounce Shallots, Fresh, (1 large or 2 medium shallots)",
+          "qty": 8,
+          "unit": "Ounce",
+          "item": "Shallots, Fresh, (1 large or 2 medium shallots)"
+        },
+        {
+          "raw": "0.2 Ounce Spice, Thyme Ground, (or \u00bd teaspoon fresh thyme)",
+          "qty": 0.2,
+          "unit": "Ounce",
+          "item": "Spice, Thyme Ground, (or \u00bd teaspoon fresh thyme)"
+        },
+        {
+          "raw": "3 Each Spice, Bay Leaves",
+          "qty": 3,
+          "unit": "Each",
+          "item": "Spice, Bay Leaves"
+        },
+        {
+          "raw": "1 Tablespoon Base, Beef",
+          "qty": 1,
+          "unit": "Tablespoon",
+          "item": "Base, Beef"
+        },
+        {
+          "raw": "1 Ounce Butter, Salted",
+          "qty": 1,
+          "unit": "Ounce",
+          "item": "Butter, Salted"
+        },
+        {
+          "raw": "32 Fluid Ounce Tap Water",
+          "qty": 32,
+          "unit": "Fluid Ounce",
+          "item": "Tap Water"
+        }
+      ],
+      "methodText": "To a small saucepan, add wine, shallots, thyme, and bay leaf.\nBring to a boil over medium heat and cook until the mixture\nreduces by half, about 10 minutes.\nAdd the broth and bring to a boil again. Continue cooking until\nthis mixture reduces by half, 15-20 minutes.\nStrain the mixture through a fine mesh strainer and discard the\nsolids. Return the strained sauce to the saucepan and heat over\nmedium-low heat.\nIn a small bowl, combine the melted butter and flour until\nsmooth. Add this mixture to the saucepan and whisk until thick-\nened. Enjoy immediately.",
+      "methodLines": [
+        "To a small saucepan, add wine, shallots, thyme, and bay leaf.",
+        "Bring to a boil over medium heat and cook until the mixture",
+        "reduces by half, about 10 minutes.",
+        "Add the broth and bring to a boil again. Continue cooking until",
+        "this mixture reduces by half, 15-20 minutes.",
+        "Strain the mixture through a fine mesh strainer and discard the",
+        "solids. Return the strained sauce to the saucepan and heat over",
+        "medium-low heat.",
+        "In a small bowl, combine the melted butter and flour until",
+        "smooth. Add this mixture to the saucepan and whisk until thick-",
+        "ened. Enjoy immediately."
+      ]
+    },
+    {
+      "title": "Bourbon Fig Sauce",
+      "sourceRestaurant": "Prairie Canary",
+      "sourceFile": "Printed Recipes - Portrait (5).pdf",
+      "printedDate": "04/08/2026",
+      "category": "Prepared items",
+      "recipeType": "Batch",
+      "allergens": "",
+      "equipment": "",
+      "shelfLife": "",
+      "yieldsText": "1 Serving",
+      "yieldAmount": 1,
+      "yieldUnit": "Serving",
+      "ingredients": [
+        {
+          "raw": "1 Ounce PREP - Mushrooms",
+          "qty": 1,
+          "unit": "Ounce",
+          "item": "PREP - Mushrooms"
+        },
+        {
+          "raw": "1 Tablespoon Jam, Fig",
+          "qty": 1,
+          "unit": "Tablespoon",
+          "item": "Jam, Fig"
+        },
+        {
+          "raw": "0.5 Fluid Ounce Jack Daniels Shot",
+          "qty": 0.5,
+          "unit": "Fluid Ounce",
+          "item": "Jack Daniels Shot"
+        },
+        {
+          "raw": "0.5 Ounce Onions, Yellow",
+          "qty": 0.5,
+          "unit": "Ounce",
+          "item": "Onions, Yellow"
+        },
+        {
+          "raw": "2 Fluid OuncePREP - Chicken Stock from Base",
+          "qty": 2,
+          "unit": "",
+          "item": "Fluid OuncePREP - Chicken Stock from Base"
+        },
+        {
+          "raw": "2 Tablespoon Butter, Unsalted",
+          "qty": 2,
+          "unit": "Tablespoon",
+          "item": "Butter, Unsalted"
+        },
+        {
+          "raw": "0.01 Table- spoon Salt and pepper mixture",
+          "qty": 0.01,
+          "unit": "",
+          "item": "Table- spoon Salt and pepper mixture"
+        },
+        {
+          "raw": "1 Tablespoon Slury",
+          "qty": 1,
+          "unit": "Tablespoon",
+          "item": "Slury"
+        }
+      ],
+      "methodText": "No Method",
+      "methodLines": [
+        "No Method"
+      ]
+    },
+    {
+      "title": "Bourbon Peppercorn Sauce",
+      "sourceRestaurant": "Prairie Canary",
+      "sourceFile": "Printed Recipes - Portrait (5).pdf",
+      "printedDate": "04/08/2026",
+      "category": "Prepared items",
+      "recipeType": "Sauces",
+      "allergens": "",
+      "equipment": "",
+      "shelfLife": "7 Days",
+      "yieldsText": "2.25 Quarts",
+      "yieldAmount": 2.25,
+      "yieldUnit": "Quarts",
+      "ingredients": [
+        {
+          "raw": "2 Tablespoon Garlic, Peeled",
+          "qty": 2,
+          "unit": "Tablespoon",
+          "item": "Garlic, Peeled"
+        },
+        {
+          "raw": "4 Ounce Onions, Yellow",
+          "qty": 4,
+          "unit": "Ounce",
+          "item": "Onions, Yellow"
+        },
+        {
+          "raw": "2 Fluid OunceOil, Olive",
+          "qty": 2,
+          "unit": "",
+          "item": "Fluid OunceOil, Olive"
+        },
+        {
+          "raw": "6 Fluid OunceJim Beam Bourbon",
+          "qty": 6,
+          "unit": "",
+          "item": "Fluid OunceJim Beam Bourbon"
+        },
+        {
+          "raw": "32 Fluid Ounce Tap Water",
+          "qty": 32,
+          "unit": "Fluid Ounce",
+          "item": "Tap Water"
+        },
+        {
+          "raw": "2 Tablespoon Base, Beef",
+          "qty": 2,
+          "unit": "Tablespoon",
+          "item": "Base, Beef"
+        },
+        {
+          "raw": "32 Fluid Ounce Heavy Cream",
+          "qty": 32,
+          "unit": "Fluid Ounce",
+          "item": "Heavy Cream"
+        },
+        {
+          "raw": "4 Fluid OunceSlury",
+          "qty": 4,
+          "unit": "",
+          "item": "Fluid OunceSlury"
+        },
+        {
+          "raw": "2 Teaspoon Salt and pepper mixture",
+          "qty": 2,
+          "unit": "Teaspoon",
+          "item": "Salt and pepper mixture"
+        },
+        {
+          "raw": "4 Ounce Butter, Unsalted",
+          "qty": 4,
+          "unit": "Ounce",
+          "item": "Butter, Unsalted"
+        }
+      ],
+      "methodText": "No Method",
+      "methodLines": [
+        "No Method"
+      ]
+    },
+    {
+      "title": "Breaded Chicken Thigh",
+      "sourceRestaurant": "Hometown Heroes",
+      "sourceFile": "Printed Recipes - Portrait (4).pdf",
+      "printedDate": "04/08/2026",
+      "category": "Prepared items",
+      "recipeType": "Batch",
+      "allergens": "",
+      "equipment": "",
+      "shelfLife": "",
+      "yieldsText": "12 Each",
+      "yieldAmount": 12,
+      "yieldUnit": "Each",
+      "ingredients": [
+        {
+          "raw": "12 Each Chicken, Thighs Boneless",
+          "qty": 12,
+          "unit": "Each",
+          "item": "Chicken, Thighs Boneless"
+        },
+        {
+          "raw": "2 Cup Bread Crumbs, Panko",
+          "qty": 2,
+          "unit": "Cup",
+          "item": "Bread Crumbs, Panko"
+        },
+        {
+          "raw": "4 Each Eggs",
+          "qty": 4,
+          "unit": "Each",
+          "item": "Eggs"
+        },
+        {
+          "raw": "0.25 Cup Corn Starch",
+          "qty": 0.25,
+          "unit": "Cup",
+          "item": "Corn Starch"
+        }
+      ],
+      "methodText": "No Method",
+      "methodLines": [
+        "No Method"
+      ]
+    },
+    {
+      "title": "Brown Gravy",
+      "sourceRestaurant": "Prairie Canary",
+      "sourceFile": "Printed Recipes - Portrait (5).pdf",
+      "printedDate": "04/08/2026",
+      "category": "Prepared items",
+      "recipeType": "Batch",
+      "allergens": "",
+      "equipment": "",
+      "shelfLife": "",
+      "yieldsText": "64 Fluid Ounces",
+      "yieldAmount": 64,
+      "yieldUnit": "Fluid Ounces",
+      "ingredients": [
+        {
+          "raw": "2 Quart Tap Water, I use unsalted",
+          "qty": 2,
+          "unit": "Quart",
+          "item": "Tap Water, I use unsalted"
+        },
+        {
+          "raw": "4 Tablespoon Butter, Unsalted, I use un- salted and add salt as needed",
+          "qty": 4,
+          "unit": "Tablespoon",
+          "item": "Butter, Unsalted, I use un- salted and add salt as needed"
+        },
+        {
+          "raw": "4 Tablespoon Flour, All Purpose",
+          "qty": 4,
+          "unit": "Tablespoon",
+          "item": "Flour, All Purpose"
+        },
+        {
+          "raw": "1 Teaspoon Spice, Pepper Black Ground, (or more to taste)",
+          "qty": 1,
+          "unit": "Teaspoon",
+          "item": "Spice, Pepper Black Ground, (or more to taste)"
+        },
+        {
+          "raw": "0.5 Ounce Spice, Kosher Salt, (to taste)",
+          "qty": 0.5,
+          "unit": "Ounce",
+          "item": "Spice, Kosher Salt, (to taste)"
+        },
+        {
+          "raw": "4 Tablespoon Base, Beef",
+          "qty": 4,
+          "unit": "Tablespoon",
+          "item": "Base, Beef"
+        }
+      ],
+      "methodText": "Heat a large skillet over medium-high heat.\nAdd the butter and let it melt.\nOnce the butter is melted, add in the all-purpose flour and\nwhisk until smooth. You want it to cook out the raw flour taste.\nAllow the flour mixture to cook for about 3 minutes, whisking\noccasionally to keep it smooth.\nGradually add in the beef broth, whisking constantly. Pouring it\nin slowly will allow it to thicken. I like to add in about 1 cup at a\ntime.\nOnce all of the beef broth has been added, season with black\npepper. Taste test before adding salt. The amount of salt you'll\nwant to use will be determined by whether or not you use salted\nbeef broth and/or salted butter.\nOnce your gravy is seasoned, serve in a gravy boat over your\nfavorite dish!",
+      "methodLines": [
+        "Heat a large skillet over medium-high heat.",
+        "Add the butter and let it melt.",
+        "Once the butter is melted, add in the all-purpose flour and",
+        "whisk until smooth. You want it to cook out the raw flour taste.",
+        "Allow the flour mixture to cook for about 3 minutes, whisking",
+        "occasionally to keep it smooth.",
+        "Gradually add in the beef broth, whisking constantly. Pouring it",
+        "in slowly will allow it to thicken. I like to add in about 1 cup at a",
+        "time.",
+        "Once all of the beef broth has been added, season with black",
+        "pepper. Taste test before adding salt. The amount of salt you'll",
+        "want to use will be determined by whether or not you use salted",
+        "beef broth and/or salted butter.",
+        "Once your gravy is seasoned, serve in a gravy boat over your",
+        "favorite dish!"
+      ]
+    },
+    {
+      "title": "Bruschetta",
+      "sourceRestaurant": "Prairie Canary",
+      "sourceFile": "Printed Recipes - Portrait (2).pdf",
+      "printedDate": "11/05/2025",
+      "category": "Prepared items",
+      "recipeType": "Batch",
+      "allergens": "",
+      "equipment": "",
+      "shelfLife": "",
+      "yieldsText": "1.5 Quarts",
+      "yieldAmount": 1.5,
+      "yieldUnit": "Quarts",
+      "ingredients": [
+        {
+          "raw": "5 Each Tomatoes, Fresh",
+          "qty": 5,
+          "unit": "Each",
+          "item": "Tomatoes, Fresh"
+        },
+        {
+          "raw": "1.5 Cup Onions, Red",
+          "qty": 1.5,
+          "unit": "Cup",
+          "item": "Onions, Red"
+        },
+        {
+          "raw": "0.5 Cup Basil, Fresh",
+          "qty": 0.5,
+          "unit": "Cup",
+          "item": "Basil, Fresh"
+        },
+        {
+          "raw": "1 Teaspoon Spice, Oregano",
+          "qty": 1,
+          "unit": "Teaspoon",
+          "item": "Spice, Oregano"
+        },
+        {
+          "raw": "1 Teaspoon Salt and pepper mixture",
+          "qty": 1,
+          "unit": "Teaspoon",
+          "item": "Salt and pepper mixture"
+        },
+        {
+          "raw": "0.5 Fluid Ounce Vinegar, Balsamic Reduc- tion",
+          "qty": 0.5,
+          "unit": "Fluid Ounce",
+          "item": "Vinegar, Balsamic Reduc- tion"
+        },
+        {
+          "raw": "1 Tablespoon Truffle Oil Blend",
+          "qty": 1,
+          "unit": "Tablespoon",
+          "item": "Truffle Oil Blend"
+        }
+      ],
+      "methodText": "No Method",
+      "methodLines": [
+        "No Method"
+      ]
+    },
+    {
+      "title": "Buffalo Ranch (3 oz)",
+      "sourceRestaurant": "Hometown Heroes",
+      "sourceFile": "Printed Recipes - Portrait (4).pdf",
+      "printedDate": "04/08/2026",
+      "category": "Prepared items",
+      "recipeType": "Sauces",
+      "allergens": "",
+      "equipment": "",
+      "shelfLife": "",
+      "yieldsText": "1 Serving",
+      "yieldAmount": 1,
+      "yieldUnit": "Serving",
+      "ingredients": [
+        {
+          "raw": "3 Fluid OuncePrep - Buffalo Ranch",
+          "qty": 3,
+          "unit": "",
+          "item": "Fluid OuncePrep - Buffalo Ranch"
+        }
+      ],
+      "methodText": "No Method",
+      "methodLines": [
+        "No Method"
+      ]
+    },
+    {
+      "title": "Cajun Flour",
+      "sourceRestaurant": "Prairie Canary",
+      "sourceFile": "Printed Recipes - Portrait (2).pdf",
+      "printedDate": "11/05/2025",
+      "category": "Prepared items",
+      "recipeType": "Batch",
+      "allergens": "",
+      "equipment": "",
+      "shelfLife": "",
+      "yieldsText": "32 Ounces",
+      "yieldAmount": 32,
+      "yieldUnit": "Ounces",
+      "ingredients": [
+        {
+          "raw": "4 Cup Flour, All Purpose",
+          "qty": 4,
+          "unit": "Cup",
+          "item": "Flour, All Purpose"
+        },
+        {
+          "raw": "1 Tablespoon Salt and pepper mixture",
+          "qty": 1,
+          "unit": "Tablespoon",
+          "item": "Salt and pepper mixture"
+        },
+        {
+          "raw": "1 Ounce PREP - Cajun Seasoning",
+          "qty": 1,
+          "unit": "Ounce",
+          "item": "PREP - Cajun Seasoning"
+        }
+      ],
+      "methodText": "No Method",
+      "methodLines": [
+        "No Method"
+      ]
+    },
+    {
+      "title": "Chicken Legs and Thighs",
+      "sourceRestaurant": "Prairie Canary",
+      "sourceFile": "Printed Recipes - Portrait (2).pdf",
+      "printedDate": "11/05/2025",
+      "category": "Prepared items",
+      "recipeType": "Batch",
+      "allergens": "",
+      "equipment": "",
+      "shelfLife": "",
+      "yieldsText": "28 Each",
+      "yieldAmount": 28,
+      "yieldUnit": "Each",
+      "ingredients": [
+        {
+          "raw": "15.4 Pound Chicken, Rotisserie",
+          "qty": 15.4,
+          "unit": "Pound",
+          "item": "Chicken, Rotisserie"
+        }
+      ],
+      "methodText": "No Method",
+      "methodLines": [
+        "No Method"
+      ]
+    },
+    {
+      "title": "Chimi Churri",
+      "sourceRestaurant": "Hometown Heroes",
+      "sourceFile": "Printed Recipes - Portrait (4).pdf",
+      "printedDate": "04/08/2026",
+      "category": "Prepared items",
+      "recipeType": "Sauces",
+      "allergens": "",
+      "equipment": "",
+      "shelfLife": "",
+      "yieldsText": "2 Quarts",
+      "yieldAmount": 2,
+      "yieldUnit": "Quarts",
+      "ingredients": [
+        {
+          "raw": "8 Ounce Cilantro, Fresh",
+          "qty": 8,
+          "unit": "Ounce",
+          "item": "Cilantro, Fresh"
+        },
+        {
+          "raw": "1 Quart Tomatoes, Beefsteak",
+          "qty": 1,
+          "unit": "Quart",
+          "item": "Tomatoes, Beefsteak"
+        },
+        {
+          "raw": "7 Ounce Onions, Yellow",
+          "qty": 7,
+          "unit": "Ounce",
+          "item": "Onions, Yellow"
+        },
+        {
+          "raw": "4 Ounce Peppers, Jalapeno",
+          "qty": 4,
+          "unit": "Ounce",
+          "item": "Peppers, Jalapeno"
+        },
+        {
+          "raw": "1 Quart Vinegar, White",
+          "qty": 1,
+          "unit": "Quart",
+          "item": "Vinegar, White"
+        },
+        {
+          "raw": "2 Ounce Juice, Lime",
+          "qty": 2,
+          "unit": "Ounce",
+          "item": "Juice, Lime"
+        },
+        {
+          "raw": "1 Tablespoon Salt and pepper mixture",
+          "qty": 1,
+          "unit": "Tablespoon",
+          "item": "Salt and pepper mixture"
+        }
+      ],
+      "methodText": "Place all ingredients in a blender and blend until smooth.",
+      "methodLines": [
+        "Place all ingredients in a blender and blend until smooth."
+      ]
+    },
+    {
+      "title": "Cocout Curry Sauce",
+      "sourceRestaurant": "Prairie Canary",
+      "sourceFile": "Printed Recipes - Portrait (2).pdf",
+      "printedDate": "11/05/2025",
+      "category": "Prepared items",
+      "recipeType": "Batch",
+      "allergens": "",
+      "equipment": "",
+      "shelfLife": "",
+      "yieldsText": "2 Gallons",
+      "yieldAmount": 2,
+      "yieldUnit": "Gallons",
+      "ingredients": [
+        {
+          "raw": "3 Ounce Ginger, Fresh",
+          "qty": 3,
+          "unit": "Ounce",
+          "item": "Ginger, Fresh"
+        },
+        {
+          "raw": "2 Tablespoon Garlic, Minced",
+          "qty": 2,
+          "unit": "Tablespoon",
+          "item": "Garlic, Minced"
+        },
+        {
+          "raw": "4 Ounce Onions, Yellow",
+          "qty": 4,
+          "unit": "Ounce",
+          "item": "Onions, Yellow"
+        },
+        {
+          "raw": "2 Quart Seafood Stock, Stocks are interchangeable depend- ing portion",
+          "qty": 2,
+          "unit": "Quart",
+          "item": "Seafood Stock, Stocks are interchangeable depend- ing portion"
+        },
+        {
+          "raw": "98 Ounce Milk Coconut",
+          "qty": 98,
+          "unit": "Ounce",
+          "item": "Milk Coconut"
+        },
+        {
+          "raw": "8 Ounce Paste, Red Curry",
+          "qty": 8,
+          "unit": "Ounce",
+          "item": "Paste, Red Curry"
+        },
+        {
+          "raw": "2 Ounce Honey",
+          "qty": 2,
+          "unit": "Ounce",
+          "item": "Honey"
+        },
+        {
+          "raw": "1 Each Sauce, Sweet Chili",
+          "qty": 1,
+          "unit": "Each",
+          "item": "Sauce, Sweet Chili"
+        },
+        {
+          "raw": "5 Tablespoon Spice, Curry Powder",
+          "qty": 5,
+          "unit": "Tablespoon",
+          "item": "Spice, Curry Powder"
+        }
+      ],
+      "methodText": "No Method",
+      "methodLines": [
+        "No Method"
+      ]
+    },
+    {
+      "title": "Creamy Balsamic",
+      "sourceRestaurant": "Prairie Canary",
+      "sourceFile": "Printed Recipes - Portrait (2).pdf",
+      "printedDate": "11/05/2025",
+      "category": "Prepared items",
+      "recipeType": "Salad Dressings",
+      "allergens": "",
+      "equipment": "",
+      "shelfLife": "",
+      "yieldsText": "2 Quarts or 64 Ounces",
+      "yieldAmount": 2,
+      "yieldUnit": "Quarts or 64 Ounces",
+      "ingredients": [
+        {
+          "raw": "1 Quart PREP - Honey Balsamic Dressing",
+          "qty": 1,
+          "unit": "Quart",
+          "item": "PREP - Honey Balsamic Dressing"
+        },
+        {
+          "raw": "1 Quart PREP - Buttermilk Ranch",
+          "qty": 1,
+          "unit": "Quart",
+          "item": "PREP - Buttermilk Ranch"
+        }
+      ],
+      "methodText": "No Method",
+      "methodLines": [
+        "No Method"
+      ]
+    },
+    {
+      "title": "Creamy Spinach Artichoke Chowder",
+      "sourceRestaurant": "Prairie Canary",
+      "sourceFile": "Printed Recipes - Portrait (5).pdf",
+      "printedDate": "04/08/2026",
+      "category": "Prepared items",
+      "recipeType": "Soups",
+      "allergens": "",
+      "equipment": "",
+      "shelfLife": "",
+      "yieldsText": "1.25 Gallons",
+      "yieldAmount": 1.25,
+      "yieldUnit": "Gallons",
+      "ingredients": [
+        {
+          "raw": "2 Cup Onions, Yellow",
+          "qty": 2,
+          "unit": "Cup",
+          "item": "Onions, Yellow"
+        },
+        {
+          "raw": "2 Cup Carrots, Shredded",
+          "qty": 2,
+          "unit": "Cup",
+          "item": "Carrots, Shredded"
+        },
+        {
+          "raw": "12 Cup PREP - Chicken Stock from Base",
+          "qty": 12,
+          "unit": "Cup",
+          "item": "PREP - Chicken Stock from Base"
+        },
+        {
+          "raw": "2 Quart Spinach Artichoke Dip",
+          "qty": 2,
+          "unit": "Quart",
+          "item": "Spinach Artichoke Dip"
+        },
+        {
+          "raw": "1 Tablespoon Garlic, Fresh",
+          "qty": 1,
+          "unit": "Tablespoon",
+          "item": "Garlic, Fresh"
+        },
+        {
+          "raw": "1 Tablespoon Salt and pepper mixture",
+          "qty": 1,
+          "unit": "Tablespoon",
+          "item": "Salt and pepper mixture"
+        },
+        {
+          "raw": "5 Each Potatoes, Idaho",
+          "qty": 5,
+          "unit": "Each",
+          "item": "Potatoes, Idaho"
+        }
+      ],
+      "methodText": "No Method",
+      "methodLines": [
+        "No Method"
+      ]
+    },
+    {
+      "title": "Dill Aoili",
+      "sourceRestaurant": "Prairie Canary",
+      "sourceFile": "Printed Recipes - Portrait (5).pdf",
+      "printedDate": "04/08/2026",
+      "category": "Prepared items",
+      "recipeType": "Sauces",
+      "allergens": "",
+      "equipment": "",
+      "shelfLife": "",
+      "yieldsText": "0.5 Quarts",
+      "yieldAmount": 0.5,
+      "yieldUnit": "Quarts",
+      "ingredients": [
+        {
+          "raw": "1.5 Cup PREP - Buttermilk Ranch",
+          "qty": 1.5,
+          "unit": "Cup",
+          "item": "PREP - Buttermilk Ranch"
+        },
+        {
+          "raw": "1 Cup Sour Cream",
+          "qty": 1,
+          "unit": "Cup",
+          "item": "Sour Cream"
+        },
+        {
+          "raw": "1 Ounce Spice, Dill Weed",
+          "qty": 1,
+          "unit": "Ounce",
+          "item": "Spice, Dill Weed"
+        }
+      ],
+      "methodText": "No Method",
+      "methodLines": [
+        "No Method"
+      ]
+    },
+    {
+      "title": "Duches Potatoes",
+      "sourceRestaurant": "Hometown Heroes",
+      "sourceFile": "Printed Recipes - Portrait (4).pdf",
+      "printedDate": "04/08/2026",
+      "category": "Prepared items",
+      "recipeType": "Batch",
+      "allergens": "",
+      "equipment": "",
+      "shelfLife": "",
+      "yieldsText": "1 Batch or 20 Servings",
+      "yieldAmount": 1,
+      "yieldUnit": "Batch or 20 Servings",
+      "ingredients": [
+        {
+          "raw": "20 Serving Mashed Potatoes - Batch",
+          "qty": 20,
+          "unit": "Serving",
+          "item": "Mashed Potatoes - Batch"
+        },
+        {
+          "raw": "6 Each Eggs",
+          "qty": 6,
+          "unit": "Each",
+          "item": "Eggs"
+        }
+      ],
+      "methodText": "No Method",
+      "methodLines": [
+        "No Method"
+      ]
+    },
+    {
+      "title": "Eggplant Breaded",
+      "sourceRestaurant": "Prairie Canary",
+      "sourceFile": "Printed Recipes - Portrait (5).pdf",
+      "printedDate": "04/08/2026",
+      "category": "Prepared items",
+      "recipeType": "Batch",
+      "allergens": "",
+      "equipment": "",
+      "shelfLife": "",
+      "yieldsText": "40 Pieces",
+      "yieldAmount": 40,
+      "yieldUnit": "Pieces",
+      "ingredients": [
+        {
+          "raw": "5 Each Eggplant",
+          "qty": 5,
+          "unit": "Each",
+          "item": "Eggplant"
+        },
+        {
+          "raw": "4 Cup Bread Crumbs, Panko",
+          "qty": 4,
+          "unit": "Cup",
+          "item": "Bread Crumbs, Panko"
+        },
+        {
+          "raw": "1.5 Cup Egg Wash",
+          "qty": 1.5,
+          "unit": "Cup",
+          "item": "Egg Wash"
+        },
+        {
+          "raw": "1 Tablespoon Seasoning, Italian",
+          "qty": 1,
+          "unit": "Tablespoon",
+          "item": "Seasoning, Italian"
+        },
+        {
+          "raw": "1 Tablespoon Salt and pepper mixture",
+          "qty": 1,
+          "unit": "Tablespoon",
+          "item": "Salt and pepper mixture"
+        },
+        {
+          "raw": "1 Cup Cheese, Parmesan Grated",
+          "qty": 1,
+          "unit": "Cup",
+          "item": "Cheese, Parmesan Grated"
+        }
+      ],
+      "methodText": "No Method",
+      "methodLines": [
+        "No Method"
+      ]
+    },
+    {
+      "title": "Fig Simple Syrup",
+      "sourceRestaurant": "Prairie Canary",
+      "sourceFile": "Printed Recipes - Portrait (2).pdf",
+      "printedDate": "11/05/2025",
+      "category": "Prepared items",
+      "recipeType": "Sauces",
+      "allergens": "",
+      "equipment": "10 qt. Pot",
+      "shelfLife": "7 Days",
+      "yieldsText": "1 Quart",
+      "yieldAmount": 1,
+      "yieldUnit": "Quart",
+      "ingredients": [
+        {
+          "raw": "1 Each Figs, Dried Mission",
+          "qty": 1,
+          "unit": "Each",
+          "item": "Figs, Dried Mission"
+        },
+        {
+          "raw": "1 Quart Sugar, Granulated",
+          "qty": 1,
+          "unit": "Quart",
+          "item": "Sugar, Granulated"
+        }
+      ],
+      "methodText": "No Method",
+      "methodLines": [
+        "No Method"
+      ]
+    },
+    {
+      "title": "Filet",
+      "sourceRestaurant": "Prairie Canary",
+      "sourceFile": "Printed Recipes - Portrait (2).pdf",
+      "printedDate": "11/05/2025",
+      "category": "Prepared items",
+      "recipeType": "Batch",
+      "allergens": "",
+      "equipment": "",
+      "shelfLife": "",
+      "yieldsText": "1 Batch",
+      "yieldAmount": 1,
+      "yieldUnit": "Batch",
+      "ingredients": [
+        {
+          "raw": "6 Ounce Beef, Tenderloin",
+          "qty": 6,
+          "unit": "Ounce",
+          "item": "Beef, Tenderloin"
+        }
+      ],
+      "methodText": "No Method",
+      "methodLines": [
+        "No Method"
+      ]
+    },
+    {
+      "title": "Focaccia Parmesan and Caramelized Onion",
+      "sourceRestaurant": "Hometown Heroes",
+      "sourceFile": "Printed Recipes - Portrait (4).pdf",
+      "printedDate": "04/08/2026",
+      "category": "Prepared items",
+      "recipeType": "Batch",
+      "allergens": "",
+      "equipment": "",
+      "shelfLife": "1 Day",
+      "yieldsText": "1 Pan or 15 Pieces",
+      "yieldAmount": 1,
+      "yieldUnit": "Pan or 15 Pieces",
+      "ingredients": [
+        {
+          "raw": "1024 Gram Flour, Bread",
+          "qty": 1024,
+          "unit": "Gram",
+          "item": "Flour, Bread"
+        },
+        {
+          "raw": "16 Gram Yeast",
+          "qty": 16,
+          "unit": "Gram",
+          "item": "Yeast"
+        },
+        {
+          "raw": "16 Gram Spice, Kosher Salt",
+          "qty": 16,
+          "unit": "Gram",
+          "item": "Spice, Kosher Salt"
+        },
+        {
+          "raw": "4 Gram Sugar, Granulated",
+          "qty": 4,
+          "unit": "Gram",
+          "item": "Sugar, Granulated"
+        },
+        {
+          "raw": "2 Cup PREP - Caramelized Onions",
+          "qty": 2,
+          "unit": "Cup",
+          "item": "PREP - Caramelized Onions"
+        },
+        {
+          "raw": "2 Cup Cheese, Parmesan Grated",
+          "qty": 2,
+          "unit": "Cup",
+          "item": "Cheese, Parmesan Grated"
+        }
+      ],
+      "methodText": "No Method",
+      "methodLines": [
+        "No Method"
+      ]
+    },
+    {
+      "title": "Focaccia Rosemary and Kalamata",
+      "sourceRestaurant": "Hometown Heroes",
+      "sourceFile": "Printed Recipes - Portrait (4).pdf",
+      "printedDate": "04/08/2026",
+      "category": "Prepared items",
+      "recipeType": "Batch",
+      "allergens": "",
+      "equipment": "",
+      "shelfLife": "1 Day",
+      "yieldsText": "1 Pan or 15 Pieces",
+      "yieldAmount": 1,
+      "yieldUnit": "Pan or 15 Pieces",
+      "ingredients": [
+        {
+          "raw": "1024 Gram Flour, Bread",
+          "qty": 1024,
+          "unit": "Gram",
+          "item": "Flour, Bread"
+        },
+        {
+          "raw": "16 Gram Yeast",
+          "qty": 16,
+          "unit": "Gram",
+          "item": "Yeast"
+        },
+        {
+          "raw": "16 Gram Spice, Kosher Salt",
+          "qty": 16,
+          "unit": "Gram",
+          "item": "Spice, Kosher Salt"
+        },
+        {
+          "raw": "4 Gram Sugar, Granulated",
+          "qty": 4,
+          "unit": "Gram",
+          "item": "Sugar, Granulated"
+        },
+        {
+          "raw": "0.5 Cup Rosemary, Fresh",
+          "qty": 0.5,
+          "unit": "Cup",
+          "item": "Rosemary, Fresh"
+        },
+        {
+          "raw": "2 Cup Olives, Kalamata",
+          "qty": 2,
+          "unit": "Cup",
+          "item": "Olives, Kalamata"
+        },
+        {
+          "raw": "6 Ounce Cheese, Feta Crumbles",
+          "qty": 6,
+          "unit": "Ounce",
+          "item": "Cheese, Feta Crumbles"
+        }
+      ],
+      "methodText": "No Method",
+      "methodLines": [
+        "No Method"
+      ]
+    },
+    {
+      "title": "French Onion",
+      "sourceRestaurant": "Hometown Heroes",
+      "sourceFile": "Printed Recipes - Portrait (4).pdf",
+      "printedDate": "04/08/2026",
+      "category": "Prepared items",
+      "recipeType": "Batch",
+      "allergens": "",
+      "equipment": "",
+      "shelfLife": "",
+      "yieldsText": "4 Gallons",
+      "yieldAmount": 4,
+      "yieldUnit": "Gallons",
+      "ingredients": [
+        {
+          "raw": "20 Pound Onions, Yellow",
+          "qty": 20,
+          "unit": "Pound",
+          "item": "Onions, Yellow"
+        },
+        {
+          "raw": "24 Ounce Butter, Unsalted",
+          "qty": 24,
+          "unit": "Ounce",
+          "item": "Butter, Unsalted"
+        },
+        {
+          "raw": "4 Ounce Sugar, Granulated",
+          "qty": 4,
+          "unit": "Ounce",
+          "item": "Sugar, Granulated"
+        },
+        {
+          "raw": "4 Fluid OunceOil, Soybean Salad",
+          "qty": 4,
+          "unit": "",
+          "item": "Fluid OunceOil, Soybean Salad"
+        },
+        {
+          "raw": "2 Tablespoon Seasoning, Italian",
+          "qty": 2,
+          "unit": "Tablespoon",
+          "item": "Seasoning, Italian"
+        },
+        {
+          "raw": "4 Ounce Base, Beef",
+          "qty": 4,
+          "unit": "Ounce",
+          "item": "Base, Beef"
+        },
+        {
+          "raw": "2 Tablespoon Salt and pepper mixture",
+          "qty": 2,
+          "unit": "Tablespoon",
+          "item": "Salt and pepper mixture"
+        },
+        {
+          "raw": "4 Ounce Sauce, Worcestershire GAL",
+          "qty": 4,
+          "unit": "Ounce",
+          "item": "Sauce, Worcestershire GAL"
+        },
+        {
+          "raw": "3 Gallon Tap Water",
+          "qty": 3,
+          "unit": "Gallon",
+          "item": "Tap Water"
+        }
+      ],
+      "methodText": "No Method",
+      "methodLines": [
+        "No Method"
+      ]
+    },
+    {
+      "title": "Ginger Beer",
+      "sourceRestaurant": "Prairie Canary",
+      "sourceFile": "Printed Recipes - Portrait (2).pdf",
+      "printedDate": "11/05/2025",
+      "category": "Prepared items",
+      "recipeType": "BIB Mixture",
+      "allergens": "",
+      "equipment": "",
+      "shelfLife": "",
+      "yieldsText": "10 Fluid Ounces",
+      "yieldAmount": 10,
+      "yieldUnit": "Fluid Ounces",
+      "ingredients": [
+        {
+          "raw": "1.7 Fluid Ounce Ginger Beer BIB",
+          "qty": 1.7,
+          "unit": "Fluid Ounce",
+          "item": "Ginger Beer BIB"
+        }
+      ],
+      "methodText": "No Method",
+      "methodLines": [
+        "No Method"
+      ]
+    },
+    {
+      "title": "gochujang butter",
+      "sourceRestaurant": "Prairie Canary",
+      "sourceFile": "Printed Recipes - Portrait (2).pdf",
+      "printedDate": "11/05/2025",
+      "category": "Prepared items",
+      "recipeType": "Batch",
+      "allergens": "",
+      "equipment": "",
+      "shelfLife": "",
+      "yieldsText": "1.25 Pounds",
+      "yieldAmount": 1.25,
+      "yieldUnit": "Pounds",
+      "ingredients": [
+        {
+          "raw": "1 Pound Butter, Salted",
+          "qty": 1,
+          "unit": "Pound",
+          "item": "Butter, Salted"
+        },
+        {
+          "raw": "0.5 Cup Sauce, Gochujang",
+          "qty": 0.5,
+          "unit": "Cup",
+          "item": "Sauce, Gochujang"
+        }
+      ],
+      "methodText": "No Method",
+      "methodLines": [
+        "No Method"
+      ]
+    },
+    {
+      "title": "Gochujang Sauce",
+      "sourceRestaurant": "Prairie Canary",
+      "sourceFile": "Printed Recipes - Portrait (2).pdf",
+      "printedDate": "11/05/2025",
+      "category": "Prepared items",
+      "recipeType": "Sauces",
+      "allergens": "",
+      "equipment": "",
+      "shelfLife": "",
+      "yieldsText": "0.5 Quarts",
+      "yieldAmount": 0.5,
+      "yieldUnit": "Quarts",
+      "ingredients": [
+        {
+          "raw": "0.5 Jar Paste, Gochujang",
+          "qty": 0.5,
+          "unit": "Jar",
+          "item": "Paste, Gochujang"
+        },
+        {
+          "raw": "0.75 Cup Sauce, Soy",
+          "qty": 0.75,
+          "unit": "Cup",
+          "item": "Sauce, Soy"
+        },
+        {
+          "raw": "3 Tablespoon Vinegar, Rice Wine",
+          "qty": 3,
+          "unit": "Tablespoon",
+          "item": "Vinegar, Rice Wine"
+        },
+        {
+          "raw": "3 Tablespoon Sugar, Granulated",
+          "qty": 3,
+          "unit": "Tablespoon",
+          "item": "Sugar, Granulated"
+        },
+        {
+          "raw": "2 Tablespoon Oil, Sesame",
+          "qty": 2,
+          "unit": "Tablespoon",
+          "item": "Oil, Sesame"
+        }
+      ],
+      "methodText": "No Method",
+      "methodLines": [
+        "No Method"
+      ]
+    },
+    {
+      "title": "Gumbo",
+      "sourceRestaurant": "Prairie Canary",
+      "sourceFile": "Printed Recipes - Portrait (5).pdf",
+      "printedDate": "04/08/2026",
+      "category": "Prepared items",
+      "recipeType": "Soups",
+      "allergens": "",
+      "equipment": "",
+      "shelfLife": "",
+      "yieldsText": "4 Gallons",
+      "yieldAmount": 4,
+      "yieldUnit": "Gallons",
+      "ingredients": [
+        {
+          "raw": "4 Cup Onions, Yellow",
+          "qty": 4,
+          "unit": "Cup",
+          "item": "Onions, Yellow"
+        },
+        {
+          "raw": "4 Cup Celery, Fresh",
+          "qty": 4,
+          "unit": "Cup",
+          "item": "Celery, Fresh"
+        },
+        {
+          "raw": "1 Ounce Garlic, Fresh",
+          "qty": 1,
+          "unit": "Ounce",
+          "item": "Garlic, Fresh"
+        },
+        {
+          "raw": "3 Quart PREP - Chicken Stock from Base",
+          "qty": 3,
+          "unit": "Quart",
+          "item": "PREP - Chicken Stock from Base"
+        },
+        {
+          "raw": "3 Quart Seafood Stock",
+          "qty": 3,
+          "unit": "Quart",
+          "item": "Seafood Stock"
+        },
+        {
+          "raw": "3 Pound Shrimp, 41/50",
+          "qty": 3,
+          "unit": "Pound",
+          "item": "Shrimp, 41/50"
+        },
+        {
+          "raw": "3 Pound Scallops, 30/40",
+          "qty": 3,
+          "unit": "Pound",
+          "item": "Scallops, 30/40"
+        },
+        {
+          "raw": "4 Pound Chicken, Breast",
+          "qty": 4,
+          "unit": "Pound",
+          "item": "Chicken, Breast"
+        },
+        {
+          "raw": "106 Each Tomatoes, Strip Can",
+          "qty": 106,
+          "unit": "Each",
+          "item": "Tomatoes, Strip Can"
+        },
+        {
+          "raw": "1 Can Clams, Chopped",
+          "qty": 1,
+          "unit": "Can",
+          "item": "Clams, Chopped"
+        }
+      ],
+      "methodText": "No Method",
+      "methodLines": [
+        "No Method"
+      ]
+    },
+    {
+      "title": "Hand Cut French Fries",
+      "sourceRestaurant": "Hometown Heroes",
+      "sourceFile": "Printed Recipes - Portrait (4).pdf",
+      "printedDate": "04/08/2026",
+      "category": "Prepared items",
+      "recipeType": "Batch",
+      "allergens": "",
+      "equipment": "",
+      "shelfLife": "",
+      "yieldsText": "1 Pound",
+      "yieldAmount": 1,
+      "yieldUnit": "Pound",
+      "ingredients": [
+        {
+          "raw": "1 Pound Potatoes, Idaho",
+          "qty": 1,
+          "unit": "Pound",
+          "item": "Potatoes, Idaho"
+        },
+        {
+          "raw": "0.25 Ounce Oil, Fryer",
+          "qty": 0.25,
+          "unit": "Ounce",
+          "item": "Oil, Fryer"
+        },
+        {
+          "raw": "0.25 Tea- spoon Salt and pepper mixture",
+          "qty": 0.25,
+          "unit": "",
+          "item": "Tea- spoon Salt and pepper mixture"
+        }
+      ],
+      "methodText": "No Method",
+      "methodLines": [
+        "No Method"
+      ]
+    },
+    {
+      "title": "Hero's Buffalo Wing Sauce",
+      "sourceRestaurant": "Hometown Heroes",
+      "sourceFile": "Printed Recipes - Portrait (4).pdf",
+      "printedDate": "04/08/2026",
+      "category": "Prepared items",
+      "recipeType": "Batch",
+      "allergens": "",
+      "equipment": "",
+      "shelfLife": "",
+      "yieldsText": "1.125 Gallons",
+      "yieldAmount": 1.125,
+      "yieldUnit": "Gallons",
+      "ingredients": [
+        {
+          "raw": "1 Gallon Sauce, Buffalo",
+          "qty": 1,
+          "unit": "Gallon",
+          "item": "Sauce, Buffalo"
+        },
+        {
+          "raw": "2 Cup Honey",
+          "qty": 2,
+          "unit": "Cup",
+          "item": "Honey"
+        },
+        {
+          "raw": "1 Pound Butter, Unsalted",
+          "qty": 1,
+          "unit": "Pound",
+          "item": "Butter, Unsalted"
+        },
+        {
+          "raw": "64 Fluid Ounce Busch Light",
+          "qty": 64,
+          "unit": "Fluid Ounce",
+          "item": "Busch Light"
+        }
+      ],
+      "methodText": "No Method",
+      "methodLines": [
+        "No Method"
+      ]
+    },
+    {
+      "title": "Honey Vinaigrette.",
+      "sourceRestaurant": "Hometown Heroes",
+      "sourceFile": "Printed Recipes - Portrait (4).pdf",
+      "printedDate": "04/08/2026",
+      "category": "Prepared items",
+      "recipeType": "Salad Dressings",
+      "allergens": "",
+      "equipment": "",
+      "shelfLife": "",
+      "yieldsText": "3 Cups",
+      "yieldAmount": 3,
+      "yieldUnit": "Cups",
+      "ingredients": [
+        {
+          "raw": "6 Tablespoon Honey",
+          "qty": 6,
+          "unit": "Tablespoon",
+          "item": "Honey"
+        },
+        {
+          "raw": "12 Table- spoon Vinegar, Apple Cider",
+          "qty": 12,
+          "unit": "",
+          "item": "Table- spoon Vinegar, Apple Cider"
+        },
+        {
+          "raw": "1.5 Cup Oil, Canola",
+          "qty": 1.5,
+          "unit": "Cup",
+          "item": "Oil, Canola"
+        },
+        {
+          "raw": "1 Teaspoon Salt and pepper mixture",
+          "qty": 1,
+          "unit": "Teaspoon",
+          "item": "Salt and pepper mixture"
+        },
+        {
+          "raw": "6 Teaspoon Mustard, Dijon",
+          "qty": 6,
+          "unit": "Teaspoon",
+          "item": "Mustard, Dijon"
+        }
+      ],
+      "methodText": "No Method",
+      "methodLines": [
+        "No Method"
+      ]
+    },
+    {
+      "title": "Hungarian Mushroom",
+      "sourceRestaurant": "Hometown Heroes",
+      "sourceFile": "Printed Recipes - Portrait (4).pdf",
+      "printedDate": "04/08/2026",
+      "category": "Prepared items",
+      "recipeType": "Soups",
+      "allergens": "",
+      "equipment": "",
+      "shelfLife": "",
+      "yieldsText": "11 Quarts",
+      "yieldAmount": 11,
+      "yieldUnit": "Quarts",
+      "ingredients": [
+        {
+          "raw": "4 Pound Mushrooms, Medium",
+          "qty": 4,
+          "unit": "Pound",
+          "item": "Mushrooms, Medium"
+        },
+        {
+          "raw": "2 Pound Mushrooms, Pieces & Stems",
+          "qty": 2,
+          "unit": "Pound",
+          "item": "Mushrooms, Pieces & Stems"
+        },
+        {
+          "raw": "1 Cup Onions, Yellow",
+          "qty": 1,
+          "unit": "Cup",
+          "item": "Onions, Yellow"
+        },
+        {
+          "raw": "2 Tablespoon Garlic, Fresh",
+          "qty": 2,
+          "unit": "Tablespoon",
+          "item": "Garlic, Fresh"
+        },
+        {
+          "raw": "2 Ounce Spice, Paprika",
+          "qty": 2,
+          "unit": "Ounce",
+          "item": "Spice, Paprika"
+        },
+        {
+          "raw": "2 Ounce Spice, Dill Weed",
+          "qty": 2,
+          "unit": "Ounce",
+          "item": "Spice, Dill Weed"
+        },
+        {
+          "raw": "2 Tablespoon Base, Beef",
+          "qty": 2,
+          "unit": "Tablespoon",
+          "item": "Base, Beef"
+        },
+        {
+          "raw": "1 Quart Heavy Cream",
+          "qty": 1,
+          "unit": "Quart",
+          "item": "Heavy Cream"
+        },
+        {
+          "raw": "1 Tablespoon Salt and pepper mixture",
+          "qty": 1,
+          "unit": "Tablespoon",
+          "item": "Salt and pepper mixture"
+        }
+      ],
+      "methodText": "No Method",
+      "methodLines": [
+        "No Method"
+      ]
+    },
+    {
+      "title": "Italian Dressing",
+      "sourceRestaurant": "Prairie Canary",
+      "sourceFile": "Printed Recipes - Portrait (5).pdf",
+      "printedDate": "04/08/2026",
+      "category": "Prepared items",
+      "recipeType": "Salad Dressings",
+      "allergens": "",
+      "equipment": "",
+      "shelfLife": "",
+      "yieldsText": "2 Quarts",
+      "yieldAmount": 2,
+      "yieldUnit": "Quarts",
+      "ingredients": [
+        {
+          "raw": "3 Cup Oil, Canola",
+          "qty": 3,
+          "unit": "Cup",
+          "item": "Oil, Canola"
+        },
+        {
+          "raw": "3 Cup Vinegar, White",
+          "qty": 3,
+          "unit": "Cup",
+          "item": "Vinegar, White"
+        },
+        {
+          "raw": "2 Ounce Seasoning, Italian",
+          "qty": 2,
+          "unit": "Ounce",
+          "item": "Seasoning, Italian"
+        },
+        {
+          "raw": "1 Tablespoon Spice, Paprika",
+          "qty": 1,
+          "unit": "Tablespoon",
+          "item": "Spice, Paprika"
+        },
+        {
+          "raw": "2 Tablespoon Mustard, Dijon",
+          "qty": 2,
+          "unit": "Tablespoon",
+          "item": "Mustard, Dijon"
+        },
+        {
+          "raw": "1 Tablespoon Honey",
+          "qty": 1,
+          "unit": "Tablespoon",
+          "item": "Honey"
+        },
+        {
+          "raw": "1 Tablespoon Salt and pepper mixture",
+          "qty": 1,
+          "unit": "Tablespoon",
+          "item": "Salt and pepper mixture"
+        },
+        {
+          "raw": "1 Cup Tap Water",
+          "qty": 1,
+          "unit": "Cup",
+          "item": "Tap Water"
+        },
+        {
+          "raw": "2 Cup Tap Water",
+          "qty": 2,
+          "unit": "Cup",
+          "item": "Tap Water"
+        }
+      ],
+      "methodText": "No Method",
+      "methodLines": [
+        "No Method"
+      ]
+    },
+    {
+      "title": "Italian Veggie",
+      "sourceRestaurant": "Hometown Heroes",
+      "sourceFile": "Printed Recipes - Portrait (4).pdf",
+      "printedDate": "04/08/2026",
+      "category": "Prepared items",
+      "recipeType": "Soups",
+      "allergens": "",
+      "equipment": "",
+      "shelfLife": "",
+      "yieldsText": "11 Quarts",
+      "yieldAmount": 11,
+      "yieldUnit": "Quarts",
+      "ingredients": [
+        {
+          "raw": "2 Cup Onions, Yellow",
+          "qty": 2,
+          "unit": "Cup",
+          "item": "Onions, Yellow"
+        },
+        {
+          "raw": "2 Pound Beef, Ground",
+          "qty": 2,
+          "unit": "Pound",
+          "item": "Beef, Ground"
+        },
+        {
+          "raw": "1 Tablespoon Garlic, Fresh",
+          "qty": 1,
+          "unit": "Tablespoon",
+          "item": "Garlic, Fresh"
+        },
+        {
+          "raw": "4 Pound Vegetables, Frozen Mix",
+          "qty": 4,
+          "unit": "Pound",
+          "item": "Vegetables, Frozen Mix"
+        },
+        {
+          "raw": "2 Ounce Seasoning, Italian",
+          "qty": 2,
+          "unit": "Ounce",
+          "item": "Seasoning, Italian"
+        },
+        {
+          "raw": "1 Tablespoon Spice, Garlic Powder",
+          "qty": 1,
+          "unit": "Tablespoon",
+          "item": "Spice, Garlic Powder"
+        },
+        {
+          "raw": "1 Tablespoon Spice, Onion Powder",
+          "qty": 1,
+          "unit": "Tablespoon",
+          "item": "Spice, Onion Powder"
+        },
+        {
+          "raw": "2 Tablespoon Base, Beef",
+          "qty": 2,
+          "unit": "Tablespoon",
+          "item": "Base, Beef"
+        },
+        {
+          "raw": "2 Cup Carrots, Shredded",
+          "qty": 2,
+          "unit": "Cup",
+          "item": "Carrots, Shredded"
+        }
+      ],
+      "methodText": "No Method",
+      "methodLines": [
+        "No Method"
+      ]
+    },
+    {
+      "title": "jasmine rice",
+      "sourceRestaurant": "Prairie Canary",
+      "sourceFile": "Printed Recipes - Portrait (2).pdf",
+      "printedDate": "11/05/2025",
+      "category": "Prepared items",
+      "recipeType": "Batch",
+      "allergens": "",
+      "equipment": "",
+      "shelfLife": "",
+      "yieldsText": "2.5 Quarts or 40 Ounces",
+      "yieldAmount": 2.5,
+      "yieldUnit": "Quarts or 40 Ounces",
+      "ingredients": [
+        {
+          "raw": "4 Cup Rice, Jasmine",
+          "qty": 4,
+          "unit": "Cup",
+          "item": "Rice, Jasmine"
+        },
+        {
+          "raw": "2 Tablespoon Garlic, Fresh",
+          "qty": 2,
+          "unit": "Tablespoon",
+          "item": "Garlic, Fresh"
+        },
+        {
+          "raw": "1 Tablespoon Spice, Ginger Ground",
+          "qty": 1,
+          "unit": "Tablespoon",
+          "item": "Spice, Ginger Ground"
+        }
+      ],
+      "methodText": "No Method",
+      "methodLines": [
+        "No Method"
+      ]
+    },
+    {
+      "title": "Jasmine rice (Ryans special)",
+      "sourceRestaurant": "Prairie Canary",
+      "sourceFile": "Printed Recipes - Portrait (2).pdf",
+      "printedDate": "11/05/2025",
+      "category": "Prepared items",
+      "recipeType": "Batch",
+      "allergens": "",
+      "equipment": "",
+      "shelfLife": "",
+      "yieldsText": "15 Cups",
+      "yieldAmount": 15,
+      "yieldUnit": "Cups",
+      "ingredients": [
+        {
+          "raw": "5 Cup Rice, Jasmine",
+          "qty": 5,
+          "unit": "Cup",
+          "item": "Rice, Jasmine"
+        },
+        {
+          "raw": "10 Cup PREP - Chicken Stock from Base",
+          "qty": 10,
+          "unit": "Cup",
+          "item": "PREP - Chicken Stock from Base"
+        },
+        {
+          "raw": "4 Ounce Roasted Garlic",
+          "qty": 4,
+          "unit": "Ounce",
+          "item": "Roasted Garlic"
+        }
+      ],
+      "methodText": "No Method",
+      "methodLines": [
+        "No Method"
+      ]
+    },
+    {
+      "title": "Key lime pie mixture",
+      "sourceRestaurant": "Prairie Canary",
+      "sourceFile": "Printed Recipes - Portrait (2).pdf",
+      "printedDate": "11/05/2025",
+      "category": "Prepared items",
+      "recipeType": "Batch",
+      "allergens": "",
+      "equipment": "",
+      "shelfLife": "",
+      "yieldsText": "12 Each",
+      "yieldAmount": 12,
+      "yieldUnit": "Each",
+      "ingredients": [
+        {
+          "raw": "2 Can Milk, Condensed",
+          "qty": 2,
+          "unit": "Can",
+          "item": "Milk, Condensed"
+        },
+        {
+          "raw": "3 Each Limes, Fresh",
+          "qty": 3,
+          "unit": "Each",
+          "item": "Limes, Fresh"
+        },
+        {
+          "raw": "1 Cup Juice, Lime",
+          "qty": 1,
+          "unit": "Cup",
+          "item": "Juice, Lime"
+        },
+        {
+          "raw": "10 Each Eggs",
+          "qty": 10,
+          "unit": "Each",
+          "item": "Eggs"
+        }
+      ],
+      "methodText": "3.33 oz per pie.",
+      "methodLines": [
+        "3.33 oz per pie."
+      ]
+    },
+    {
+      "title": "Lemon Aioli",
+      "sourceRestaurant": "Prairie Canary",
+      "sourceFile": "Printed Recipes - Portrait (2).pdf",
+      "printedDate": "11/05/2025",
+      "category": "Prepared items",
+      "recipeType": "Sauces",
+      "allergens": "",
+      "equipment": "",
+      "shelfLife": "",
+      "yieldsText": "1 Quart",
+      "yieldAmount": 1,
+      "yieldUnit": "Quart",
+      "ingredients": [
+        {
+          "raw": "1 Quart Mayonnaise",
+          "qty": 1,
+          "unit": "Quart",
+          "item": "Mayonnaise"
+        },
+        {
+          "raw": "3 Tablespoon Garlic, Peeled",
+          "qty": 3,
+          "unit": "Tablespoon",
+          "item": "Garlic, Peeled"
+        },
+        {
+          "raw": "0.25 Cup Onions, Green",
+          "qty": 0.25,
+          "unit": "Cup",
+          "item": "Onions, Green"
+        }
+      ],
+      "methodText": "No Method",
+      "methodLines": [
+        "No Method"
+      ]
+    },
+    {
+      "title": "Lemon Chicken",
+      "sourceRestaurant": "Prairie Canary",
+      "sourceFile": "Printed Recipes - Portrait (2).pdf",
+      "printedDate": "11/05/2025",
+      "category": "Prepared items",
+      "recipeType": "Soups",
+      "allergens": "",
+      "equipment": "",
+      "shelfLife": "",
+      "yieldsText": "11 Quarts",
+      "yieldAmount": 11,
+      "yieldUnit": "Quarts",
+      "ingredients": [
+        {
+          "raw": "1 Cup Onions, Yellow",
+          "qty": 1,
+          "unit": "Cup",
+          "item": "Onions, Yellow"
+        },
+        {
+          "raw": "1 Cup Carrots, Shredded",
+          "qty": 1,
+          "unit": "Cup",
+          "item": "Carrots, Shredded"
+        },
+        {
+          "raw": "1 Cup Celery, Fresh",
+          "qty": 1,
+          "unit": "Cup",
+          "item": "Celery, Fresh"
+        },
+        {
+          "raw": "1 Tablespoon Garlic, Fresh",
+          "qty": 1,
+          "unit": "Tablespoon",
+          "item": "Garlic, Fresh"
+        },
+        {
+          "raw": "1 Can Beans, Great Northern Can",
+          "qty": 1,
+          "unit": "Can",
+          "item": "Beans, Great Northern Can"
+        },
+        {
+          "raw": "3 Each Lemons, Fresh",
+          "qty": 3,
+          "unit": "Each",
+          "item": "Lemons, Fresh"
+        },
+        {
+          "raw": "14 Each Chicken Legs and Thighs",
+          "qty": 14,
+          "unit": "Each",
+          "item": "Chicken Legs and Thighs"
+        },
+        {
+          "raw": "1 Tablespoon Base, Chicken",
+          "qty": 1,
+          "unit": "Tablespoon",
+          "item": "Base, Chicken"
+        },
+        {
+          "raw": "2 Ounce Seasoning, Italian",
+          "qty": 2,
+          "unit": "Ounce",
+          "item": "Seasoning, Italian"
+        },
+        {
+          "raw": "1 Tablespoon Spice, Onion Powder",
+          "qty": 1,
+          "unit": "Tablespoon",
+          "item": "Spice, Onion Powder"
+        },
+        {
+          "raw": "1 Tablespoon Spice, Garlic Powder",
+          "qty": 1,
+          "unit": "Tablespoon",
+          "item": "Spice, Garlic Powder"
+        },
+        {
+          "raw": "1 Tablespoon Spice, Paprika",
+          "qty": 1,
+          "unit": "Tablespoon",
+          "item": "Spice, Paprika"
+        }
+      ],
+      "methodText": "No Method",
+      "methodLines": [
+        "No Method"
+      ]
+    },
+    {
+      "title": "Lemon Herb Sauce",
+      "sourceRestaurant": "Prairie Canary",
+      "sourceFile": "Printed Recipes - Portrait (2).pdf",
+      "printedDate": "11/05/2025",
+      "category": "Prepared items",
+      "recipeType": "Batch",
+      "allergens": "",
+      "equipment": "",
+      "shelfLife": "",
+      "yieldsText": "2 Quarts or 64 Ounces",
+      "yieldAmount": 2,
+      "yieldUnit": "Quarts or 64 Ounces",
+      "ingredients": [
+        {
+          "raw": "1 Ounce Oil, Olive",
+          "qty": 1,
+          "unit": "Ounce",
+          "item": "Oil, Olive"
+        },
+        {
+          "raw": "1 Each Garlic, Fresh, Fine-diced",
+          "qty": 1,
+          "unit": "Each",
+          "item": "Garlic, Fresh, Fine-diced"
+        },
+        {
+          "raw": "4 Ounce Onions, Yellow",
+          "qty": 4,
+          "unit": "Ounce",
+          "item": "Onions, Yellow"
+        },
+        {
+          "raw": "1 Each Thyme, Fresh",
+          "qty": 1,
+          "unit": "Each",
+          "item": "Thyme, Fresh"
+        },
+        {
+          "raw": "1 Each Rosemary, Fresh",
+          "qty": 1,
+          "unit": "Each",
+          "item": "Rosemary, Fresh"
+        },
+        {
+          "raw": "1 Ounce Parsley, Fresh, chopped",
+          "qty": 1,
+          "unit": "Ounce",
+          "item": "Parsley, Fresh, chopped"
+        },
+        {
+          "raw": "1 Quart Heavy Cream",
+          "qty": 1,
+          "unit": "Quart",
+          "item": "Heavy Cream"
+        },
+        {
+          "raw": "1 Quart Base, Pork",
+          "qty": 1,
+          "unit": "Quart",
+          "item": "Base, Pork"
+        },
+        {
+          "raw": "4 Ounce Butter, Unsalted",
+          "qty": 4,
+          "unit": "Ounce",
+          "item": "Butter, Unsalted"
+        }
+      ],
+      "methodText": "No Method",
+      "methodLines": [
+        "No Method"
+      ]
+    },
+    {
+      "title": "Lettuce and Tomato",
+      "sourceRestaurant": "Hometown Heroes",
+      "sourceFile": "Printed Recipes - Portrait (4).pdf",
+      "printedDate": "04/08/2026",
+      "category": "Prepared items",
+      "recipeType": "Batch",
+      "allergens": "",
+      "equipment": "",
+      "shelfLife": "",
+      "yieldsText": "1 Each or 1 Serving",
+      "yieldAmount": 1,
+      "yieldUnit": "Each or 1 Serving",
+      "ingredients": [
+        {
+          "raw": "1 Ounce Lettuce, Green Leaf",
+          "qty": 1,
+          "unit": "Ounce",
+          "item": "Lettuce, Green Leaf"
+        },
+        {
+          "raw": "2 Slice PREP Sliced Tomato",
+          "qty": 2,
+          "unit": "Slice",
+          "item": "PREP Sliced Tomato"
+        }
+      ],
+      "methodText": "No Method",
+      "methodLines": [
+        "No Method"
+      ]
+    },
+    {
+      "title": "Mango Salsa",
+      "sourceRestaurant": "Prairie Canary",
+      "sourceFile": "Printed Recipes - Portrait (5).pdf",
+      "printedDate": "04/08/2026",
+      "category": "Prepared items",
+      "recipeType": "Batch",
+      "allergens": "",
+      "equipment": "",
+      "shelfLife": "",
+      "yieldsText": "5.5 Cups",
+      "yieldAmount": 5.5,
+      "yieldUnit": "Cups",
+      "ingredients": [
+        {
+          "raw": "10 Ounce Mango, Dried",
+          "qty": 10,
+          "unit": "Ounce",
+          "item": "Mango, Dried"
+        },
+        {
+          "raw": "4 Each Limes, Fresh",
+          "qty": 4,
+          "unit": "Each",
+          "item": "Limes, Fresh"
+        },
+        {
+          "raw": "2 Each Oranges, Fresh",
+          "qty": 2,
+          "unit": "Each",
+          "item": "Oranges, Fresh"
+        },
+        {
+          "raw": "1.5 Ounce Cilantro, Fresh",
+          "qty": 1.5,
+          "unit": "Ounce",
+          "item": "Cilantro, Fresh"
+        },
+        {
+          "raw": "3 Ounce Onions, Red",
+          "qty": 3,
+          "unit": "Ounce",
+          "item": "Onions, Red"
+        },
+        {
+          "raw": "0.75 Tea- spoon Salt and pepper mixture",
+          "qty": 0.75,
+          "unit": "",
+          "item": "Tea- spoon Salt and pepper mixture"
+        }
+      ],
+      "methodText": "No Method",
+      "methodLines": [
+        "No Method"
+      ]
+    },
+    {
+      "title": "Marinated Chicken",
+      "sourceRestaurant": "Hometown Heroes",
+      "sourceFile": "Printed Recipes - Portrait (4).pdf",
+      "printedDate": "04/08/2026",
+      "category": "Prepared items",
+      "recipeType": "Batch",
+      "allergens": "",
+      "equipment": "",
+      "shelfLife": "",
+      "yieldsText": "320 Ounces or 53 Each",
+      "yieldAmount": 320,
+      "yieldUnit": "Ounces or 53 Each",
+      "ingredients": [
+        {
+          "raw": "20 Pound Chicken, Breast",
+          "qty": 20,
+          "unit": "Pound",
+          "item": "Chicken, Breast"
+        },
+        {
+          "raw": "1 Cup Dressing, Italian",
+          "qty": 1,
+          "unit": "Cup",
+          "item": "Dressing, Italian"
+        }
+      ],
+      "methodText": "lay out chicken on cutting board Jaccard each chicken 5 times\non both size place in 1/3rd pan add 1/2 quart of Italian dressing\nto each pan.",
+      "methodLines": [
+        "lay out chicken on cutting board Jaccard each chicken 5 times",
+        "on both size place in 1/3rd pan add 1/2 quart of Italian dressing",
+        "to each pan."
+      ]
+    },
+    {
+      "title": "Marinated Steaks",
+      "sourceRestaurant": "Prairie Canary",
+      "sourceFile": "Printed Recipes - Portrait (2).pdf",
+      "printedDate": "11/05/2025",
+      "category": "Prepared items",
+      "recipeType": "Batch",
+      "allergens": "",
+      "equipment": "",
+      "shelfLife": "1 Week",
+      "yieldsText": "16 Counts or 1 Ounce or 16 Each",
+      "yieldAmount": 16,
+      "yieldUnit": "Counts or 1 Ounce or 16 Each",
+      "ingredients": [
+        {
+          "raw": "64 Ounce Beef, Sirloin",
+          "qty": 64,
+          "unit": "Ounce",
+          "item": "Beef, Sirloin"
+        },
+        {
+          "raw": "16 Ounce Teriyaki Marinade",
+          "qty": 16,
+          "unit": "Ounce",
+          "item": "Teriyaki Marinade"
+        }
+      ],
+      "methodText": "No Method",
+      "methodLines": [
+        "No Method"
+      ]
+    },
+    {
+      "title": "Mashed Potatoes - Batch",
+      "sourceRestaurant": "Hometown Heroes",
+      "sourceFile": "Printed Recipes - Portrait (4).pdf",
+      "printedDate": "04/08/2026",
+      "category": "Prepared items",
+      "recipeType": "Batch",
+      "allergens": "",
+      "equipment": "Large Whisk, 12 qt. Pot, Third Pan Deep,",
+      "shelfLife": "7 Days",
+      "yieldsText": "40 Servings or 160 Ounces",
+      "yieldAmount": 40,
+      "yieldUnit": "Servings or 160 Ounces",
+      "ingredients": [
+        {
+          "raw": "15 Each Potatoes, Idaho",
+          "qty": 15,
+          "unit": "Each",
+          "item": "Potatoes, Idaho"
+        },
+        {
+          "raw": "3 Each Rosemary, Fresh, Three sprigs",
+          "qty": 3,
+          "unit": "Each",
+          "item": "Rosemary, Fresh, Three sprigs"
+        },
+        {
+          "raw": "4 Each Thyme, Fresh, Four sprigs",
+          "qty": 4,
+          "unit": "Each",
+          "item": "Thyme, Fresh, Four sprigs"
+        },
+        {
+          "raw": "0.5 Pound Butter, Unsalted",
+          "qty": 0.5,
+          "unit": "Pound",
+          "item": "Butter, Unsalted"
+        },
+        {
+          "raw": "0.5 Cup Heavy Cream",
+          "qty": 0.5,
+          "unit": "Cup",
+          "item": "Heavy Cream"
+        },
+        {
+          "raw": "3 Tablespoon Spice, Kosher Salt",
+          "qty": 3,
+          "unit": "Tablespoon",
+          "item": "Spice, Kosher Salt"
+        },
+        {
+          "raw": "2 Tablespoon Garlic, Peeled",
+          "qty": 2,
+          "unit": "Tablespoon",
+          "item": "Garlic, Peeled"
+        }
+      ],
+      "methodText": "Select 15 Idaho potatoes and peel.\nCut each in half and put into 12 qt. pot.\nFill with water to just above line of potatoes.\nPlace on stove on high heat. Add several heavy pinches of\nsalt.\nBring to a boil and let simmer until a fork easily passes through\npotatoes. Drain in large colander.\nReturn drained potatoes to large pot and turn on low heat.\nIn small sauce pan heat 1/2 lb butter, 1/2 cup cream, two table-\nspoons of chopped garlic, one sprig Rosemary and three sprigs\nof Thyme until butter is fully melted and well seasoned.\nStrain butter to remove herbs.\nAdd cream and butter to potatoes and stir with whisk until\npotatoes are smooth and creamy.\nPour into deep third pan.",
+      "methodLines": [
+        "Select 15 Idaho potatoes and peel.",
+        "Cut each in half and put into 12 qt. pot.",
+        "Fill with water to just above line of potatoes.",
+        "Place on stove on high heat. Add several heavy pinches of",
+        "salt.",
+        "Bring to a boil and let simmer until a fork easily passes through",
+        "potatoes. Drain in large colander.",
+        "Return drained potatoes to large pot and turn on low heat.",
+        "In small sauce pan heat 1/2 lb butter, 1/2 cup cream, two table-",
+        "spoons of chopped garlic, one sprig Rosemary and three sprigs",
+        "of Thyme until butter is fully melted and well seasoned.",
+        "Strain butter to remove herbs.",
+        "Add cream and butter to potatoes and stir with whisk until",
+        "potatoes are smooth and creamy.",
+        "Pour into deep third pan."
+      ]
+    },
+    {
+      "title": "Miso",
+      "sourceRestaurant": "Prairie Canary",
+      "sourceFile": "Printed Recipes - Portrait (2).pdf",
+      "printedDate": "11/05/2025",
+      "category": "Prepared items",
+      "recipeType": "Batch",
+      "allergens": "",
+      "equipment": "",
+      "shelfLife": "",
+      "yieldsText": "64 Fluid Ounces",
+      "yieldAmount": 64,
+      "yieldUnit": "Fluid Ounces",
+      "ingredients": [
+        {
+          "raw": "24 Ounce Mirin",
+          "qty": 24,
+          "unit": "Ounce",
+          "item": "Mirin"
+        },
+        {
+          "raw": "12 Ounce Sauce, Soy",
+          "qty": 12,
+          "unit": "Ounce",
+          "item": "Sauce, Soy"
+        },
+        {
+          "raw": "8 Ounce Oil, Sesame",
+          "qty": 8,
+          "unit": "Ounce",
+          "item": "Oil, Sesame"
+        },
+        {
+          "raw": "12 Ounce Vinegar, Rice Wine",
+          "qty": 12,
+          "unit": "Ounce",
+          "item": "Vinegar, Rice Wine"
+        }
+      ],
+      "methodText": "No Method",
+      "methodLines": [
+        "No Method"
+      ]
+    },
+    {
+      "title": "Mushroom Risotto",
+      "sourceRestaurant": "Prairie Canary",
+      "sourceFile": "Printed Recipes - Portrait (2).pdf",
+      "printedDate": "11/05/2025",
+      "category": "Prepared items",
+      "recipeType": "Batch",
+      "allergens": "",
+      "equipment": "",
+      "shelfLife": "",
+      "yieldsText": "1 Quart",
+      "yieldAmount": 1,
+      "yieldUnit": "Quart",
+      "ingredients": [
+        {
+          "raw": "0.5 Quart Rice, Arborio",
+          "qty": 0.5,
+          "unit": "Quart",
+          "item": "Rice, Arborio"
+        },
+        {
+          "raw": "0.5 Cup Mushrooms, Button",
+          "qty": 0.5,
+          "unit": "Cup",
+          "item": "Mushrooms, Button"
+        },
+        {
+          "raw": "0.25 Each Garlic, Fresh",
+          "qty": 0.25,
+          "unit": "Each",
+          "item": "Garlic, Fresh"
+        },
+        {
+          "raw": "6 Gram Onions, Yellow",
+          "qty": 6,
+          "unit": "Gram",
+          "item": "Onions, Yellow"
+        },
+        {
+          "raw": "0.5 Cup San Antonio Winery Velvet California Chablis 18L",
+          "qty": 0.5,
+          "unit": "Cup",
+          "item": "San Antonio Winery Velvet California Chablis 18L"
+        },
+        {
+          "raw": "3 Cup PREP - Chicken Stock from Base",
+          "qty": 3,
+          "unit": "Cup",
+          "item": "PREP - Chicken Stock from Base"
+        },
+        {
+          "raw": "1 Cup Heavy Cream",
+          "qty": 1,
+          "unit": "Cup",
+          "item": "Heavy Cream"
+        },
+        {
+          "raw": "0.25 Cup Cheese, Parmesan Grated",
+          "qty": 0.25,
+          "unit": "Cup",
+          "item": "Cheese, Parmesan Grated"
+        },
+        {
+          "raw": "0.1 Cup Salt and pepper mixture",
+          "qty": 0.1,
+          "unit": "Cup",
+          "item": "Salt and pepper mixture"
+        }
+      ],
+      "methodText": "No Method",
+      "methodLines": [
+        "No Method"
+      ]
+    },
+    {
+      "title": "Naan Chips",
+      "sourceRestaurant": "Prairie Canary",
+      "sourceFile": "Printed Recipes - Portrait (2).pdf",
+      "printedDate": "11/05/2025",
+      "category": "Prepared items",
+      "recipeType": "New Menu Items",
+      "allergens": "",
+      "equipment": "",
+      "shelfLife": "",
+      "yieldsText": "1 Each",
+      "yieldAmount": 1,
+      "yieldUnit": "Each",
+      "ingredients": [
+        {
+          "raw": "2 Each Bread, Pita",
+          "qty": 2,
+          "unit": "Each",
+          "item": "Bread, Pita"
+        },
+        {
+          "raw": "0.5 Ounce Cheese, Parmesan Grated",
+          "qty": 0.5,
+          "unit": "Ounce",
+          "item": "Cheese, Parmesan Grated"
+        },
+        {
+          "raw": "0.001 Fluid Ounce Salt and pepper mixture",
+          "qty": 0.001,
+          "unit": "Fluid Ounce",
+          "item": "Salt and pepper mixture"
+        }
+      ],
+      "methodText": "No Method",
+      "methodLines": [
+        "No Method"
+      ]
+    },
+    {
+      "title": "Pancakes",
+      "sourceRestaurant": "Hometown Heroes",
+      "sourceFile": "Printed Recipes - Portrait (4).pdf",
+      "printedDate": "04/08/2026",
+      "category": "Prepared items",
+      "recipeType": "Batch",
+      "allergens": "",
+      "equipment": "",
+      "shelfLife": "",
+      "yieldsText": "128 Ounces",
+      "yieldAmount": 128,
+      "yieldUnit": "Ounces",
+      "ingredients": [
+        {
+          "raw": "8 Cup Flour, All Purpose",
+          "qty": 8,
+          "unit": "Cup",
+          "item": "Flour, All Purpose"
+        },
+        {
+          "raw": "1 Cup Sugar, Granulated",
+          "qty": 1,
+          "unit": "Cup",
+          "item": "Sugar, Granulated"
+        },
+        {
+          "raw": "3 Tablespoon Baking Powder",
+          "qty": 3,
+          "unit": "Tablespoon",
+          "item": "Baking Powder"
+        },
+        {
+          "raw": "2 Teaspoon Baking Soda",
+          "qty": 2,
+          "unit": "Teaspoon",
+          "item": "Baking Soda"
+        },
+        {
+          "raw": "0.1 Ounce Spice, Salt Bulk",
+          "qty": 0.1,
+          "unit": "Ounce",
+          "item": "Spice, Salt Bulk"
+        },
+        {
+          "raw": "8 Each Eggs",
+          "qty": 8,
+          "unit": "Each",
+          "item": "Eggs"
+        },
+        {
+          "raw": "8 Cup Buttermilk",
+          "qty": 8,
+          "unit": "Cup",
+          "item": "Buttermilk"
+        },
+        {
+          "raw": "8 Ounce Butter, Salted",
+          "qty": 8,
+          "unit": "Ounce",
+          "item": "Butter, Salted"
+        }
+      ],
+      "methodText": "No Method",
+      "methodLines": [
+        "No Method"
+      ]
+    },
+    {
+      "title": "Peach Sauce",
+      "sourceRestaurant": "Prairie Canary",
+      "sourceFile": "Printed Recipes - Portrait (2).pdf",
+      "printedDate": "11/05/2025",
+      "category": "Prepared items",
+      "recipeType": "Batch",
+      "allergens": "",
+      "equipment": "",
+      "shelfLife": "",
+      "yieldsText": "12 Each",
+      "yieldAmount": 12,
+      "yieldUnit": "Each",
+      "ingredients": [
+        {
+          "raw": "5 Pound Peaches, Fresh",
+          "qty": 5,
+          "unit": "Pound",
+          "item": "Peaches, Fresh"
+        },
+        {
+          "raw": "1 Cup Butter, Unsalted",
+          "qty": 1,
+          "unit": "Cup",
+          "item": "Butter, Unsalted"
+        },
+        {
+          "raw": "1 Cup Sugar, Brown",
+          "qty": 1,
+          "unit": "Cup",
+          "item": "Sugar, Brown"
+        },
+        {
+          "raw": "2 Tablespoon Cody Road Bourbon",
+          "qty": 2,
+          "unit": "Tablespoon",
+          "item": "Cody Road Bourbon"
+        },
+        {
+          "raw": "1 Teaspoon Spice, Cinnamon Ground",
+          "qty": 1,
+          "unit": "Teaspoon",
+          "item": "Spice, Cinnamon Ground"
+        },
+        {
+          "raw": "2 Tablespoon Heavy Cream",
+          "qty": 2,
+          "unit": "Tablespoon",
+          "item": "Heavy Cream"
+        }
+      ],
+      "methodText": "No Method",
+      "methodLines": [
+        "No Method"
+      ]
+    },
+    {
+      "title": "peanut sauce",
+      "sourceRestaurant": "Prairie Canary",
+      "sourceFile": "Printed Recipes - Portrait (5).pdf",
+      "printedDate": "04/08/2026",
+      "category": "Prepared items",
+      "recipeType": "Sauces",
+      "allergens": "",
+      "equipment": "",
+      "shelfLife": "",
+      "yieldsText": "1 Quart",
+      "yieldAmount": 1,
+      "yieldUnit": "Quart",
+      "ingredients": [
+        {
+          "raw": "2 Cup Peanut Butter",
+          "qty": 2,
+          "unit": "Cup",
+          "item": "Peanut Butter"
+        },
+        {
+          "raw": "0.5 Cup Sauce, Soy",
+          "qty": 0.5,
+          "unit": "Cup",
+          "item": "Sauce, Soy"
+        },
+        {
+          "raw": "0.25 Cup Vinegar, Rice Wine",
+          "qty": 0.25,
+          "unit": "Cup",
+          "item": "Vinegar, Rice Wine"
+        },
+        {
+          "raw": "0.25 Cup Honey",
+          "qty": 0.25,
+          "unit": "Cup",
+          "item": "Honey"
+        },
+        {
+          "raw": "2 Tablespoon Oil, Sesame",
+          "qty": 2,
+          "unit": "Tablespoon",
+          "item": "Oil, Sesame"
+        },
+        {
+          "raw": "1 Tablespoon Garlic, Fresh",
+          "qty": 1,
+          "unit": "Tablespoon",
+          "item": "Garlic, Fresh"
+        },
+        {
+          "raw": "1 Tablespoon Ginger, Fresh",
+          "qty": 1,
+          "unit": "Tablespoon",
+          "item": "Ginger, Fresh"
+        },
+        {
+          "raw": "1 Tablespoon Sauce, Sriracha",
+          "qty": 1,
+          "unit": "Tablespoon",
+          "item": "Sauce, Sriracha"
+        },
+        {
+          "raw": "1 Tablespoon Juice, Lime",
+          "qty": 1,
+          "unit": "Tablespoon",
+          "item": "Juice, Lime"
+        }
+      ],
+      "methodText": "add 1 -1.5 cups water",
+      "methodLines": [
+        "add 1 -1.5 cups water"
+      ]
+    },
+    {
+      "title": "pecan Graham cracker crust",
+      "sourceRestaurant": "Prairie Canary",
+      "sourceFile": "Printed Recipes - Portrait (2).pdf",
+      "printedDate": "11/05/2025",
+      "category": "Prepared items",
+      "recipeType": "Batch",
+      "allergens": "",
+      "equipment": "",
+      "shelfLife": "",
+      "yieldsText": "18 Each",
+      "yieldAmount": 18,
+      "yieldUnit": "Each",
+      "ingredients": [
+        {
+          "raw": "2 Cup Graham Cracker Crumbs",
+          "qty": 2,
+          "unit": "Cup",
+          "item": "Graham Cracker Crumbs"
+        },
+        {
+          "raw": "1 Cup Pecans",
+          "qty": 1,
+          "unit": "Cup",
+          "item": "Pecans"
+        },
+        {
+          "raw": "0.25 Pound Butter, Salted",
+          "qty": 0.25,
+          "unit": "Pound",
+          "item": "Butter, Salted"
+        }
+      ],
+      "methodText": "1.5 oz per pie",
+      "methodLines": [
+        "1.5 oz per pie"
+      ]
+    },
+    {
+      "title": "Pesto Garlic Aioli",
+      "sourceRestaurant": "Prairie Canary",
+      "sourceFile": "Printed Recipes - Portrait (5).pdf",
+      "printedDate": "04/08/2026",
+      "category": "Prepared items",
+      "recipeType": "Sauces",
+      "allergens": "",
+      "equipment": "",
+      "shelfLife": "",
+      "yieldsText": "4 Cups",
+      "yieldAmount": 4,
+      "yieldUnit": "Cups",
+      "ingredients": [
+        {
+          "raw": "0.25 Cup PREP - Pesto",
+          "qty": 0.25,
+          "unit": "Cup",
+          "item": "PREP - Pesto"
+        },
+        {
+          "raw": "3.75 Cup PREP - Garlic Aioli",
+          "qty": 3.75,
+          "unit": "Cup",
+          "item": "PREP - Garlic Aioli"
+        }
+      ],
+      "methodText": "No Method",
+      "methodLines": [
+        "No Method"
+      ]
+    },
+    {
+      "title": "Pico De Gallo",
+      "sourceRestaurant": "Hometown Heroes",
+      "sourceFile": "Printed Recipes - Portrait (4).pdf",
+      "printedDate": "04/08/2026",
+      "category": "Prepared items",
+      "recipeType": "Batch",
+      "allergens": "",
+      "equipment": "",
+      "shelfLife": "5 Days",
+      "yieldsText": "2 Quarts or 64 Ounces",
+      "yieldAmount": 2,
+      "yieldUnit": "Quarts or 64 Ounces",
+      "ingredients": [
+        {
+          "raw": "1 Quart Tomatoes, Beefsteak",
+          "qty": 1,
+          "unit": "Quart",
+          "item": "Tomatoes, Beefsteak"
+        },
+        {
+          "raw": "1 Quart Onions, Red",
+          "qty": 1,
+          "unit": "Quart",
+          "item": "Onions, Red"
+        },
+        {
+          "raw": "1 Each Cilantro, Fresh",
+          "qty": 1,
+          "unit": "Each",
+          "item": "Cilantro, Fresh"
+        },
+        {
+          "raw": "0.5 Table- spoon Spice, Kosher Salt",
+          "qty": 0.5,
+          "unit": "",
+          "item": "Table- spoon Spice, Kosher Salt"
+        },
+        {
+          "raw": "2 Fluid OunceVinegar, White",
+          "qty": 2,
+          "unit": "",
+          "item": "Fluid OunceVinegar, White"
+        },
+        {
+          "raw": "0.5 Ounce Spice, Pepper Black Ground",
+          "qty": 0.5,
+          "unit": "Ounce",
+          "item": "Spice, Pepper Black Ground"
+        }
+      ],
+      "methodText": "No Method",
+      "methodLines": [
+        "No Method"
+      ]
+    },
+    {
+      "title": "Polenta",
+      "sourceRestaurant": "Prairie Canary",
+      "sourceFile": "Printed Recipes - Portrait (2).pdf",
+      "printedDate": "11/05/2025",
+      "category": "Prepared items",
+      "recipeType": "Batch",
+      "allergens": "",
+      "equipment": "",
+      "shelfLife": "3 Days",
+      "yieldsText": "2 Quarts or 64 Ounces",
+      "yieldAmount": 2,
+      "yieldUnit": "Quarts or 64 Ounces",
+      "ingredients": [
+        {
+          "raw": "1 Ounce Garlic, Peeled",
+          "qty": 1,
+          "unit": "Ounce",
+          "item": "Garlic, Peeled"
+        },
+        {
+          "raw": "4 Ounce Onions, Yellow",
+          "qty": 4,
+          "unit": "Ounce",
+          "item": "Onions, Yellow"
+        },
+        {
+          "raw": "1 Fluid OunceOil, Olive",
+          "qty": 1,
+          "unit": "",
+          "item": "Fluid OunceOil, Olive"
+        },
+        {
+          "raw": "4 Fluid OunceSan Antonio Winery Velvet California Chablis 18L",
+          "qty": 4,
+          "unit": "",
+          "item": "Fluid OunceSan Antonio Winery Velvet California Chablis 18L"
+        },
+        {
+          "raw": "1 Quart PREP - Chicken Stock from Base",
+          "qty": 1,
+          "unit": "Quart",
+          "item": "PREP - Chicken Stock from Base"
+        },
+        {
+          "raw": "2 Ounce Butter, Unsalted",
+          "qty": 2,
+          "unit": "Ounce",
+          "item": "Butter, Unsalted"
+        },
+        {
+          "raw": "4 Ounce Cheese, Parmesan Grated",
+          "qty": 4,
+          "unit": "Ounce",
+          "item": "Cheese, Parmesan Grated"
+        },
+        {
+          "raw": "16 Ounce Cornmeal",
+          "qty": 16,
+          "unit": "Ounce",
+          "item": "Cornmeal"
+        },
+        {
+          "raw": "1 Quart Heavy Cream",
+          "qty": 1,
+          "unit": "Quart",
+          "item": "Heavy Cream"
+        }
+      ],
+      "methodText": "No Method",
+      "methodLines": [
+        "No Method"
+      ]
+    },
+    {
+      "title": "Portion Ranch",
+      "sourceRestaurant": "Prairie Canary",
+      "sourceFile": "Printed Recipes - Portrait (2).pdf",
+      "printedDate": "11/05/2025",
+      "category": "Prepared items",
+      "recipeType": "Batch",
+      "allergens": "",
+      "equipment": "",
+      "shelfLife": "",
+      "yieldsText": "1 Each",
+      "yieldAmount": 1,
+      "yieldUnit": "Each",
+      "ingredients": [
+        {
+          "raw": "1.5 Fluid Ounce PREP - Buttermilk Ranch",
+          "qty": 1.5,
+          "unit": "Fluid Ounce",
+          "item": "PREP - Buttermilk Ranch"
+        },
+        {
+          "raw": "1 Each Lid L Fits 2 OZ Portion Cup",
+          "qty": 1,
+          "unit": "Each",
+          "item": "Lid L Fits 2 OZ Portion Cup"
+        },
+        {
+          "raw": "1 Each Cup L Portion 2 OZ Black",
+          "qty": 1,
+          "unit": "Each",
+          "item": "Cup L Portion 2 OZ Black"
+        }
+      ],
+      "methodText": "No Method",
+      "methodLines": [
+        "No Method"
+      ]
+    },
+    {
+      "title": "Pound cake",
+      "sourceRestaurant": "Prairie Canary",
+      "sourceFile": "Printed Recipes - Portrait (2).pdf",
+      "printedDate": "11/05/2025",
+      "category": "Prepared items",
+      "recipeType": "Batch",
+      "allergens": "",
+      "equipment": "",
+      "shelfLife": "",
+      "yieldsText": "12 Slices",
+      "yieldAmount": 12,
+      "yieldUnit": "Slices",
+      "ingredients": [
+        {
+          "raw": "4 Each Eggs",
+          "qty": 4,
+          "unit": "Each",
+          "item": "Eggs"
+        },
+        {
+          "raw": "1 Cup Butter, Unsalted",
+          "qty": 1,
+          "unit": "Cup",
+          "item": "Butter, Unsalted"
+        },
+        {
+          "raw": "1 Cup Sugar, Granulated",
+          "qty": 1,
+          "unit": "Cup",
+          "item": "Sugar, Granulated"
+        },
+        {
+          "raw": "1.5 Cup Flour, All Purpose",
+          "qty": 1.5,
+          "unit": "Cup",
+          "item": "Flour, All Purpose"
+        },
+        {
+          "raw": "4 Ounce Sour Cream",
+          "qty": 4,
+          "unit": "Ounce",
+          "item": "Sour Cream"
+        },
+        {
+          "raw": "1 Teaspoon Spice, Kosher Salt",
+          "qty": 1,
+          "unit": "Teaspoon",
+          "item": "Spice, Kosher Salt"
+        },
+        {
+          "raw": "2 Tablespoon Extract, Vanilla Imitation",
+          "qty": 2,
+          "unit": "Tablespoon",
+          "item": "Extract, Vanilla Imitation"
+        }
+      ],
+      "methodText": "No Method",
+      "methodLines": [
+        "No Method"
+      ]
+    },
+    {
+      "title": "PREP - Alfredo",
+      "sourceRestaurant": "Prairie Canary",
+      "sourceFile": "Printed Recipes - Portrait (5).pdf",
+      "printedDate": "04/08/2026",
+      "category": "Prepared items",
+      "recipeType": "Batch",
+      "allergens": "",
+      "equipment": "12 qt. Pot, Rubber Head Spatula",
+      "shelfLife": "7 Days",
+      "yieldsText": "1 Batch or 325 Fluid Ounces",
+      "yieldAmount": 1,
+      "yieldUnit": "Batch or 325 Fluid Ounces",
+      "ingredients": [
+        {
+          "raw": "8 Ounce Onions, Yellow",
+          "qty": 8,
+          "unit": "Ounce",
+          "item": "Onions, Yellow"
+        },
+        {
+          "raw": "4 Fluid OunceOil, Olive",
+          "qty": 4,
+          "unit": "",
+          "item": "Fluid OunceOil, Olive"
+        },
+        {
+          "raw": "8 Ounce Roasted Garlic",
+          "qty": 8,
+          "unit": "Ounce",
+          "item": "Roasted Garlic"
+        },
+        {
+          "raw": "1 Quart San Antonio Winery Velvet California Chablis 18L",
+          "qty": 1,
+          "unit": "Quart",
+          "item": "San Antonio Winery Velvet California Chablis 18L"
+        },
+        {
+          "raw": "1 Gallon Milk, Whole",
+          "qty": 1,
+          "unit": "Gallon",
+          "item": "Milk, Whole"
+        },
+        {
+          "raw": "4 Quart Heavy Cream",
+          "qty": 4,
+          "unit": "Quart",
+          "item": "Heavy Cream"
+        },
+        {
+          "raw": "2.5 Pound Cheese, Parmesan Grated",
+          "qty": 2.5,
+          "unit": "Pound",
+          "item": "Cheese, Parmesan Grated"
+        },
+        {
+          "raw": "2 Tablespoon Spice, Kosher Salt",
+          "qty": 2,
+          "unit": "Tablespoon",
+          "item": "Spice, Kosher Salt"
+        },
+        {
+          "raw": "1 Tablespoon Spice, Pepper Black Ground",
+          "qty": 1,
+          "unit": "Tablespoon",
+          "item": "Spice, Pepper Black Ground"
+        },
+        {
+          "raw": "6 Fluid OunceSlury",
+          "qty": 6,
+          "unit": "",
+          "item": "Fluid OunceSlury"
+        }
+      ],
+      "methodText": "Put olive oil",
+      "methodLines": [
+        "Put olive oil"
+      ]
+    },
+    {
+      "title": "PREP - Bacon Jam",
+      "sourceRestaurant": "Hometown Heroes",
+      "sourceFile": "Printed Recipes - Portrait (4).pdf",
+      "printedDate": "04/08/2026",
+      "category": "Prepared items",
+      "recipeType": "Batch",
+      "allergens": "",
+      "equipment": "",
+      "shelfLife": "7 Days",
+      "yieldsText": "1 Quart or 32 Ounces",
+      "yieldAmount": 1,
+      "yieldUnit": "Quart or 32 Ounces",
+      "ingredients": [
+        {
+          "raw": "3.25 Pound Bacon",
+          "qty": 3.25,
+          "unit": "Pound",
+          "item": "Bacon"
+        },
+        {
+          "raw": "10 Ounce Onions, Yellow",
+          "qty": 10,
+          "unit": "Ounce",
+          "item": "Onions, Yellow"
+        },
+        {
+          "raw": "1 Tablespoon Garlic, Peeled",
+          "qty": 1,
+          "unit": "Tablespoon",
+          "item": "Garlic, Peeled"
+        },
+        {
+          "raw": "7 Fluid OunceVinegar, Apple Cider",
+          "qty": 7,
+          "unit": "",
+          "item": "Fluid OunceVinegar, Apple Cider"
+        },
+        {
+          "raw": "2 Tablespoon Spice, Chili Powder",
+          "qty": 2,
+          "unit": "Tablespoon",
+          "item": "Spice, Chili Powder"
+        },
+        {
+          "raw": "0.5 Cup Sugar, Brown",
+          "qty": 0.5,
+          "unit": "Cup",
+          "item": "Sugar, Brown"
+        },
+        {
+          "raw": "2 Tablespoon Syrup, Maple",
+          "qty": 2,
+          "unit": "Tablespoon",
+          "item": "Syrup, Maple"
+        }
+      ],
+      "methodText": "Cook bacon in Oven until crispy.\nRun cooked Bacon through Robocoop for 45 seconds.\nin a bowl mix maple, Apple cider vinegar, chili powder, brown\nsugar, salt and pepper .\nSautee one Yellow onion, and a tablespoon of Garlic. until\ntranslucent. add Maple mixture, then add bacon. cook for 3\nminutes. Let cool Quart up.",
+      "methodLines": [
+        "Cook bacon in Oven until crispy.",
+        "Run cooked Bacon through Robocoop for 45 seconds.",
+        "in a bowl mix maple, Apple cider vinegar, chili powder, brown",
+        "sugar, salt and pepper .",
+        "Sautee one Yellow onion, and a tablespoon of Garlic. until",
+        "translucent. add Maple mixture, then add bacon. cook for 3",
+        "minutes. Let cool Quart up."
+      ]
+    },
+    {
+      "title": "Prep - Buffalo Ranch",
+      "sourceRestaurant": "Hometown Heroes",
+      "sourceFile": "Printed Recipes - Portrait (4).pdf",
+      "printedDate": "04/08/2026",
+      "category": "Prepared items",
+      "recipeType": "Sauces",
+      "allergens": "",
+      "equipment": "",
+      "shelfLife": "5 Days",
+      "yieldsText": "1 Quart",
+      "yieldAmount": 1,
+      "yieldUnit": "Quart",
+      "ingredients": [
+        {
+          "raw": "2 Cup PREP - Buttermilk Ranch",
+          "qty": 2,
+          "unit": "Cup",
+          "item": "PREP - Buttermilk Ranch"
+        },
+        {
+          "raw": "2 Cup Hero's Buffalo Wing Sauce",
+          "qty": 2,
+          "unit": "Cup",
+          "item": "Hero's Buffalo Wing Sauce"
+        }
+      ],
+      "methodText": "Mix 2 cups of each sauce and store in quart container.",
+      "methodLines": [
+        "Mix 2 cups of each sauce and store in quart container."
+      ]
+    },
+    {
+      "title": "Prep - Butter Chicken Spices",
+      "sourceRestaurant": "Hometown Heroes",
+      "sourceFile": "Printed Recipes - Portrait (4).pdf",
+      "printedDate": "04/08/2026",
+      "category": "Prepared items",
+      "recipeType": "Batch",
+      "allergens": "",
+      "equipment": "",
+      "shelfLife": "",
+      "yieldsText": "24 Ounces",
+      "yieldAmount": 24,
+      "yieldUnit": "Ounces",
+      "ingredients": [
+        {
+          "raw": "4 Ounce Spice, Cinnamon Ground",
+          "qty": 4,
+          "unit": "Ounce",
+          "item": "Spice, Cinnamon Ground"
+        },
+        {
+          "raw": "4 Ounce Spice, Cinnamon Ground",
+          "qty": 4,
+          "unit": "Ounce",
+          "item": "Spice, Cinnamon Ground"
+        },
+        {
+          "raw": "4 Ounce Spice, Chili Powder",
+          "qty": 4,
+          "unit": "Ounce",
+          "item": "Spice, Chili Powder"
+        },
+        {
+          "raw": "4 Ounce Spice, Garam Masala",
+          "qty": 4,
+          "unit": "Ounce",
+          "item": "Spice, Garam Masala"
+        },
+        {
+          "raw": "4 Ounce Spice, Coriander Ground",
+          "qty": 4,
+          "unit": "Ounce",
+          "item": "Spice, Coriander Ground"
+        },
+        {
+          "raw": "4 Ounce Sugar, Granulated",
+          "qty": 4,
+          "unit": "Ounce",
+          "item": "Sugar, Granulated"
+        },
+        {
+          "raw": "2 Tablespoon Salt and pepper mixture",
+          "qty": 2,
+          "unit": "Tablespoon",
+          "item": "Salt and pepper mixture"
+        }
+      ],
+      "methodText": "No Method",
+      "methodLines": [
+        "No Method"
+      ]
+    },
+    {
+      "title": "PREP - Buttermilk Ranch",
+      "sourceRestaurant": "Prairie Canary",
+      "sourceFile": "Printed Recipes - Portrait (5).pdf",
+      "printedDate": "04/08/2026",
+      "category": "Prepared items",
+      "recipeType": "Batch",
+      "allergens": "",
+      "equipment": "",
+      "shelfLife": "7 Days",
+      "yieldsText": "2.6 Gallons",
+      "yieldAmount": 2.6,
+      "yieldUnit": "Gallons",
+      "ingredients": [
+        {
+          "raw": "1 Gallon Mayonnaise",
+          "qty": 1,
+          "unit": "Gallon",
+          "item": "Mayonnaise"
+        },
+        {
+          "raw": "5 Pound Sour Cream",
+          "qty": 5,
+          "unit": "Pound",
+          "item": "Sour Cream"
+        },
+        {
+          "raw": "4 Each Lemons, Fresh",
+          "qty": 4,
+          "unit": "Each",
+          "item": "Lemons, Fresh"
+        },
+        {
+          "raw": "2 Tablespoon Spice, Celery Salt",
+          "qty": 2,
+          "unit": "Tablespoon",
+          "item": "Spice, Celery Salt"
+        },
+        {
+          "raw": "0.33 Cup Spice, Garlic Powder",
+          "qty": 0.33,
+          "unit": "Cup",
+          "item": "Spice, Garlic Powder"
+        },
+        {
+          "raw": "0.33 Cup Spice, Onion Powder",
+          "qty": 0.33,
+          "unit": "Cup",
+          "item": "Spice, Onion Powder"
+        },
+        {
+          "raw": "0.33 Cup Spice, Dill Weed",
+          "qty": 0.33,
+          "unit": "Cup",
+          "item": "Spice, Dill Weed"
+        },
+        {
+          "raw": "0.5 Gallon Buttermilk",
+          "qty": 0.5,
+          "unit": "Gallon",
+          "item": "Buttermilk"
+        },
+        {
+          "raw": "2 Tablespoon Spice, Kosher Salt",
+          "qty": 2,
+          "unit": "Tablespoon",
+          "item": "Spice, Kosher Salt"
+        },
+        {
+          "raw": "2 Tablespoon Spice, Pepper Black Ground",
+          "qty": 2,
+          "unit": "Tablespoon",
+          "item": "Spice, Pepper Black Ground"
+        }
+      ],
+      "methodText": "Add all ingredients into a large mixing bowl and whisk thor-\noughly. Ensure all ingredients are evenly spread. Pour into\nquart containers, and label with name and date.",
+      "methodLines": [
+        "Add all ingredients into a large mixing bowl and whisk thor-",
+        "oughly. Ensure all ingredients are evenly spread. Pour into",
+        "quart containers, and label with name and date."
+      ]
+    },
+    {
+      "title": "PREP - Caramelized Onions",
+      "sourceRestaurant": "Hometown Heroes",
+      "sourceFile": "Printed Recipes - Portrait (4).pdf",
+      "printedDate": "04/08/2026",
+      "category": "Prepared items",
+      "recipeType": "Sauces",
+      "allergens": "",
+      "equipment": "",
+      "shelfLife": "7 Days",
+      "yieldsText": "2 Quarts or 64 Ounces",
+      "yieldAmount": 2,
+      "yieldUnit": "Quarts or 64 Ounces",
+      "ingredients": [
+        {
+          "raw": "6.5 Pound Onions, Yellow",
+          "qty": 6.5,
+          "unit": "Pound",
+          "item": "Onions, Yellow"
+        },
+        {
+          "raw": "2 Tablespoon Oil, Canola",
+          "qty": 2,
+          "unit": "Tablespoon",
+          "item": "Oil, Canola"
+        },
+        {
+          "raw": "4 Ounce Butter, Unsalted",
+          "qty": 4,
+          "unit": "Ounce",
+          "item": "Butter, Unsalted"
+        }
+      ],
+      "methodText": "Slice 10 yellow onions with mandolin\nUse thin setting and slice across side to side half moon\nshaped.\nPlace all slices into large round saute pan\nAdd 2 tablespoons of oil, pinch of salt and pepper\nWhen onions begin to become transparent, add 4 oz of butter\nMelt all together until onions just begin to brown\nRemove from heat and let cool",
+      "methodLines": [
+        "Slice 10 yellow onions with mandolin",
+        "Use thin setting and slice across side to side half moon",
+        "shaped.",
+        "Place all slices into large round saute pan",
+        "Add 2 tablespoons of oil, pinch of salt and pepper",
+        "When onions begin to become transparent, add 4 oz of butter",
+        "Melt all together until onions just begin to brown",
+        "Remove from heat and let cool"
+      ]
+    },
+    {
+      "title": "PREP - Chile Aoli",
+      "sourceRestaurant": "Hometown Heroes",
+      "sourceFile": "Printed Recipes - Portrait (4).pdf",
+      "printedDate": "04/08/2026",
+      "category": "Prepared items",
+      "recipeType": "Sauces",
+      "allergens": "",
+      "equipment": "",
+      "shelfLife": "14 Days",
+      "yieldsText": "4.28 Quarts or 3200 Grams",
+      "yieldAmount": 4.28,
+      "yieldUnit": "Quarts or 3200 Grams",
+      "ingredients": [
+        {
+          "raw": "1 Gallon Mayonnaise",
+          "qty": 1,
+          "unit": "Gallon",
+          "item": "Mayonnaise"
+        },
+        {
+          "raw": "8 Each Limes, Fresh",
+          "qty": 8,
+          "unit": "Each",
+          "item": "Limes, Fresh"
+        },
+        {
+          "raw": "14 Ounce Sauce, Sriracha",
+          "qty": 14,
+          "unit": "Ounce",
+          "item": "Sauce, Sriracha"
+        },
+        {
+          "raw": "8 Ounce Ketchup, Bulk",
+          "qty": 8,
+          "unit": "Ounce",
+          "item": "Ketchup, Bulk"
+        }
+      ],
+      "methodText": "No Method",
+      "methodLines": [
+        "No Method"
+      ]
+    },
+    {
+      "title": "PREP - Cowboy Butter",
+      "sourceRestaurant": "Prairie Canary",
+      "sourceFile": "Printed Recipes - Portrait (5).pdf",
+      "printedDate": "04/08/2026",
+      "category": "Prepared items",
+      "recipeType": "Batch",
+      "allergens": "",
+      "equipment": "Rubber Head Spatula, 2 Qt. Metal Mixing Bowl",
+      "shelfLife": "14 Days",
+      "yieldsText": "1 Cup or 8 Ounces",
+      "yieldAmount": 1,
+      "yieldUnit": "Cup or 8 Ounces",
+      "ingredients": [
+        {
+          "raw": "0.5 Teaspoon Spice, Pepper Red Crushed",
+          "qty": 0.5,
+          "unit": "Teaspoon",
+          "item": "Spice, Pepper Red Crushed"
+        },
+        {
+          "raw": "1 Pound Butter, Unsalted",
+          "qty": 1,
+          "unit": "Pound",
+          "item": "Butter, Unsalted"
+        },
+        {
+          "raw": "3 Piece Garlic, Peeled",
+          "qty": 3,
+          "unit": "Piece",
+          "item": "Garlic, Peeled"
+        },
+        {
+          "raw": "1 Tablespoon Thyme, Fresh",
+          "qty": 1,
+          "unit": "Tablespoon",
+          "item": "Thyme, Fresh"
+        },
+        {
+          "raw": "0.5 Teaspoon Spice, Paprika Smoked",
+          "qty": 0.5,
+          "unit": "Teaspoon",
+          "item": "Spice, Paprika Smoked"
+        },
+        {
+          "raw": "1 Each Lemons, Fresh",
+          "qty": 1,
+          "unit": "Each",
+          "item": "Lemons, Fresh"
+        },
+        {
+          "raw": "0.5 Teaspoon Spice, Kosher Salt",
+          "qty": 0.5,
+          "unit": "Teaspoon",
+          "item": "Spice, Kosher Salt"
+        },
+        {
+          "raw": "0.25 Tea- spoon Spice, Pepper Black Ground",
+          "qty": 0.25,
+          "unit": "",
+          "item": "Tea- spoon Spice, Pepper Black Ground"
+        },
+        {
+          "raw": "2 Ounce Seasoning, Italian",
+          "qty": 2,
+          "unit": "Ounce",
+          "item": "Seasoning, Italian"
+        },
+        {
+          "raw": "2 Tablespoon Mustard, Dijon",
+          "qty": 2,
+          "unit": "Tablespoon",
+          "item": "Mustard, Dijon"
+        }
+      ],
+      "methodText": "Allow 1lb of butter to soften and add to bowl\nAdd 1 teaspoon crushed red pepper\nAdd 3 cloves garlic minced\nAdd 3 Tablespoons finely Italian seasoning\nAdd 1 Tablespoon chopped Thyme leaves\nAdd 1/2 Teaspoon Smoked Paprika\nAdd the zest of one full lemon\nAdd 1 Tablespoon of lemon juice\nAdd 1/2 Teaspoon kosher salt\nAdd 1/4 Teaspoon ground black pepper\nAdd 2 Tbsp Dijon mustard\nStir and mix thoroughly so all ingredients are evenly spread\nthrough the butter mixture\nRoll a sheet of plastic wrap out flat\nScrape the bowl with spatula and form a long \"log\" of the butter\nmixture onto the plastic wrap\nRoll the plastic wrap around the butter log and twist the ends\nto seal\nDate, label and put Cowboy Butter Roll into fridge",
+      "methodLines": [
+        "Allow 1lb of butter to soften and add to bowl",
+        "Add 1 teaspoon crushed red pepper",
+        "Add 3 cloves garlic minced",
+        "Add 3 Tablespoons finely Italian seasoning",
+        "Add 1 Tablespoon chopped Thyme leaves",
+        "Add 1/2 Teaspoon Smoked Paprika",
+        "Add the zest of one full lemon",
+        "Add 1 Tablespoon of lemon juice",
+        "Add 1/2 Teaspoon kosher salt",
+        "Add 1/4 Teaspoon ground black pepper",
+        "Add 2 Tbsp Dijon mustard",
+        "Stir and mix thoroughly so all ingredients are evenly spread",
+        "through the butter mixture",
+        "Roll a sheet of plastic wrap out flat",
+        "Scrape the bowl with spatula and form a long \"log\" of the butter",
+        "mixture onto the plastic wrap",
+        "Roll the plastic wrap around the butter log and twist the ends",
+        "to seal",
+        "Date, label and put Cowboy Butter Roll into fridge"
+      ]
+    },
+    {
+      "title": "PREP - Creme Brulee",
+      "sourceRestaurant": "Prairie Canary",
+      "sourceFile": "Printed Recipes - Portrait (5).pdf",
+      "printedDate": "04/08/2026",
+      "category": "Prepared items",
+      "recipeType": "Batch",
+      "allergens": "",
+      "equipment": "10 qt. Pot, 4 Qt. Metal Mixing Bowl, Ho-",
+      "shelfLife": "7 Days",
+      "yieldsText": "14 Servings",
+      "yieldAmount": 14,
+      "yieldUnit": "Servings",
+      "ingredients": [
+        {
+          "raw": "2 Quart Heavy Cream",
+          "qty": 2,
+          "unit": "Quart",
+          "item": "Heavy Cream"
+        },
+        {
+          "raw": "14 Each Eggs",
+          "qty": 14,
+          "unit": "Each",
+          "item": "Eggs"
+        },
+        {
+          "raw": "1.25 Cup Sugar, Granulated",
+          "qty": 1.25,
+          "unit": "Cup",
+          "item": "Sugar, Granulated"
+        },
+        {
+          "raw": "1 Teaspoon Vanilla Bean Powder (D'Allesandro Brand)",
+          "qty": 1,
+          "unit": "Teaspoon",
+          "item": "Vanilla Bean Powder (D'Allesandro Brand)"
+        }
+      ],
+      "methodText": "Pour 2 quarts of cream into 10 qt. Pot\nAdd 1 Tbspn Vanilla Bean Powder (or scraped inner powder\nfrom 2 dried vanilla beans)\nApply medium heat stirring frequently to bring to 190 F\nBubbles should begin to form around the edge of the pot\nDON'T LET THE LIQUID RISE TO A BOIL\nRemove from heat and allow to cool for 2 minutes\nSeparate 12 egg yolks (keeping yolks and discarding whites)\nand place yolks into large metal mixing bowl\nAdd two whole eggs and 1 cup of sugar to the egg yolks\nAdd the warm cream mixture slowly to the bowl and mix gently\nwith a small whisk\nMix until combined thoroughly\nPour into 14 round bowls (see equipment) and place each into\na hotel pan\nPour water between bowls into hotel pan until water line is half\nway up the sides of the round bowls\nCover the entire hotel pan with aluminum foil\nBake at 350 F for 50 minutes\nRemove from oven and release the foil from the sides to allow\nthe cream to ventilate\nOnce completely cooled and set, wrap each individual Creme\nBrulee and label and date",
+      "methodLines": [
+        "Pour 2 quarts of cream into 10 qt. Pot",
+        "Add 1 Tbspn Vanilla Bean Powder (or scraped inner powder",
+        "from 2 dried vanilla beans)",
+        "Apply medium heat stirring frequently to bring to 190 F",
+        "Bubbles should begin to form around the edge of the pot",
+        "DON'T LET THE LIQUID RISE TO A BOIL",
+        "Remove from heat and allow to cool for 2 minutes",
+        "Separate 12 egg yolks (keeping yolks and discarding whites)",
+        "and place yolks into large metal mixing bowl",
+        "Add two whole eggs and 1 cup of sugar to the egg yolks",
+        "Add the warm cream mixture slowly to the bowl and mix gently",
+        "with a small whisk",
+        "Mix until combined thoroughly",
+        "Pour into 14 round bowls (see equipment) and place each into",
+        "a hotel pan",
+        "Pour water between bowls into hotel pan until water line is half",
+        "way up the sides of the round bowls",
+        "Cover the entire hotel pan with aluminum foil",
+        "Bake at 350 F for 50 minutes",
+        "Remove from oven and release the foil from the sides to allow",
+        "the cream to ventilate",
+        "Once completely cooled and set, wrap each individual Creme",
+        "Brulee and label and date"
+      ]
+    },
+    {
+      "title": "PREP - D'Burgo Sauce Chicken",
+      "sourceRestaurant": "Hometown Heroes",
+      "sourceFile": "Printed Recipes - Portrait (3).pdf",
+      "printedDate": "04/08/2026",
+      "category": "Prepared items",
+      "recipeType": "Batch",
+      "allergens": "",
+      "equipment": "10 qt. Pot, Whisk - Balloon (Small)",
+      "shelfLife": "5 Days",
+      "yieldsText": "2.5 Quarts",
+      "yieldAmount": 2.5,
+      "yieldUnit": "Quarts",
+      "ingredients": [
+        {
+          "raw": "1 Fluid OunceOil, Blend 90/10",
+          "qty": 1,
+          "unit": "",
+          "item": "Fluid OunceOil, Blend 90/10"
+        },
+        {
+          "raw": "1 Tablespoon Garlic, Peeled",
+          "qty": 1,
+          "unit": "Tablespoon",
+          "item": "Garlic, Peeled"
+        },
+        {
+          "raw": "3 Ounce Onions, Yellow",
+          "qty": 3,
+          "unit": "Ounce",
+          "item": "Onions, Yellow"
+        },
+        {
+          "raw": "0.5 Table- spoon Spice, Onion Powder",
+          "qty": 0.5,
+          "unit": "",
+          "item": "Table- spoon Spice, Onion Powder"
+        },
+        {
+          "raw": "1 Fluid OunceLapis Luna Chardonnay",
+          "qty": 1,
+          "unit": "",
+          "item": "Fluid OunceLapis Luna Chardonnay"
+        },
+        {
+          "raw": "1 Quart PREP - Chicken Stock from Base",
+          "qty": 1,
+          "unit": "Quart",
+          "item": "PREP - Chicken Stock from Base"
+        },
+        {
+          "raw": "1 Quart Heavy Cream",
+          "qty": 1,
+          "unit": "Quart",
+          "item": "Heavy Cream"
+        },
+        {
+          "raw": "4 Ounce Mustard, Dijon",
+          "qty": 4,
+          "unit": "Ounce",
+          "item": "Mustard, Dijon"
+        },
+        {
+          "raw": "0.25 Tea- spoon Spice, Kosher Salt",
+          "qty": 0.25,
+          "unit": "",
+          "item": "Tea- spoon Spice, Kosher Salt"
+        },
+        {
+          "raw": "0.25 Tea- spoon Spice, Pepper Black Ground",
+          "qty": 0.25,
+          "unit": "",
+          "item": "Tea- spoon Spice, Pepper Black Ground"
+        },
+        {
+          "raw": "1 Teaspoon Vinegar, Balsamic",
+          "qty": 1,
+          "unit": "Teaspoon",
+          "item": "Vinegar, Balsamic"
+        },
+        {
+          "raw": "1 Cup Mushrooms, Medium",
+          "qty": 1,
+          "unit": "Cup",
+          "item": "Mushrooms, Medium"
+        }
+      ],
+      "methodText": "No Method",
+      "methodLines": [
+        "No Method"
+      ]
+    },
+    {
+      "title": "PREP - Drunkenberry Sauce",
+      "sourceRestaurant": "Prairie Canary",
+      "sourceFile": "Printed Recipes - Portrait (5).pdf",
+      "printedDate": "04/08/2026",
+      "category": "Prepared items",
+      "recipeType": "Batch",
+      "allergens": "",
+      "equipment": "10 qt. Pot, Blender",
+      "shelfLife": "14 Days",
+      "yieldsText": "1.5 Quarts",
+      "yieldAmount": 1.5,
+      "yieldUnit": "Quarts",
+      "ingredients": [
+        {
+          "raw": "1 Quart Berries, Mixed Frozen",
+          "qty": 1,
+          "unit": "Quart",
+          "item": "Berries, Mixed Frozen"
+        },
+        {
+          "raw": "1 Fluid OunceGran Gala Triple Orange Liqueur",
+          "qty": 1,
+          "unit": "",
+          "item": "Fluid OunceGran Gala Triple Orange Liqueur"
+        },
+        {
+          "raw": "1 Fluid OuncePama Pomegranate Liqueur",
+          "qty": 1,
+          "unit": "",
+          "item": "Fluid OuncePama Pomegranate Liqueur"
+        },
+        {
+          "raw": "0.5 Cup Sugar, Brown",
+          "qty": 0.5,
+          "unit": "Cup",
+          "item": "Sugar, Brown"
+        }
+      ],
+      "methodText": "Add 1 qt frozen berries and 4 tablespoons butter to sauce pan\nand simmer on low heat until melted and well mixed\nAdd one shot Grand Gala and one shot of Palma\nAdd 1/2 cup brown sugar\nPlace in blender and blend for 1 - 2 minutes until smooth\nLet cool\nPour into one full squeeze bottle and the remainder into a quart\ncontainer",
+      "methodLines": [
+        "Add 1 qt frozen berries and 4 tablespoons butter to sauce pan",
+        "and simmer on low heat until melted and well mixed",
+        "Add one shot Grand Gala and one shot of Palma",
+        "Add 1/2 cup brown sugar",
+        "Place in blender and blend for 1 - 2 minutes until smooth",
+        "Let cool",
+        "Pour into one full squeeze bottle and the remainder into a quart",
+        "container"
+      ]
+    },
+    {
+      "title": "PREP - Garlic Aioli",
+      "sourceRestaurant": "Hometown Heroes",
+      "sourceFile": "Printed Recipes - Portrait (4).pdf",
+      "printedDate": "04/08/2026",
+      "category": "Prepared items",
+      "recipeType": "Sauces",
+      "allergens": "",
+      "equipment": "",
+      "shelfLife": "",
+      "yieldsText": "4 Quarts or 6400 Grams",
+      "yieldAmount": 4,
+      "yieldUnit": "Quarts or 6400 Grams",
+      "ingredients": [
+        {
+          "raw": "1 Gallon Mayonnaise",
+          "qty": 1,
+          "unit": "Gallon",
+          "item": "Mayonnaise"
+        },
+        {
+          "raw": "2 Tablespoon Garlic, Peeled",
+          "qty": 2,
+          "unit": "Tablespoon",
+          "item": "Garlic, Peeled"
+        },
+        {
+          "raw": "2 Fluid OunceOil, Olive Extra Virgin",
+          "qty": 2,
+          "unit": "",
+          "item": "Fluid OunceOil, Olive Extra Virgin"
+        },
+        {
+          "raw": "0.5 Teaspoon Spice, Kosher Salt",
+          "qty": 0.5,
+          "unit": "Teaspoon",
+          "item": "Spice, Kosher Salt"
+        }
+      ],
+      "methodText": "** 2 Tbsp garlic Fresh Garlic",
+      "methodLines": [
+        "** 2 Tbsp garlic Fresh Garlic"
+      ]
+    },
+    {
+      "title": "PREP - Goat Cheese Spread",
+      "sourceRestaurant": "Hometown Heroes",
+      "sourceFile": "Printed Recipes - Portrait (3).pdf",
+      "printedDate": "04/08/2026",
+      "category": "Prepared items",
+      "recipeType": "Batch",
+      "allergens": "",
+      "equipment": "",
+      "shelfLife": "7 Days",
+      "yieldsText": "9 Pounds or 288 Tablespoons",
+      "yieldAmount": 9,
+      "yieldUnit": "Pounds or 288 Tablespoons",
+      "ingredients": [
+        {
+          "raw": "6 Pound Cheese, Goat",
+          "qty": 6,
+          "unit": "Pound",
+          "item": "Cheese, Goat"
+        },
+        {
+          "raw": "3 Pound Cream Cheese",
+          "qty": 3,
+          "unit": "Pound",
+          "item": "Cream Cheese"
+        }
+      ],
+      "methodText": "No Method",
+      "methodLines": [
+        "No Method"
+      ]
+    },
+    {
+      "title": "Prep - Hero's Aioli",
+      "sourceRestaurant": "Hometown Heroes",
+      "sourceFile": "Printed Recipes - Portrait (3).pdf",
+      "printedDate": "04/08/2026",
+      "category": "Prepared items",
+      "recipeType": "Sauces",
+      "allergens": "",
+      "equipment": "",
+      "shelfLife": "7 Days",
+      "yieldsText": "6 Quarts",
+      "yieldAmount": 6,
+      "yieldUnit": "Quarts",
+      "ingredients": [
+        {
+          "raw": "0.5 Gallon Ketchup, Bulk",
+          "qty": 0.5,
+          "unit": "Gallon",
+          "item": "Ketchup, Bulk"
+        },
+        {
+          "raw": "0.5 Gallon Mustard, Yellow",
+          "qty": 0.5,
+          "unit": "Gallon",
+          "item": "Mustard, Yellow"
+        },
+        {
+          "raw": "0.5 Gallon Mayonnaise",
+          "qty": 0.5,
+          "unit": "Gallon",
+          "item": "Mayonnaise"
+        },
+        {
+          "raw": "1 Tablespoon Salt and pepper mixture",
+          "qty": 1,
+          "unit": "Tablespoon",
+          "item": "Salt and pepper mixture"
+        }
+      ],
+      "methodText": "No Method",
+      "methodLines": [
+        "No Method"
+      ]
+    },
+    {
+      "title": "PREP - Mango Chicken Salad",
+      "sourceRestaurant": "Hometown Heroes",
+      "sourceFile": "Printed Recipes - Portrait (4).pdf",
+      "printedDate": "04/08/2026",
+      "category": "Prepared items",
+      "recipeType": "Batch",
+      "allergens": "",
+      "equipment": "4 Qt. Metal Mixing Bowl",
+      "shelfLife": "7 Days",
+      "yieldsText": "5 Pounds",
+      "yieldAmount": 5,
+      "yieldUnit": "Pounds",
+      "ingredients": [
+        {
+          "raw": "2.5 Pound Chicken, Pulled",
+          "qty": 2.5,
+          "unit": "Pound",
+          "item": "Chicken, Pulled"
+        },
+        {
+          "raw": "2 Cup Celery, Fresh",
+          "qty": 2,
+          "unit": "Cup",
+          "item": "Celery, Fresh"
+        },
+        {
+          "raw": "10 Ounce Onions, Red",
+          "qty": 10,
+          "unit": "Ounce",
+          "item": "Onions, Red"
+        },
+        {
+          "raw": "3 Tablespoon Spice, Kosher Salt",
+          "qty": 3,
+          "unit": "Tablespoon",
+          "item": "Spice, Kosher Salt"
+        },
+        {
+          "raw": "3 Tablespoon Spice, Pepper Black Ground",
+          "qty": 3,
+          "unit": "Tablespoon",
+          "item": "Spice, Pepper Black Ground"
+        },
+        {
+          "raw": "3 Tablespoon Spice, Curry Powder",
+          "qty": 3,
+          "unit": "Tablespoon",
+          "item": "Spice, Curry Powder"
+        },
+        {
+          "raw": "3 Cup PREP - Chile Aoli",
+          "qty": 3,
+          "unit": "Cup",
+          "item": "PREP - Chile Aoli"
+        },
+        {
+          "raw": "2 Cup Mango, Dried",
+          "qty": 2,
+          "unit": "Cup",
+          "item": "Mango, Dried"
+        },
+        {
+          "raw": "2 Cup Carrots, Shredded",
+          "qty": 2,
+          "unit": "Cup",
+          "item": "Carrots, Shredded"
+        }
+      ],
+      "methodText": "Chop and Put all ingredients in a large metal mixing bowl and\nmix thoroughly.\nAdd mixture to the Food processor and pulse for 30 seconds\nto a minute just until broken down.\nYOU DONT WANT A PASTE CONSISTANCY.\nPut mixture into large Cambro and label with date and name.",
+      "methodLines": [
+        "Chop and Put all ingredients in a large metal mixing bowl and",
+        "mix thoroughly.",
+        "Add mixture to the Food processor and pulse for 30 seconds",
+        "to a minute just until broken down.",
+        "YOU DONT WANT A PASTE CONSISTANCY.",
+        "Put mixture into large Cambro and label with date and name."
+      ]
+    },
+    {
+      "title": "PREP - Maple Sriracha",
+      "sourceRestaurant": "Hometown Heroes",
+      "sourceFile": "Printed Recipes - Portrait (4).pdf",
+      "printedDate": "04/08/2026",
+      "category": "Prepared items",
+      "recipeType": "Sauces",
+      "allergens": "",
+      "equipment": "",
+      "shelfLife": "",
+      "yieldsText": "4.25 Quarts",
+      "yieldAmount": 4.25,
+      "yieldUnit": "Quarts",
+      "ingredients": [
+        {
+          "raw": "1 Gallon Syrup, Maple",
+          "qty": 1,
+          "unit": "Gallon",
+          "item": "Syrup, Maple"
+        },
+        {
+          "raw": "16 Fluid Ounce Sauce, Sriracha",
+          "qty": 16,
+          "unit": "Fluid Ounce",
+          "item": "Sauce, Sriracha"
+        },
+        {
+          "raw": "1 Tablespoon Salt and pepper mixture",
+          "qty": 1,
+          "unit": "Tablespoon",
+          "item": "Salt and pepper mixture"
+        }
+      ],
+      "methodText": "No Method",
+      "methodLines": [
+        "No Method"
+      ]
+    },
+    {
+      "title": "PREP - Marinara",
+      "sourceRestaurant": "Hometown Heroes",
+      "sourceFile": "Printed Recipes - Portrait (4).pdf",
+      "printedDate": "04/08/2026",
+      "category": "Prepared items",
+      "recipeType": "Sauces",
+      "allergens": "",
+      "equipment": "",
+      "shelfLife": "7 Days",
+      "yieldsText": "9.5 Gallons or 1216 Ounces",
+      "yieldAmount": 9.5,
+      "yieldUnit": "Gallons or 1216 Ounces",
+      "ingredients": [
+        {
+          "raw": "6 Can Tomatoes, Chopped Can",
+          "qty": 6,
+          "unit": "Can",
+          "item": "Tomatoes, Chopped Can"
+        },
+        {
+          "raw": "6 Each Sauce, Tomato",
+          "qty": 6,
+          "unit": "Each",
+          "item": "Sauce, Tomato"
+        },
+        {
+          "raw": "4 Cup San Antonio Winery Velvet California Chablis 18L",
+          "qty": 4,
+          "unit": "Cup",
+          "item": "San Antonio Winery Velvet California Chablis 18L"
+        },
+        {
+          "raw": "2 Cup Seasoning, Italian",
+          "qty": 2,
+          "unit": "Cup",
+          "item": "Seasoning, Italian"
+        },
+        {
+          "raw": "2 Ounce Spice, Pepper Red Crushed",
+          "qty": 2,
+          "unit": "Ounce",
+          "item": "Spice, Pepper Red Crushed"
+        },
+        {
+          "raw": "2 Cup Sugar, Granulated",
+          "qty": 2,
+          "unit": "Cup",
+          "item": "Sugar, Granulated"
+        },
+        {
+          "raw": "0.5 Cup Spice, Kosher Salt",
+          "qty": 0.5,
+          "unit": "Cup",
+          "item": "Spice, Kosher Salt"
+        },
+        {
+          "raw": "1 Tablespoon Spice, Pepper Black Ground",
+          "qty": 1,
+          "unit": "Tablespoon",
+          "item": "Spice, Pepper Black Ground"
+        },
+        {
+          "raw": "1 Pound Onions, Yellow",
+          "qty": 1,
+          "unit": "Pound",
+          "item": "Onions, Yellow"
+        },
+        {
+          "raw": "3 Ounce Garlic, Peeled",
+          "qty": 3,
+          "unit": "Ounce",
+          "item": "Garlic, Peeled"
+        }
+      ],
+      "methodText": "No Method",
+      "methodLines": [
+        "No Method"
+      ]
+    },
+    {
+      "title": "PREP - Mushrooms",
+      "sourceRestaurant": "Hometown Heroes",
+      "sourceFile": "Printed Recipes - Portrait (4).pdf",
+      "printedDate": "04/08/2026",
+      "category": "Prepared items",
+      "recipeType": "Batch",
+      "allergens": "",
+      "equipment": "",
+      "shelfLife": "",
+      "yieldsText": "4 Cups or 16 Counts or 32 Ounces",
+      "yieldAmount": 4,
+      "yieldUnit": "Cups or 16 Counts or 32 Ounces",
+      "ingredients": [
+        {
+          "raw": "5 Cup Mushrooms, Medium",
+          "qty": 5,
+          "unit": "Cup",
+          "item": "Mushrooms, Medium"
+        },
+        {
+          "raw": "2 Fluid OunceOil, Soybean Salad",
+          "qty": 2,
+          "unit": "",
+          "item": "Fluid OunceOil, Soybean Salad"
+        },
+        {
+          "raw": "1 Teaspoon Salt and pepper mixture",
+          "qty": 1,
+          "unit": "Teaspoon",
+          "item": "Salt and pepper mixture"
+        }
+      ],
+      "methodText": "No Method",
+      "methodLines": [
+        "No Method"
+      ]
+    },
+    {
+      "title": "PREP - Pesto",
+      "sourceRestaurant": "Hometown Heroes",
+      "sourceFile": "Printed Recipes - Portrait (4).pdf",
+      "printedDate": "04/08/2026",
+      "category": "Prepared items",
+      "recipeType": "Batch",
+      "allergens": "",
+      "equipment": "Robot Coupe, Rubber Head Spatula, Quart Container",
+      "shelfLife": "7 Days",
+      "yieldsText": "1 Quart or 32 Ounces",
+      "yieldAmount": 1,
+      "yieldUnit": "Quart or 32 Ounces",
+      "ingredients": [
+        {
+          "raw": "6 Ounce Basil, Fresh",
+          "qty": 6,
+          "unit": "Ounce",
+          "item": "Basil, Fresh"
+        },
+        {
+          "raw": "2 Ounce Garlic, Peeled",
+          "qty": 2,
+          "unit": "Ounce",
+          "item": "Garlic, Peeled"
+        },
+        {
+          "raw": "5 Ounce Almonds, Blanched Sliv- ered",
+          "qty": 5,
+          "unit": "Ounce",
+          "item": "Almonds, Blanched Sliv- ered"
+        },
+        {
+          "raw": "1 Each Lemons, Fresh",
+          "qty": 1,
+          "unit": "Each",
+          "item": "Lemons, Fresh"
+        },
+        {
+          "raw": "8 Ounce Cheese, Parmesan Grated",
+          "qty": 8,
+          "unit": "Ounce",
+          "item": "Cheese, Parmesan Grated"
+        },
+        {
+          "raw": "1 Cup Oil, Canola",
+          "qty": 1,
+          "unit": "Cup",
+          "item": "Oil, Canola"
+        },
+        {
+          "raw": "6 Ounce Spinach, Fresh",
+          "qty": 6,
+          "unit": "Ounce",
+          "item": "Spinach, Fresh"
+        },
+        {
+          "raw": "1 Teaspoon Spice, Kosher Salt",
+          "qty": 1,
+          "unit": "Teaspoon",
+          "item": "Spice, Kosher Salt"
+        }
+      ],
+      "methodText": "Put 2 cups of packed fresh basil leaves and 2 cups spinach into\nRobo Coupe\nAdd 2 tablespoons of chopped fresh garlic\nAdd 1 1/2 cup slivered almonds\nAdd 2 tablespoons lemon juice\nAdd 2 cups of grated parmesan cheese\nTurn on Robo Coupe and blend thoroughly\nWhile Robo Coupe is running, gradually pour the olive oil\nslowly until completely mixed and pasty\nScrape into a quart container and label and date",
+      "methodLines": [
+        "Put 2 cups of packed fresh basil leaves and 2 cups spinach into",
+        "Robo Coupe",
+        "Add 2 tablespoons of chopped fresh garlic",
+        "Add 1 1/2 cup slivered almonds",
+        "Add 2 tablespoons lemon juice",
+        "Add 2 cups of grated parmesan cheese",
+        "Turn on Robo Coupe and blend thoroughly",
+        "While Robo Coupe is running, gradually pour the olive oil",
+        "slowly until completely mixed and pasty",
+        "Scrape into a quart container and label and date"
+      ]
+    },
+    {
+      "title": "PREP - Red and Green Peppers Diced",
+      "sourceRestaurant": "Hometown Heroes",
+      "sourceFile": "Printed Recipes - Portrait (4).pdf",
+      "printedDate": "04/08/2026",
+      "category": "Prepared items",
+      "recipeType": "Batch",
+      "allergens": "",
+      "equipment": "",
+      "shelfLife": "5 Days",
+      "yieldsText": "6 Cups",
+      "yieldAmount": 6,
+      "yieldUnit": "Cups",
+      "ingredients": [
+        {
+          "raw": "0.1 Case Peppers, Green, 45 - 50 peppers to a case",
+          "qty": 0.1,
+          "unit": "Case",
+          "item": "Peppers, Green, 45 - 50 peppers to a case"
+        },
+        {
+          "raw": "0.05 Case Peppers, Red, 45 - 50 pep- pers to a case",
+          "qty": 0.05,
+          "unit": "Case",
+          "item": "Peppers, Red, 45 - 50 pep- pers to a case"
+        }
+      ],
+      "methodText": "Cut tops and bottoms off peppers\nCut out core and ribs\nDice evenly and mix\nApproximately 6 green peppers to every 1 red\n5 - 6 green peppers and 1 - 2 red peppers should equal 6 cups\nof diced",
+      "methodLines": [
+        "Cut tops and bottoms off peppers",
+        "Cut out core and ribs",
+        "Dice evenly and mix",
+        "Approximately 6 green peppers to every 1 red",
+        "5 - 6 green peppers and 1 - 2 red peppers should equal 6 cups",
+        "of diced"
+      ]
+    },
+    {
+      "title": "PREP Sliced red onion",
+      "sourceRestaurant": "Hometown Heroes",
+      "sourceFile": "Printed Recipes - Portrait (4).pdf",
+      "printedDate": "04/08/2026",
+      "category": "Prepared items",
+      "recipeType": "Batch",
+      "allergens": "",
+      "equipment": "",
+      "shelfLife": "",
+      "yieldsText": "1 (1/6) Pan or 48 Ounces",
+      "yieldAmount": 1,
+      "yieldUnit": "(1/6) Pan or 48 Ounces",
+      "ingredients": [
+        {
+          "raw": "3 Pound Onions, Red",
+          "qty": 3,
+          "unit": "Pound",
+          "item": "Onions, Red"
+        }
+      ],
+      "methodText": "No Method",
+      "methodLines": [
+        "No Method"
+      ]
+    },
+    {
+      "title": "PREP Sliced Tomato",
+      "sourceRestaurant": "Hometown Heroes",
+      "sourceFile": "Printed Recipes - Portrait (4).pdf",
+      "printedDate": "04/08/2026",
+      "category": "Prepared items",
+      "recipeType": "Batch",
+      "allergens": "",
+      "equipment": "",
+      "shelfLife": "",
+      "yieldsText": "1 (1/6) Pan or 54 Slices",
+      "yieldAmount": 1,
+      "yieldUnit": "(1/6) Pan or 54 Slices",
+      "ingredients": [
+        {
+          "raw": "9 Each Tomatoes, Fresh",
+          "qty": 9,
+          "unit": "Each",
+          "item": "Tomatoes, Fresh"
+        }
+      ],
+      "methodText": "No Method",
+      "methodLines": [
+        "No Method"
+      ]
+    },
+    {
+      "title": "Prep: Pork Belly Rub",
+      "sourceRestaurant": "Prairie Canary",
+      "sourceFile": "Printed Recipes - Portrait (1).pdf",
+      "printedDate": "11/05/2025",
+      "category": "Prepared items",
+      "recipeType": "Batch",
+      "allergens": "",
+      "equipment": "",
+      "shelfLife": "",
+      "yieldsText": "1 Each",
+      "yieldAmount": 1,
+      "yieldUnit": "Each",
+      "ingredients": [
+        {
+          "raw": "1 Tablespoon Spice, Chinese 5 Spice",
+          "qty": 1,
+          "unit": "Tablespoon",
+          "item": "Spice, Chinese 5 Spice"
+        },
+        {
+          "raw": "3 Ounce Sauce, Soy",
+          "qty": 3,
+          "unit": "Ounce",
+          "item": "Sauce, Soy"
+        },
+        {
+          "raw": "2 Ounce Sauce, Fish",
+          "qty": 2,
+          "unit": "Ounce",
+          "item": "Sauce, Fish"
+        },
+        {
+          "raw": "0.5 Ounce Spice, Kosher Salt",
+          "qty": 0.5,
+          "unit": "Ounce",
+          "item": "Spice, Kosher Salt"
+        },
+        {
+          "raw": "0.5 Ounce Spice, Pepper Black Ground",
+          "qty": 0.5,
+          "unit": "Ounce",
+          "item": "Spice, Pepper Black Ground"
+        }
+      ],
+      "methodText": "No Method",
+      "methodLines": [
+        "No Method"
+      ]
+    },
+    {
+      "title": "Prep: Queso Blanco",
+      "sourceRestaurant": "Prairie Canary",
+      "sourceFile": "Printed Recipes - Portrait (1).pdf",
+      "printedDate": "11/05/2025",
+      "category": "Prepared items",
+      "recipeType": "Batch",
+      "allergens": "",
+      "equipment": "",
+      "shelfLife": "",
+      "yieldsText": ".75 Quarts",
+      "yieldAmount": 0.75,
+      "yieldUnit": "Quarts",
+      "ingredients": [
+        {
+          "raw": "5 Pound Cheese, Queso",
+          "qty": 5,
+          "unit": "Pound",
+          "item": "Cheese, Queso"
+        },
+        {
+          "raw": "1 Quart Milk, Whole",
+          "qty": 1,
+          "unit": "Quart",
+          "item": "Milk, Whole"
+        },
+        {
+          "raw": "1 Quart Heavy Cream",
+          "qty": 1,
+          "unit": "Quart",
+          "item": "Heavy Cream"
+        },
+        {
+          "raw": "1 Each Tomatoes, Diced Can",
+          "qty": 1,
+          "unit": "Each",
+          "item": "Tomatoes, Diced Can"
+        }
+      ],
+      "methodText": "No Method",
+      "methodLines": [
+        "No Method"
+      ]
+    },
+    {
+      "title": "Prep: Tartar Sauce",
+      "sourceRestaurant": "Prairie Canary",
+      "sourceFile": "Printed Recipes - Portrait (1).pdf",
+      "printedDate": "11/05/2025",
+      "category": "Prepared items",
+      "recipeType": "Batch",
+      "allergens": "",
+      "equipment": "Qt. Metal Mixing Bowl, Large Whisk",
+      "shelfLife": "",
+      "yieldsText": "2.25 Quarts",
+      "yieldAmount": 2.25,
+      "yieldUnit": "Quarts",
+      "ingredients": [
+        {
+          "raw": "2 Quart Mayonnaise",
+          "qty": 2,
+          "unit": "Quart",
+          "item": "Mayonnaise"
+        },
+        {
+          "raw": "8 Ounce Relish, Sweet",
+          "qty": 8,
+          "unit": "Ounce",
+          "item": "Relish, Sweet"
+        },
+        {
+          "raw": "1 Fluid OunceJuice, Lemon",
+          "qty": 1,
+          "unit": "",
+          "item": "Fluid OunceJuice, Lemon"
+        },
+        {
+          "raw": "1 Tablespoon Sauce, Worcestershire GAL",
+          "qty": 1,
+          "unit": "Tablespoon",
+          "item": "Sauce, Worcestershire GAL"
+        },
+        {
+          "raw": "1 Teaspoon Salt and pepper mixture",
+          "qty": 1,
+          "unit": "Teaspoon",
+          "item": "Salt and pepper mixture"
+        }
+      ],
+      "methodText": "Put all items into a bowl, stir until all ingredients are incorper-\nated.",
+      "methodLines": [
+        "Put all items into a bowl, stir until all ingredients are incorper-",
+        "ated."
+      ]
+    },
+    {
+      "title": "Prep: Vegetable Medley",
+      "sourceRestaurant": "Prairie Canary",
+      "sourceFile": "Printed Recipes - Portrait (1).pdf",
+      "printedDate": "11/05/2025",
+      "category": "Prepared items",
+      "recipeType": "Batch",
+      "allergens": "",
+      "equipment": "",
+      "shelfLife": "",
+      "yieldsText": "9 Pounds",
+      "yieldAmount": 9,
+      "yieldUnit": "Pounds",
+      "ingredients": [
+        {
+          "raw": "3 Pound Squash, Zucchini",
+          "qty": 3,
+          "unit": "Pound",
+          "item": "Squash, Zucchini"
+        },
+        {
+          "raw": "3 Pound Squash, Yellow",
+          "qty": 3,
+          "unit": "Pound",
+          "item": "Squash, Yellow"
+        },
+        {
+          "raw": "1 Pound Onions, Red",
+          "qty": 1,
+          "unit": "Pound",
+          "item": "Onions, Red"
+        },
+        {
+          "raw": "1 Pound Peppers, Roasted Red",
+          "qty": 1,
+          "unit": "Pound",
+          "item": "Peppers, Roasted Red"
+        },
+        {
+          "raw": "1 Pound Peppers, Green",
+          "qty": 1,
+          "unit": "Pound",
+          "item": "Peppers, Green"
+        }
+      ],
+      "methodText": "No Method",
+      "methodLines": [
+        "No Method"
+      ]
+    },
+    {
+      "title": "pumpkin cheesecake filling",
+      "sourceRestaurant": "Prairie Canary",
+      "sourceFile": "Printed Recipes - Portrait (1).pdf",
+      "printedDate": "11/05/2025",
+      "category": "Prepared items",
+      "recipeType": "Batch",
+      "allergens": "",
+      "equipment": "",
+      "shelfLife": "",
+      "yieldsText": "76 Ounces",
+      "yieldAmount": 76,
+      "yieldUnit": "Ounces",
+      "ingredients": [
+        {
+          "raw": "3 Pound Cream Cheese",
+          "qty": 3,
+          "unit": "Pound",
+          "item": "Cream Cheese"
+        },
+        {
+          "raw": "2.25 Cup Sugar, Granulated",
+          "qty": 2.25,
+          "unit": "Cup",
+          "item": "Sugar, Granulated"
+        },
+        {
+          "raw": "6 Each Eggs",
+          "qty": 6,
+          "unit": "Each",
+          "item": "Eggs"
+        },
+        {
+          "raw": "1 Tablespoon Extract, Vanilla Imitation",
+          "qty": 1,
+          "unit": "Tablespoon",
+          "item": "Extract, Vanilla Imitation"
+        }
+      ],
+      "methodText": "No Method",
+      "methodLines": [
+        "No Method"
+      ]
+    },
+    {
+      "title": "Ribeye Steak",
+      "sourceRestaurant": "Prairie Canary",
+      "sourceFile": "Printed Recipes - Portrait (1).pdf",
+      "printedDate": "11/05/2025",
+      "category": "Prepared items",
+      "recipeType": "Batch",
+      "allergens": "",
+      "equipment": "",
+      "shelfLife": "",
+      "yieldsText": "1 Each",
+      "yieldAmount": 1,
+      "yieldUnit": "Each",
+      "ingredients": [
+        {
+          "raw": "16 Ounce Beef, Ribeye Lip On",
+          "qty": 16,
+          "unit": "Ounce",
+          "item": "Beef, Ribeye Lip On"
+        }
+      ],
+      "methodText": "No Method",
+      "methodLines": [
+        "No Method"
+      ]
+    },
+    {
+      "title": "Roasted Garlic",
+      "sourceRestaurant": "Prairie Canary",
+      "sourceFile": "Printed Recipes - Portrait (1).pdf",
+      "printedDate": "11/05/2025",
+      "category": "Prepared items",
+      "recipeType": "Batch",
+      "allergens": "",
+      "equipment": "",
+      "shelfLife": "7 Days",
+      "yieldsText": "12 Ounces",
+      "yieldAmount": 12,
+      "yieldUnit": "Ounces",
+      "ingredients": [
+        {
+          "raw": "3 Cup Garlic, Peeled",
+          "qty": 3,
+          "unit": "Cup",
+          "item": "Garlic, Peeled"
+        },
+        {
+          "raw": "1 Tablespoon Oil, Canola",
+          "qty": 1,
+          "unit": "Tablespoon",
+          "item": "Oil, Canola"
+        },
+        {
+          "raw": "1 Teaspoon Spice, Kosher Salt",
+          "qty": 1,
+          "unit": "Teaspoon",
+          "item": "Spice, Kosher Salt"
+        }
+      ],
+      "methodText": "No Method",
+      "methodLines": [
+        "No Method"
+      ]
+    },
+    {
+      "title": "roasted Garlic and herb cream sauce",
+      "sourceRestaurant": "Prairie Canary",
+      "sourceFile": "Printed Recipes - Portrait (1).pdf",
+      "printedDate": "11/05/2025",
+      "category": "Prepared items",
+      "recipeType": "Batch",
+      "allergens": "",
+      "equipment": "",
+      "shelfLife": "",
+      "yieldsText": "6 Cups",
+      "yieldAmount": 6,
+      "yieldUnit": "Cups",
+      "ingredients": [
+        {
+          "raw": "4 Cup PREP - Chicken Stock from Base",
+          "qty": 4,
+          "unit": "Cup",
+          "item": "PREP - Chicken Stock from Base"
+        },
+        {
+          "raw": "0.5 Quart Heavy Cream",
+          "qty": 0.5,
+          "unit": "Quart",
+          "item": "Heavy Cream"
+        },
+        {
+          "raw": "0.13 Cup Thyme, Fresh",
+          "qty": 0.13,
+          "unit": "Cup",
+          "item": "Thyme, Fresh"
+        },
+        {
+          "raw": "2 Fluid OunceSan Antonio Winery Velvet California Chablis 18L",
+          "qty": 2,
+          "unit": "",
+          "item": "Fluid OunceSan Antonio Winery Velvet California Chablis 18L"
+        }
+      ],
+      "methodText": "No Method",
+      "methodLines": [
+        "No Method"
+      ]
+    },
+    {
+      "title": "Root Beer",
+      "sourceRestaurant": "Prairie Canary",
+      "sourceFile": "Printed Recipes - Portrait (1).pdf",
+      "printedDate": "11/05/2025",
+      "category": "Prepared items",
+      "recipeType": "BIB Mixture",
+      "allergens": "",
+      "equipment": "",
+      "shelfLife": "",
+      "yieldsText": "10 Fluid Ounces",
+      "yieldAmount": 10,
+      "yieldUnit": "Fluid Ounces",
+      "ingredients": [
+        {
+          "raw": "1.7 Fluid Ounce Root Beer BIB",
+          "qty": 1.7,
+          "unit": "Fluid Ounce",
+          "item": "Root Beer BIB"
+        }
+      ],
+      "methodText": "No Method",
+      "methodLines": [
+        "No Method"
+      ]
+    },
+    {
+      "title": "Rosemary Ginger Simple Syrup",
+      "sourceRestaurant": "Prairie Canary",
+      "sourceFile": "Printed Recipes - Portrait (1).pdf",
+      "printedDate": "11/05/2025",
+      "category": "Prepared items",
+      "recipeType": "Sauces",
+      "allergens": "",
+      "equipment": "10 qt. Pot",
+      "shelfLife": "1 Days",
+      "yieldsText": "1 Quart",
+      "yieldAmount": 1,
+      "yieldUnit": "Quart",
+      "ingredients": [
+        {
+          "raw": "5 Gram Rosemary, Fresh",
+          "qty": 5,
+          "unit": "Gram",
+          "item": "Rosemary, Fresh"
+        },
+        {
+          "raw": "5 Gram Ginger, Fresh",
+          "qty": 5,
+          "unit": "Gram",
+          "item": "Ginger, Fresh"
+        },
+        {
+          "raw": "1 Quart Sugar, Granulated",
+          "qty": 1,
+          "unit": "Quart",
+          "item": "Sugar, Granulated"
+        }
+      ],
+      "methodText": "No Method",
+      "methodLines": [
+        "No Method"
+      ]
+    },
+    {
+      "title": "Sirloin Steak",
+      "sourceRestaurant": "Prairie Canary",
+      "sourceFile": "Printed Recipes - Portrait (1).pdf",
+      "printedDate": "11/05/2025",
+      "category": "Prepared items",
+      "recipeType": "Batch",
+      "allergens": "",
+      "equipment": "",
+      "shelfLife": "",
+      "yieldsText": "1 Batch",
+      "yieldAmount": 1,
+      "yieldUnit": "Batch",
+      "ingredients": [
+        {
+          "raw": "8 Ounce Beef, Sirloin",
+          "qty": 8,
+          "unit": "Ounce",
+          "item": "Beef, Sirloin"
+        }
+      ],
+      "methodText": "No Method",
+      "methodLines": [
+        "No Method"
+      ]
+    },
+    {
+      "title": "Slurry",
+      "sourceRestaurant": "Prairie Canary",
+      "sourceFile": "Printed Recipes - Portrait (1).pdf",
+      "printedDate": "11/05/2025",
+      "category": "Prepared items",
+      "recipeType": "Batch",
+      "allergens": "",
+      "equipment": "",
+      "shelfLife": "7 Days",
+      "yieldsText": "1 Quart",
+      "yieldAmount": 1,
+      "yieldUnit": "Quart",
+      "ingredients": [
+        {
+          "raw": "8 Ounce Corn Starch",
+          "qty": 8,
+          "unit": "Ounce",
+          "item": "Corn Starch"
+        }
+      ],
+      "methodText": "No Method",
+      "methodLines": [
+        "No Method"
+      ]
+    },
+    {
+      "title": "Spiced Almonds",
+      "sourceRestaurant": "Prairie Canary",
+      "sourceFile": "Printed Recipes - Portrait (1).pdf",
+      "printedDate": "11/05/2025",
+      "category": "Prepared items",
+      "recipeType": "Spices and Rubs",
+      "allergens": "",
+      "equipment": "Qt. Metal Mixing Bowl, Rubber Head Spatula, Full Sheet",
+      "shelfLife": "30 Days",
+      "yieldsText": "Pounds",
+      "yieldAmount": null,
+      "yieldUnit": "",
+      "ingredients": [
+        {
+          "raw": "2 Each Almonds, Blanched Sliv- ered",
+          "qty": 2,
+          "unit": "Each",
+          "item": "Almonds, Blanched Sliv- ered"
+        },
+        {
+          "raw": "1 Cup Oil, Soybean Salad",
+          "qty": 1,
+          "unit": "Cup",
+          "item": "Oil, Soybean Salad"
+        },
+        {
+          "raw": "2 Tablespoon Spice, Cinnamon Ground",
+          "qty": 2,
+          "unit": "Tablespoon",
+          "item": "Spice, Cinnamon Ground"
+        },
+        {
+          "raw": "1 Tablespoon Spice, Paprika",
+          "qty": 1,
+          "unit": "Tablespoon",
+          "item": "Spice, Paprika"
+        },
+        {
+          "raw": "1 Tablespoon Spice, Nutmeg Ground",
+          "qty": 1,
+          "unit": "Tablespoon",
+          "item": "Spice, Nutmeg Ground"
+        },
+        {
+          "raw": "1 Teaspoon Spice, Kosher Salt",
+          "qty": 1,
+          "unit": "Teaspoon",
+          "item": "Spice, Kosher Salt"
+        },
+        {
+          "raw": "0.5 Gram Spice, Pepper Black Ground",
+          "qty": 0.5,
+          "unit": "Gram",
+          "item": "Spice, Pepper Black Ground"
+        },
+        {
+          "raw": "1 Cup Honey",
+          "qty": 1,
+          "unit": "Cup",
+          "item": "Honey"
+        }
+      ],
+      "methodText": "No Method",
+      "methodLines": [
+        "No Method"
+      ]
+    },
+    {
+      "title": "Spiced Pecans",
+      "sourceRestaurant": "Prairie Canary",
+      "sourceFile": "Printed Recipes - Portrait (1).pdf",
+      "printedDate": "11/05/2025",
+      "category": "Prepared items",
+      "recipeType": "Spices and Rubs",
+      "allergens": "",
+      "equipment": "Qt. Metal Mixing Bowl, Hotel Pan",
+      "shelfLife": "",
+      "yieldsText": "5 Pounds",
+      "yieldAmount": 5,
+      "yieldUnit": "Pounds",
+      "ingredients": [
+        {
+          "raw": "5 Pound Pecans",
+          "qty": 5,
+          "unit": "Pound",
+          "item": "Pecans"
+        },
+        {
+          "raw": "1 Cup Honey",
+          "qty": 1,
+          "unit": "Cup",
+          "item": "Honey"
+        },
+        {
+          "raw": "1 Cup Oil, Canola",
+          "qty": 1,
+          "unit": "Cup",
+          "item": "Oil, Canola"
+        },
+        {
+          "raw": "1 Teaspoon Spice, Paprika",
+          "qty": 1,
+          "unit": "Teaspoon",
+          "item": "Spice, Paprika"
+        },
+        {
+          "raw": "1 Tablespoon Spice, Cinnamon Ground",
+          "qty": 1,
+          "unit": "Tablespoon",
+          "item": "Spice, Cinnamon Ground"
+        },
+        {
+          "raw": "1 Tablespoon Spice, Nutmeg Ground",
+          "qty": 1,
+          "unit": "Tablespoon",
+          "item": "Spice, Nutmeg Ground"
+        },
+        {
+          "raw": "1 Tablespoon Spice, Kosher Salt",
+          "qty": 1,
+          "unit": "Tablespoon",
+          "item": "Spice, Kosher Salt"
+        },
+        {
+          "raw": "1 Teaspoon Spice, Pepper Black Ground",
+          "qty": 1,
+          "unit": "Teaspoon",
+          "item": "Spice, Pepper Black Ground"
+        }
+      ],
+      "methodText": "No Method",
+      "methodLines": [
+        "No Method"
+      ]
+    },
+    {
+      "title": "Spinach Artichoke Dip",
+      "sourceRestaurant": "Prairie Canary",
+      "sourceFile": "Printed Recipes - Portrait (1).pdf",
+      "printedDate": "11/05/2025",
+      "category": "Prepared items",
+      "recipeType": "Batch",
+      "allergens": "",
+      "equipment": "",
+      "shelfLife": "7 Days",
+      "yieldsText": "7.65 Quarts",
+      "yieldAmount": 7.65,
+      "yieldUnit": "Quarts",
+      "ingredients": [
+        {
+          "raw": "1 Tablespoon Oil, Olive",
+          "qty": 1,
+          "unit": "Tablespoon",
+          "item": "Oil, Olive"
+        },
+        {
+          "raw": "16 Ounce Onions, Yellow",
+          "qty": 16,
+          "unit": "Ounce",
+          "item": "Onions, Yellow"
+        },
+        {
+          "raw": "1 Ounce Garlic, Peeled",
+          "qty": 1,
+          "unit": "Ounce",
+          "item": "Garlic, Peeled"
+        },
+        {
+          "raw": "1 Each Artichoke Hearts",
+          "qty": 1,
+          "unit": "Each",
+          "item": "Artichoke Hearts"
+        },
+        {
+          "raw": "2 Cup Cheese, Parmesan Grated",
+          "qty": 2,
+          "unit": "Cup",
+          "item": "Cheese, Parmesan Grated"
+        },
+        {
+          "raw": "1 Tablespoon Salt and pepper mixture",
+          "qty": 1,
+          "unit": "Tablespoon",
+          "item": "Salt and pepper mixture"
+        },
+        {
+          "raw": "10 Ounce Spinach, Fresh",
+          "qty": 10,
+          "unit": "Ounce",
+          "item": "Spinach, Fresh"
+        },
+        {
+          "raw": "6 Pound Cream Cheese",
+          "qty": 6,
+          "unit": "Pound",
+          "item": "Cream Cheese"
+        }
+      ],
+      "methodText": "No Method",
+      "methodLines": [
+        "No Method"
+      ]
+    },
+    {
+      "title": "Sweet Chili Aioli",
+      "sourceRestaurant": "Prairie Canary",
+      "sourceFile": "Printed Recipes - Portrait (1).pdf",
+      "printedDate": "11/05/2025",
+      "category": "Prepared items",
+      "recipeType": "Sauces",
+      "allergens": "",
+      "equipment": "",
+      "shelfLife": "7 Days",
+      "yieldsText": "1 Quart",
+      "yieldAmount": 1,
+      "yieldUnit": "Quart",
+      "ingredients": [
+        {
+          "raw": "2 Cup Sauce, Sweet Chili",
+          "qty": 2,
+          "unit": "Cup",
+          "item": "Sauce, Sweet Chili"
+        },
+        {
+          "raw": "2 Cup Mayonnaise",
+          "qty": 2,
+          "unit": "Cup",
+          "item": "Mayonnaise"
+        },
+        {
+          "raw": "0.5 Table- spoon Salt and pepper mixture",
+          "qty": 0.5,
+          "unit": "",
+          "item": "Table- spoon Salt and pepper mixture"
+        }
+      ],
+      "methodText": "No Method",
+      "methodLines": [
+        "No Method"
+      ]
+    },
+    {
+      "title": "Taco Soup",
+      "sourceRestaurant": "Prairie Canary",
+      "sourceFile": "Printed Recipes - Portrait (1).pdf",
+      "printedDate": "11/05/2025",
+      "category": "Prepared items",
+      "recipeType": "Soups",
+      "allergens": "",
+      "equipment": "",
+      "shelfLife": "",
+      "yieldsText": "22 Quarts",
+      "yieldAmount": 22,
+      "yieldUnit": "Quarts",
+      "ingredients": [
+        {
+          "raw": "2 Cup Onions, Yellow",
+          "qty": 2,
+          "unit": "Cup",
+          "item": "Onions, Yellow"
+        },
+        {
+          "raw": "3 Cup PREP - Red and Green Pep- pers Diced",
+          "qty": 3,
+          "unit": "Cup",
+          "item": "PREP - Red and Green Pep- pers Diced"
+        },
+        {
+          "raw": "2 Can Tomatoes, Diced with Green Chiles",
+          "qty": 2,
+          "unit": "Can",
+          "item": "Tomatoes, Diced with Green Chiles"
+        },
+        {
+          "raw": "4 Pound Corn, Frozen",
+          "qty": 4,
+          "unit": "Pound",
+          "item": "Corn, Frozen"
+        },
+        {
+          "raw": "1 Can Beans, Black Can",
+          "qty": 1,
+          "unit": "Can",
+          "item": "Beans, Black Can"
+        },
+        {
+          "raw": "2 Tablespoon Base, Chicken",
+          "qty": 2,
+          "unit": "Tablespoon",
+          "item": "Base, Chicken"
+        },
+        {
+          "raw": "3 Ounce Spice, Chimichurri",
+          "qty": 3,
+          "unit": "Ounce",
+          "item": "Spice, Chimichurri"
+        },
+        {
+          "raw": "1 Tablespoon Spice, Cumin Ground",
+          "qty": 1,
+          "unit": "Tablespoon",
+          "item": "Spice, Cumin Ground"
+        },
+        {
+          "raw": "1 Tablespoon Salt and pepper mixture",
+          "qty": 1,
+          "unit": "Tablespoon",
+          "item": "Salt and pepper mixture"
+        },
+        {
+          "raw": "1 Tablespoon Spice, Cayenne Pepper",
+          "qty": 1,
+          "unit": "Tablespoon",
+          "item": "Spice, Cayenne Pepper"
+        },
+        {
+          "raw": "1 Each Chips, Tortilla",
+          "qty": 1,
+          "unit": "Each",
+          "item": "Chips, Tortilla"
+        }
+      ],
+      "methodText": "No Method",
+      "methodLines": [
+        "No Method"
+      ]
+    },
+    {
+      "title": "Teriyaki Marinade",
+      "sourceRestaurant": "Prairie Canary",
+      "sourceFile": "Printed Recipes - Portrait (1).pdf",
+      "printedDate": "11/05/2025",
+      "category": "Prepared items",
+      "recipeType": "Sauces",
+      "allergens": "",
+      "equipment": "Qt. Metal Mixing Bowl, Large Whisk",
+      "shelfLife": "1 Days",
+      "yieldsText": "62 Ounces",
+      "yieldAmount": 62,
+      "yieldUnit": "Ounces",
+      "ingredients": [
+        {
+          "raw": "2 Cup Sauce, Soy",
+          "qty": 2,
+          "unit": "Cup",
+          "item": "Sauce, Soy"
+        },
+        {
+          "raw": "5 Ounce Honey",
+          "qty": 5,
+          "unit": "Ounce",
+          "item": "Honey"
+        },
+        {
+          "raw": "5 Fluid OunceVinegar, Rice Wine",
+          "qty": 5,
+          "unit": "",
+          "item": "Fluid OunceVinegar, Rice Wine"
+        },
+        {
+          "raw": "5 Ounce Sugar, Brown",
+          "qty": 5,
+          "unit": "Ounce",
+          "item": "Sugar, Brown"
+        },
+        {
+          "raw": "3 Ounce Garlic, Peeled, Chopped",
+          "qty": 3,
+          "unit": "Ounce",
+          "item": "Garlic, Peeled, Chopped"
+        },
+        {
+          "raw": "1.5 Cup Juice, Orange GAL",
+          "qty": 1.5,
+          "unit": "Cup",
+          "item": "Juice, Orange GAL"
+        },
+        {
+          "raw": "3 Ounce Ginger, Fresh, Peeled and Grated",
+          "qty": 3,
+          "unit": "Ounce",
+          "item": "Ginger, Fresh, Peeled and Grated"
+        }
+      ],
+      "methodText": "No Method",
+      "methodLines": [
+        "No Method"
+      ]
+    },
+    {
+      "title": "Toast Points",
+      "sourceRestaurant": "Prairie Canary",
+      "sourceFile": "Printed Recipes - Portrait (1).pdf",
+      "printedDate": "11/05/2025",
+      "category": "Prepared items",
+      "recipeType": "Batch",
+      "allergens": "",
+      "equipment": "",
+      "shelfLife": "",
+      "yieldsText": "22 Each",
+      "yieldAmount": 22,
+      "yieldUnit": "Each",
+      "ingredients": [
+        {
+          "raw": "1 Each Bread, Baguette, cut in to oblong pieces",
+          "qty": 1,
+          "unit": "Each",
+          "item": "Bread, Baguette, cut in to oblong pieces"
+        },
+        {
+          "raw": "3 Ounce Butter, Salted",
+          "qty": 3,
+          "unit": "Ounce",
+          "item": "Butter, Salted"
+        }
+      ],
+      "methodText": "No Method",
+      "methodLines": [
+        "No Method"
+      ]
+    },
+    {
+      "title": "Tortilla Chips - Batch",
+      "sourceRestaurant": "Prairie Canary",
+      "sourceFile": "Printed Recipes - Portrait (1).pdf",
+      "printedDate": "11/05/2025",
+      "category": "Prepared items",
+      "recipeType": "Batch",
+      "allergens": "",
+      "equipment": "",
+      "shelfLife": "",
+      "yieldsText": "1 Serving",
+      "yieldAmount": 1,
+      "yieldUnit": "Serving",
+      "ingredients": [
+        {
+          "raw": "1 Case Tortilla, Corn 6\"",
+          "qty": 1,
+          "unit": "Case",
+          "item": "Tortilla, Corn 6\""
+        }
+      ],
+      "methodText": "No Method",
+      "methodLines": [
+        "No Method"
+      ]
+    },
+    {
+      "title": "Truffle Oil Blend",
+      "sourceRestaurant": "Prairie Canary",
+      "sourceFile": "Printed Recipes - Portrait (1).pdf",
+      "printedDate": "11/05/2025",
+      "category": "Prepared items",
+      "recipeType": "Batch",
+      "allergens": "",
+      "equipment": "",
+      "shelfLife": "",
+      "yieldsText": "1 Batch or 32 Fluid Ounces",
+      "yieldAmount": 1,
+      "yieldUnit": "Batch or 32 Fluid Ounces",
+      "ingredients": [
+        {
+          "raw": "1 Bottle Oil, Truffle White",
+          "qty": 1,
+          "unit": "Bottle",
+          "item": "Oil, Truffle White"
+        },
+        {
+          "raw": "0.5 Quart Oil, Olive",
+          "qty": 0.5,
+          "unit": "Quart",
+          "item": "Oil, Olive"
+        }
+      ],
+      "methodText": "No Method",
+      "methodLines": [
+        "No Method"
+      ]
+    },
+    {
+      "title": "Turtle Lush",
+      "sourceRestaurant": "Prairie Canary",
+      "sourceFile": "Printed Recipes - Portrait (1).pdf",
+      "printedDate": "11/05/2025",
+      "category": "Prepared items",
+      "recipeType": "Batch",
+      "allergens": "",
+      "equipment": "",
+      "shelfLife": "5 Days",
+      "yieldsText": "12 Each",
+      "yieldAmount": 12,
+      "yieldUnit": "Each",
+      "ingredients": [
+        {
+          "raw": "1 Each Cookies, Oreo",
+          "qty": 1,
+          "unit": "Each",
+          "item": "Cookies, Oreo"
+        },
+        {
+          "raw": "1.5 Cup Butter, Unsalted",
+          "qty": 1.5,
+          "unit": "Cup",
+          "item": "Butter, Unsalted"
+        },
+        {
+          "raw": "1 Pound Cream Cheese",
+          "qty": 1,
+          "unit": "Pound",
+          "item": "Cream Cheese"
+        },
+        {
+          "raw": "1 Quart Heavy Cream",
+          "qty": 1,
+          "unit": "Quart",
+          "item": "Heavy Cream"
+        },
+        {
+          "raw": "32 Ounce Sugar, Powdered",
+          "qty": 32,
+          "unit": "Ounce",
+          "item": "Sugar, Powdered"
+        },
+        {
+          "raw": "1 Each Pudding, Chocolate",
+          "qty": 1,
+          "unit": "Each",
+          "item": "Pudding, Chocolate"
+        },
+        {
+          "raw": "2 Cup Milk, Whole",
+          "qty": 2,
+          "unit": "Cup",
+          "item": "Milk, Whole"
+        },
+        {
+          "raw": "2 Tablespoon Extract, Vanilla Imitation",
+          "qty": 2,
+          "unit": "Tablespoon",
+          "item": "Extract, Vanilla Imitation"
+        },
+        {
+          "raw": "0.3 Each Pudding, Vanilla",
+          "qty": 0.3,
+          "unit": "Each",
+          "item": "Pudding, Vanilla"
+        },
+        {
+          "raw": "8 Ounce Pecans",
+          "qty": 8,
+          "unit": "Ounce",
+          "item": "Pecans"
+        },
+        {
+          "raw": "2 Ounce Syrup, Chocolate",
+          "qty": 2,
+          "unit": "Ounce",
+          "item": "Syrup, Chocolate"
+        },
+        {
+          "raw": "0.2 Each Sauce, Caramel",
+          "qty": 0.2,
+          "unit": "Each",
+          "item": "Sauce, Caramel"
+        }
+      ],
+      "methodText": "No Method",
+      "methodLines": [
+        "No Method"
+      ]
+    },
+    {
+      "title": "Tuscan Salmon Sauce",
+      "sourceRestaurant": "Prairie Canary",
+      "sourceFile": "Printed Recipes - Portrait (1).pdf",
+      "printedDate": "11/05/2025",
+      "category": "Prepared items",
+      "recipeType": "Batch",
+      "allergens": "",
+      "equipment": "",
+      "shelfLife": "7 Days",
+      "yieldsText": "2.5 Quarts or 80 Ounces",
+      "yieldAmount": 2.5,
+      "yieldUnit": "Quarts or 80 Ounces",
+      "ingredients": [
+        {
+          "raw": "2 Tablespoon Garlic, Peeled",
+          "qty": 2,
+          "unit": "Tablespoon",
+          "item": "Garlic, Peeled"
+        },
+        {
+          "raw": "4 Ounce Onions, Yellow",
+          "qty": 4,
+          "unit": "Ounce",
+          "item": "Onions, Yellow"
+        },
+        {
+          "raw": "2 Fluid OunceOil, Olive",
+          "qty": 2,
+          "unit": "",
+          "item": "Fluid OunceOil, Olive"
+        },
+        {
+          "raw": "4 Ounce Asparagus, Fresh",
+          "qty": 4,
+          "unit": "Ounce",
+          "item": "Asparagus, Fresh"
+        },
+        {
+          "raw": "3 Ounce Tomatoes, Sundried",
+          "qty": 3,
+          "unit": "Ounce",
+          "item": "Tomatoes, Sundried"
+        },
+        {
+          "raw": "4 Ounce Mushrooms, Button",
+          "qty": 4,
+          "unit": "Ounce",
+          "item": "Mushrooms, Button"
+        },
+        {
+          "raw": "32 Fluid Ounce PREP - Chicken Stock from Base",
+          "qty": 32,
+          "unit": "Fluid Ounce",
+          "item": "PREP - Chicken Stock from Base"
+        },
+        {
+          "raw": "1 Quart Heavy Cream",
+          "qty": 1,
+          "unit": "Quart",
+          "item": "Heavy Cream"
+        },
+        {
+          "raw": "4 Ounce Butter, Unsalted",
+          "qty": 4,
+          "unit": "Ounce",
+          "item": "Butter, Unsalted"
+        },
+        {
+          "raw": "4 Fluid OunceSlury",
+          "qty": 4,
+          "unit": "",
+          "item": "Fluid OunceSlury"
+        },
+        {
+          "raw": "2 Teaspoon Salt and pepper mixture",
+          "qty": 2,
+          "unit": "Teaspoon",
+          "item": "Salt and pepper mixture"
+        }
+      ],
+      "methodText": "No Method",
+      "methodLines": [
+        "No Method"
+      ]
+    },
+    {
+      "title": "Tuscan white bean",
+      "sourceRestaurant": "Prairie Canary",
+      "sourceFile": "Printed Recipes - Portrait (1).pdf",
+      "printedDate": "11/05/2025",
+      "category": "Prepared items",
+      "recipeType": "Soups",
+      "allergens": "",
+      "equipment": "",
+      "shelfLife": "",
+      "yieldsText": "11 Quarts",
+      "yieldAmount": 11,
+      "yieldUnit": "Quarts",
+      "ingredients": [
+        {
+          "raw": "2 Cup Onions, Yellow",
+          "qty": 2,
+          "unit": "Cup",
+          "item": "Onions, Yellow"
+        },
+        {
+          "raw": "1 Tablespoon Garlic, Fresh",
+          "qty": 1,
+          "unit": "Tablespoon",
+          "item": "Garlic, Fresh"
+        },
+        {
+          "raw": "1.5 Cup Carrots, Shredded",
+          "qty": 1.5,
+          "unit": "Cup",
+          "item": "Carrots, Shredded"
+        },
+        {
+          "raw": "1 Cup Celery, Fresh",
+          "qty": 1,
+          "unit": "Cup",
+          "item": "Celery, Fresh"
+        },
+        {
+          "raw": "8 Ounce Tomatoes, Sundried",
+          "qty": 8,
+          "unit": "Ounce",
+          "item": "Tomatoes, Sundried"
+        },
+        {
+          "raw": "1 Can Beans, Great Northern Can",
+          "qty": 1,
+          "unit": "Can",
+          "item": "Beans, Great Northern Can"
+        },
+        {
+          "raw": "1 Pound Spinach, Fresh",
+          "qty": 1,
+          "unit": "Pound",
+          "item": "Spinach, Fresh"
+        },
+        {
+          "raw": "2 Tablespoon Base, Chicken",
+          "qty": 2,
+          "unit": "Tablespoon",
+          "item": "Base, Chicken"
+        },
+        {
+          "raw": "1 Quart Heavy Cream",
+          "qty": 1,
+          "unit": "Quart",
+          "item": "Heavy Cream"
+        },
+        {
+          "raw": "1 Pound Mushrooms, Pieces & Stems",
+          "qty": 1,
+          "unit": "Pound",
+          "item": "Mushrooms, Pieces & Stems"
+        }
+      ],
+      "methodText": "No Method",
+      "methodLines": [
+        "No Method"
+      ]
+    },
+    {
+      "title": "Tzatziki Sauce - Batch",
+      "sourceRestaurant": "Prairie Canary",
+      "sourceFile": "Printed Recipes - Portrait (5).pdf",
+      "printedDate": "04/08/2026",
+      "category": "Prepared items",
+      "recipeType": "Batch",
+      "allergens": "",
+      "equipment": "",
+      "shelfLife": "7 Days",
+      "yieldsText": "2 Quarts",
+      "yieldAmount": 2,
+      "yieldUnit": "Quarts",
+      "ingredients": [
+        {
+          "raw": "1 Each Cucumbers, Fresh",
+          "qty": 1,
+          "unit": "Each",
+          "item": "Cucumbers, Fresh"
+        },
+        {
+          "raw": "4 Each Lemons, Fresh",
+          "qty": 4,
+          "unit": "Each",
+          "item": "Lemons, Fresh"
+        },
+        {
+          "raw": "32 Fluid Ounce PREP - Buttermilk Ranch",
+          "qty": 32,
+          "unit": "Fluid Ounce",
+          "item": "PREP - Buttermilk Ranch"
+        }
+      ],
+      "methodText": "Peel and seed cucumber\nDice into small chunks\nCombine with 2 tbspns lemon juice\n32 oz greek yogurt\n32 oz house buttermilk ranch dressing\nMix thoroughly\nPour into quart containers and label with name and date",
+      "methodLines": [
+        "Peel and seed cucumber",
+        "Dice into small chunks",
+        "Combine with 2 tbspns lemon juice",
+        "32 oz greek yogurt",
+        "32 oz house buttermilk ranch dressing",
+        "Mix thoroughly",
+        "Pour into quart containers and label with name and date"
+      ]
+    },
+    {
+      "title": "Vanilla Whip",
+      "sourceRestaurant": "Prairie Canary",
+      "sourceFile": "Printed Recipes - Portrait (1).pdf",
+      "printedDate": "11/05/2025",
+      "category": "Prepared items",
+      "recipeType": "Batch",
+      "allergens": "",
+      "equipment": "",
+      "shelfLife": "",
+      "yieldsText": "12 Each",
+      "yieldAmount": 12,
+      "yieldUnit": "Each",
+      "ingredients": [
+        {
+          "raw": "1 Quart Heavy Cream",
+          "qty": 1,
+          "unit": "Quart",
+          "item": "Heavy Cream"
+        },
+        {
+          "raw": "12 Ounce Sugar, Powdered",
+          "qty": 12,
+          "unit": "Ounce",
+          "item": "Sugar, Powdered"
+        },
+        {
+          "raw": "2 Tablespoon Extract, Vanilla Imitation",
+          "qty": 2,
+          "unit": "Tablespoon",
+          "item": "Extract, Vanilla Imitation"
+        }
+      ],
+      "methodText": "No Method",
+      "methodLines": [
+        "No Method"
+      ]
+    }
+  ]
+}
