@@ -255,7 +255,7 @@ namespace CulinaryCommand.Services
             if (_locationState.CurrentLocation != null)
             {
                 await _js.InvokeVoidAsync("localStorage.setItem",
-                    "cc_activeLocationId",
+                    LocationState.ActiveLocStorageKey,
                     _locationState.CurrentLocation.Id);
             }
         }
