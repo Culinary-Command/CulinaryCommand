@@ -1,6 +1,9 @@
 @using CulinaryCommand.Services
 @using CulinaryCommand.Services.UserContextSpace
 @inject IUserContextService UserCtx
+@inject IJSRuntime JS
+@inject LocationState LocationState
+
 @inject NavigationManager Nav
 @rendermode InteractiveServer
 
@@ -64,8 +67,14 @@
         StateHasChanged();
     }
 
+    private async Task Logout()
+    {
+        await JS.InvokeVoidAsync("localStorage.clear");
+        await JS.InvokeVoidAsync("sessionStorage.clear");
+        LocationState.FlushLocationState();
 
-    private void Logout() => Nav.NavigateTo("/logout", forceLoad: true);
+        Nav.NavigateTo("/logout", forceLoad: true);
+    }
 
 
 

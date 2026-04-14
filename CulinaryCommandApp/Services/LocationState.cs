@@ -78,5 +78,11 @@ namespace CulinaryCommand.Services
             // OnChange?.Invoke();
             NotifyStateChanged();
         }
+
+        public void FlushLocationState()
+        {
+            ManagedLocations = new List<Location>();
+            CurrentLocation = null;
+        }
     }
 }
