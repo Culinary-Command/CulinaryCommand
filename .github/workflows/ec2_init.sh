@@ -87,6 +87,13 @@ LOGODEV_SECRET_KEY=$(aws ssm get-parameter \
     --query "Parameter.Value" \
     --output text)
 
+Email__ResendApiToken=$(aws ssm get-parameter \
+    --name "/culinarycommand/prod/Email__ResendApiToken" \
+    --with-decryption \
+    --region us-east-2 \
+    --query "Parameter.Value" \
+    --output text)
+
 # Write environment variables to file
 echo "[6/8] Writing environment file..."
 cat > /etc/culinarycommand.env << EOF
