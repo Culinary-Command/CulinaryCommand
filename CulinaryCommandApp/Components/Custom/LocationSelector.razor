@@ -2,6 +2,7 @@
 @using CulinaryCommand.Data.Entities
 @using System.Text.Json
 @using CulinaryCommand.Services.UserContextSpace
+@using System.Numerics
 
 @inject ILocationService LocationService
 @inject LocationState LocationState
@@ -59,22 +60,31 @@
 @code {
     private List<Location> ManagedLocations { get; set; } = new();
     private bool _loadedOnce;
+    
+    protected override void OnInitialized()
+    {
+        LocationState.OnChange += StateHasChanged;
+    }
+
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (!firstRender || _loadedOnce) return;
         _loadedOnce = true;
 
-        // 1) Load cached instantly (never fails hard)
+        // 1) Load cached instantly
         ManagedLocations = await LoadCachedLocationsAsync();
-        if (LocationState.CurrentLocation == null && ManagedLocations.Any())
-            await LocationState.SetCurrentLocationAsync(ManagedLocations.First());
 
+        var savedId = await JS.InvokeAsync<string>("localStorage.getItem", LocationState.ActiveLocStorageKey);
+        var savedLocation = int.TryParse(savedId, out var id)
+            ? ManagedLocations.FirstOrDefault(l => l.Id == id)
+            : null;
+
+        await LocationState.SetCurrentLocationAsync(savedLocation);
         StateHasChanged();
 
-        // 2) Load fresh server data if we can resolve user context
+        // 2) Load fresh server data after
         await LoadLocationsFromServerAsync();
-
         StateHasChanged();
     }
 
@@ -83,6 +93,7 @@
         try
         {
             var json = await JS.InvokeAsync<string?>("localStorage.getItem", "cc_locations");
+    
             return string.IsNullOrWhiteSpace(json)
                 ? new List<Location>()
                 : (JsonSerializer.Deserialize<List<Location>>(json) ?? new List<Location>());
@@ -138,5 +149,10 @@
     private void EditLocation(Location location)
     {
         NavigationManager.NavigateTo($"/settings/locations/{location.Id}");
+    }
+    
+    public void Dispose()
+    {
+        LocationState.OnChange -= StateHasChanged;
     }
 }

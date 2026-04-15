@@ -1,11 +1,19 @@
 @rendermode InteractiveServer
 @inject NavigationManager Nav
+@inject IJSRuntime JS
+@inject LocationState LocationState
+
+
 
 <button class="btn btn-outline-danger" @onclick="Logout">Logout</button>
 
 @code {
     private async Task Logout()
     {
+        await JS.InvokeVoidAsync("localStorage.clear");
+        await JS.InvokeVoidAsync("sessionStorage.clear");
+        LocationState.FlushLocationState();
+
         Nav.NavigateTo("/signin", true); // hard reload
     }
 }

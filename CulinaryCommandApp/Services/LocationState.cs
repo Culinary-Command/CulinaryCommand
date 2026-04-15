@@ -6,6 +6,7 @@ namespace CulinaryCommand.Services
 {
     public class LocationState
     {
+        public const string ActiveLocStorageKey = "cc_activeLocationId";
         private readonly IJSRuntime _js;
         public List<Location> ManagedLocations { get; private set; } = new();
         public Location? CurrentLocation { get; private set; }
@@ -23,7 +24,7 @@ namespace CulinaryCommand.Services
         {
             if (CurrentLocation != null) return; // Already have it
 
-            var savedId = await _js.InvokeAsync<string>("localStorage.getItem", "cc_selected_location_id");
+            var savedId = await _js.InvokeAsync<string>("localStorage.getItem", ActiveLocStorageKey);
             
             if (!string.IsNullOrEmpty(savedId) && int.TryParse(savedId, out int id))
             {
@@ -40,7 +41,7 @@ namespace CulinaryCommand.Services
             string? savedId = null;
             try
             {
-                savedId = await _js.InvokeAsync<string?>("localStorage.getItem", "cc_activeLocationId");
+                savedId = await _js.InvokeAsync<string?>("localStorage.getItem", ActiveLocStorageKey);
             }
             catch (InvalidOperationException)
             {
@@ -65,9 +66,9 @@ namespace CulinaryCommand.Services
             try
             {
                 if (loc is null)
-                    await _js.InvokeVoidAsync("localStorage.removeItem", "cc_activeLocationId");
+                    await _js.InvokeVoidAsync("localStorage.removeItem", ActiveLocStorageKey);
                 else
-                    await _js.InvokeVoidAsync("localStorage.setItem", "cc_activeLocationId", loc.Id.ToString());
+                    await _js.InvokeVoidAsync("localStorage.setItem", ActiveLocStorageKey, loc.Id.ToString());
             }
             catch (InvalidOperationException)
             {
@@ -76,6 +77,12 @@ namespace CulinaryCommand.Services
 
             // OnChange?.Invoke();
             NotifyStateChanged();
+        }
+
+        public void FlushLocationState()
+        {
+            ManagedLocations = new List<Location>();
+            CurrentLocation = null;
         }
     }
 }
