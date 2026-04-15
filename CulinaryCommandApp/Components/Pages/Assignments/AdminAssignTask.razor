@@ -51,7 +51,7 @@ else
             </div>
         }
         <div class="d-flex flex-column flex-lg-row justify-content-between align-items-lg-center gap-3 mb-4">
-            <div>
+            <div class="page-heading">
                 <div class="text-uppercase text-muted small fw-semibold mb-1">Kitchen Operations</div>
                 <h1 class="fw-bold mb-1">Task Assignment</h1>
                 <p class="text-muted mb-0">Manage task lists, assign library tasks fast, and track progress in one place.</p>
@@ -848,24 +848,3 @@ else
         return await JS.InvokeAsync<bool>("confirm", message);
     }
 }
-
-<style>
-    .assign-task-page .card {
-        border-radius: 1rem;
-    }
-
-    .assign-task-page .form-control,
-    .assign-task-page .form-select,
-    .assign-task-page .input-group-text,
-    .assign-task-page .btn {
-        border-radius: .8rem;
-    }
-
-    .assign-task-page .badge {
-        font-weight: 600;
-    }
-
-    .assign-task-page details summary::-webkit-details-marker {
-        display: none;
-    }
-</style>
