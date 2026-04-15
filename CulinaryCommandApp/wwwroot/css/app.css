@@ -1,3 +1,16 @@
+/* Brand CSS variables — global so they work across all scoped component stylesheets */
+:root {
+    --cc-ink: #1f2a37;
+    --cc-muted: #6b7280;
+    --cc-border: #e5e7eb;
+    --cc-bg: #f6f7f9;
+    --cc-card: #ffffff;
+    --cc-green: #009A3B;
+    --cc-green-dark: #007a2f;
+    --cc-pill: #f0f2f5;
+    --cc-shadow: 0 10px 30px rgba(31, 42, 55, 0.08);
+}
+
 /* Feedback Button Styles */
 .feedback-fixed {
   position: fixed;
@@ -132,6 +145,39 @@ a,
   background-color: #1b6ec2;
   border-color: #1861ac;
 }
+
+/* Brand green overrides for Bootstrap success utilities */
+.btn-success,
+.btn-success:focus {
+  background-color: #009A3B;
+  border-color: #009A3B;
+  color: #fff;
+}
+.btn-success:hover,
+.btn-success:active,
+.btn-success.active,
+.show > .btn-success.dropdown-toggle {
+  background-color: #007a2f;
+  border-color: #007a2f;
+  color: #fff;
+}
+.btn-outline-success {
+  color: #009A3B;
+  border-color: #009A3B;
+}
+.btn-outline-success:hover {
+  background-color: #009A3B;
+  border-color: #009A3B;
+  color: #fff;
+}
+.bg-success { background-color: #009A3B !important; }
+.text-success { color: #009A3B !important; }
+.border-success { border-color: #009A3B !important; }
+.badge.text-bg-success,
+.text-bg-success { background-color: #009A3B !important; color: #fff !important; }
+.bg-success-subtle { background-color: #e6f7ed !important; }
+.border-success-subtle { border-color: #b3e6c8 !important; }
+.text-success-emphasis { color: #007a2f !important; }
 
 .btn:focus,
 .btn:active:focus,

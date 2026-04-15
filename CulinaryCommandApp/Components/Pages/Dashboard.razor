@@ -6,8 +6,11 @@
 @using CulinaryCommandApp.AIDashboard.Services.Reporting
 @using CulinaryCommandApp.AIDashboard.Services.DTOs
 @using CulinaryCommand.Services
+@using CulinaryCommandApp.Inventory.DTOs
+@using CulinaryCommandApp.Data.Models
 @inject Microsoft.AspNetCore.Hosting.IWebHostEnvironment Env
 @inject NavigationManager Nav
+@inject LocationState LocationState
 @inject AIReportingService ReportingService
 @inject IUserContextService UserCtx
 
@@ -24,7 +27,32 @@ else if (!_isSignedIn)
 }
 else
 {
-    <div class="container mt-4">
+    <div class="container-fluid px-3 px-lg-4 mt-4">
+        <div class="d-flex flex-column flex-lg-row justify-content-between align-items-lg-center gap-3 mb-4">
+            <div>
+                <div class="text-uppercase text-muted small fw-semibold mb-1">Kitchen Operations</div>
+                <h1 class="fw-bold mb-1">Dashboard</h1>
+                <p class="text-muted mb-0">Overview of your kitchen operations, tasks, and inventory at a glance.</p>
+            </div>
+            <div class="d-flex align-items-center gap-3">
+                <div class="text-end">
+                    <div class="small text-muted fw-semibold">Location</div>
+                    <div class="fw-semibold">@(LocationState.CurrentLocation?.Name ?? "—")</div>
+                </div>
+                <div class="vr d-none d-md-block"></div>
+                <div class="d-flex gap-3">
+                    <div>
+                        <div class="text-muted small">Low Stock</div>
+                        <div class="fs-5 fw-semibold">@_lowStockItems.Count</div>
+                    </div>
+                    <div>
+                        <div class="text-muted small">Open Tasks</div>
+                        <div class="fs-5 fw-semibold">@_taskData.Count(t => !string.Equals(t.Status, "Completed", StringComparison.OrdinalIgnoreCase))</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         @if (_role == "Admin")
         {
             <AdminView />
@@ -143,6 +171,9 @@ else
     private bool _ready;
     private bool _isSignedIn;
     private string? _role;
+
+    private List<InventoryItemDTO> _lowStockItems = new();
+    private List<TaskAssignmentModel> _taskData = new();
 
     private bool _aiLoading;
     private string? _aiAnalysis;

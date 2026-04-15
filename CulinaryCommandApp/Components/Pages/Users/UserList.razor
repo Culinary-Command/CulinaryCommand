@@ -10,17 +10,35 @@
 @inject LocationState LocationState
 @inject NavigationManager Nav
 
-<div class="users-head">
+<div class="d-flex flex-column flex-lg-row justify-content-between align-items-lg-center gap-3 mb-4">
     <div>
-        <div class="text-muted users-sub">Invite teammates and manage access per location.</div>
+        <div class="text-uppercase text-muted small fw-semibold mb-1">Kitchen Operations</div>
+        <h1 class="fw-bold mb-1">Manage Users</h1>
+        <p class="text-muted mb-0">Invite teammates and manage access per location.</p>
     </div>
-
-    @if (priv)
-    {
-        <button class="btn btn-success users-add" @onclick="CreateUser">
-            <i class="bi bi-plus-lg me-1"></i> Add User
-        </button>
-    }
+    <div class="d-flex align-items-center gap-3">
+        <div class="text-end">
+            <div class="small text-muted fw-semibold">Location</div>
+            <div class="fw-semibold">@(LocationState.CurrentLocation?.Name ?? "—")</div>
+        </div>
+        <div class="vr d-none d-md-block"></div>
+        <div class="d-flex gap-3">
+            <div>
+                <div class="text-muted small">Total Users</div>
+                <div class="fs-5 fw-semibold">@(_users?.Count ?? 0)</div>
+            </div>
+            <div>
+                <div class="text-muted small">Active</div>
+                <div class="fs-5 fw-semibold">@(_users?.Count(u => u.IsActive) ?? 0)</div>
+            </div>
+        </div>
+        @if (priv)
+        {
+            <button class="btn btn-success" @onclick="CreateUser">
+                <i class="bi bi-plus-lg me-1"></i> Add User
+            </button>
+        }
+    </div>
 </div>
 
 @if (_users == null)

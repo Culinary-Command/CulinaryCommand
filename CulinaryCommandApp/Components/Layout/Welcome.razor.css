@@ -20,7 +20,7 @@
 
 .nav-brand {
     font-weight: 700;
-    color: #16a34a;
+    color: #009A3B;
     padding-left: 8px;
 }
 
@@ -29,7 +29,7 @@
     gap: 8px;
     padding: 6px 8px;
     border-radius: 999px;
-    background: linear-gradient(135deg, #22c55e, #10b981);
+    background: linear-gradient(135deg, #009A3B, #009A3B);
 }
 
 .nav-pill a {
@@ -49,7 +49,7 @@
 }
 
 .hero-banner {
-    background: linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 50%, #f0fdf4 100%);
+    background: linear-gradient(135deg, #e6f7ed 0%, #e6f7ed 50%, #e6f7ed 100%);
     border-radius: 20px;
     padding: 80px 60px;
     margin-bottom: 40px;
@@ -76,7 +76,7 @@
     gap: 8px;
     padding: 8px 16px;
     border-radius: 999px;
-    background: #10b981;
+    background: #009A3B;
     color: #ffffff;
     font-size: 0.75rem;
     font-weight: 600;
@@ -113,7 +113,7 @@
 }
 
 .hero-title-accent {
-    color: #10b981;
+    color: #009A3B;
     font-style: italic;
     font-weight: 800;
 }
@@ -133,7 +133,7 @@
 }
 
 .btn-primary {
-    background: #10b981;
+    background: #009A3B;
     color: #ffffff;
     padding: 16px 32px;
     border-radius: 12px;
@@ -150,7 +150,7 @@
 }
 
 .btn-primary:hover {
-    background: #059669;
+    background: #007a2f;
     transform: translateY(-2px);
     box-shadow: 0 14px 30px rgba(16, 185, 129, 0.40);
 }
@@ -172,9 +172,9 @@
 }
 
 .btn-secondary:hover {
-    border-color: #10b981;
-    background: #f0fdf4;
-    color: #10b981;
+    border-color: #009A3B;
+    background: #e6f7ed;
+    color: #009A3B;
 }
 
 .btn-secondary i {
@@ -224,8 +224,8 @@
 
 .overlay-stat i {
     font-size: 1.8rem;
-    color: #10b981;
-    background: #f0fdf4;
+    color: #009A3B;
+    background: #e6f7ed;
     padding: 12px;
     border-radius: 10px;
 }
@@ -245,7 +245,7 @@
 }
 
 .btn-cta {
-    background: #10b981;
+    background: #009A3B;
     color: #ffffff;
     padding: 10px 20px;
     border-radius: 999px;
@@ -258,13 +258,13 @@
 }
 
 .btn-cta:hover {
-    background: #059669;
+    background: #007a2f;
     transform: translateY(-1px);
 }
 
 .btn-ghost {
     color: #1f2937;
-    border: 2px solid #10b981;
+    border: 2px solid #009A3B;
     background: #ffffff;
     padding: 10px 20px;
     border-radius: 999px;
@@ -277,8 +277,8 @@
 }
 
 .btn-ghost:hover {
-    background: #f0fdf4;
-    border-color: #059669;
+    background: #e6f7ed;
+    border-color: #007a2f;
 }
 
 .welcome-section {
@@ -315,7 +315,7 @@
     text-transform: uppercase;
     letter-spacing: 0.2em;
     font-size: 0.75rem;
-    color: #16a34a;
+    color: #009A3B;
 }
 
 .section-header h2 {
@@ -351,7 +351,7 @@
     width: 64px;
     height: 64px;
     border-radius: 16px;
-    background: #ecfdf5;
+    background: #e6f7ed;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -360,7 +360,7 @@
 
 .feature-icon i {
     font-size: 28px;
-    color: #10b981;
+    color: #009A3B;
 }
 
 .feature-title {
@@ -381,7 +381,7 @@
 .feature-progress {
     width: 50px;
     height: 4px;
-    background: #10b981;
+    background: #009A3B;
     border-radius: 2px;
     margin-top: auto;
 }
@@ -421,7 +421,7 @@
     width: 40px;
     height: 40px;
     border-radius: 50%;
-    background: linear-gradient(135deg, #10b981, #059669);
+    background: linear-gradient(135deg, #009A3B, #007a2f);
     color: #ffffff;
     display: flex;
     align-items: center;
@@ -434,7 +434,7 @@
     width: 80px;
     height: 80px;
     border-radius: 20px;
-    background: linear-gradient(135deg, #ecfdf5, #d1fae5);
+    background: linear-gradient(135deg, #e6f7ed, #b3e6c8);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -443,7 +443,7 @@
 
 .step-icon i {
     font-size: 36px;
-    color: #10b981;
+    color: #009A3B;
 }
 
 .step-title {
@@ -490,7 +490,7 @@
 .pricing-card:hover {
     transform: translateY(-5px);
     box-shadow: 0 12px 35px rgba(0, 0, 0, 0.1);
-    border-color: #10b981;
+    border-color: #009A3B;
 }
 
 .pricing-header {
@@ -510,7 +510,7 @@
 .price {
     font-size: 3rem;
     font-weight: 800;
-    color: #10b981;
+    color: #009A3B;
     margin: 0;
     line-height: 1;
 }
@@ -539,13 +539,13 @@
 }
 
 .pricing-features i {
-    color: #10b981;
+    color: #009A3B;
     font-size: 1.125rem;
     flex-shrink: 0;
 }
 
 .pricing-card.featured {
-    border-color: #10b981;
+    border-color: #009A3B;
     box-shadow: 0 20px 50px rgba(16, 185, 129, 0.25);
     transform: scale(1.05);
 }
@@ -562,7 +562,7 @@
     display: inline-flex;
     padding: 6px 16px;
     border-radius: 999px;
-    background: linear-gradient(135deg, #10b981, #059669);
+    background: linear-gradient(135deg, #009A3B, #007a2f);
     color: #ffffff;
     font-size: 0.75rem;
     font-weight: 700;
@@ -595,14 +595,14 @@
 .faq-card:hover {
     transform: translateY(-5px);
     box-shadow: 0 12px 35px rgba(0, 0, 0, 0.1);
-    border-color: #10b981;
+    border-color: #009A3B;
 }
 
 .faq-icon {
     width: 56px;
     height: 56px;
     border-radius: 14px;
-    background: #ecfdf5;
+    background: #e6f7ed;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -611,7 +611,7 @@
 
 .faq-icon i {
     font-size: 24px;
-    color: #10b981;
+    color: #009A3B;
 }
 
 .faq-title {
@@ -634,8 +634,8 @@
     margin: 80px 60px 0 60px;
     padding: 80px 60px;
     border-radius: 24px;
-    background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
-    border: 4px solid #059669 !important;
+    background: linear-gradient(135deg, #009A3B 0%, #007a2f 100%) !important;
+    border: 4px solid #007a2f !important;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -709,7 +709,7 @@
 }
 
 .btn-link-green:hover {
-    color: #f0fdf4;
+    color: #e6f7ed;
 }
 
 .cta-notice {
@@ -754,7 +754,7 @@
 
 .footer-logo i {
     font-size: 1.5rem;
-    color: #10b981;
+    color: #009A3B;
 }
 
 .footer-tagline {
@@ -785,7 +785,7 @@
 }
 
 .footer-social a:hover {
-    background: #10b981;
+    background: #009A3B;
     color: #ffffff;
 }
 
@@ -821,7 +821,7 @@
 }
 
 .footer-column a:hover {
-    color: #10b981;
+    color: #009A3B;
 }
 
 .footer-column.newsletter p {
@@ -847,14 +847,14 @@
 }
 
 .newsletter-form input:focus {
-    border-color: #10b981;
+    border-color: #009A3B;
 }
 
 .newsletter-form button {
     width: 44px;
     height: 44px;
     border-radius: 8px;
-    background: #10b981;
+    background: #009A3B;
     color: #ffffff;
     border: none;
     display: flex;
@@ -865,7 +865,7 @@
 }
 
 .newsletter-form button:hover {
-    background: #059669;
+    background: #007a2f;
 }
 
 .footer-bottom {
@@ -899,7 +899,7 @@
 }
 
 .footer-legal a:hover {
-    color: #10b981;
+    color: #009A3B;
 }
 
 @media (max-width: 900px) {

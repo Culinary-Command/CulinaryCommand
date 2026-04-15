@@ -26,10 +26,28 @@ else
     <div class="recipes-container">
 
         @* ── Header ── *@
-        <div class="recipes-header">
-            <div class="header-text">
-                <h1>Recipes</h1>
-                <p>Manage your location's recipes and prep items</p>
+        <div class="d-flex flex-column flex-lg-row justify-content-between align-items-lg-center gap-3 mb-4">
+            <div>
+                <div class="text-uppercase text-muted small fw-semibold mb-1">Kitchen Operations</div>
+                <h1 class="fw-bold mb-1">Recipes</h1>
+                <p class="text-muted mb-0">Manage your location's recipes and prep items.</p>
+            </div>
+            <div class="d-flex align-items-center gap-3">
+                <div class="text-end">
+                    <div class="small text-muted fw-semibold">Location</div>
+                    <div class="fw-semibold">@(LocationState.CurrentLocation?.Name ?? "—")</div>
+                </div>
+                <div class="vr d-none d-md-block"></div>
+                <div class="d-flex gap-3">
+                    <div>
+                        <div class="text-muted small">Total</div>
+                        <div class="fs-5 fw-semibold">@_allRecipes.Count</div>
+                    </div>
+                    <div>
+                        <div class="text-muted small">Sub-Recipes</div>
+                        <div class="fs-5 fw-semibold">@_allRecipes.Count(r => r.IsSubRecipe)</div>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -140,7 +158,7 @@ else
                                     <td>
                                         @if (!string.IsNullOrWhiteSpace(recipe.Category))
                                         {
-                                            <span class="category-pill">@recipe.Category</span>
+                                            <span class="category-pill @GetCategoryClass(recipe.Category)">@recipe.Category</span>
                                         }
                                         else
                                         {
@@ -417,6 +435,18 @@ else
         if (_sortColumn != column) return "bi-chevron-expand opacity-50";
         return _sortAsc ? "bi-chevron-up" : "bi-chevron-down";
     }
+
+    private string GetCategoryClass(string? category) => category switch
+    {
+        "Produce"    => "category-produce",
+        "Dairy"      => "category-dairy",
+        "Meat"       => "category-meat",
+        "Dry Goods"  => "category-dry-goods",
+        "Beverages"  => "category-beverages",
+        "Condiments" => "category-condiments",
+        "Spices"     => "category-spices",
+        _            => "category-default"
+    };
 
     private void GoToPage(int page)
     {
