@@ -32,6 +32,7 @@
     <Content Include="AIDashboard\**\*"> 
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory> 
     </Content>
+    <PackageReference Include="Resend" Version="0.2.2" />
   </ItemGroup>
   
   <!-- <ItemGroup>

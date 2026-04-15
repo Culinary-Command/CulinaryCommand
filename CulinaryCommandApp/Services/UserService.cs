@@ -463,20 +463,13 @@ namespace CulinaryCommand.Services
             if (string.IsNullOrWhiteSpace(user.InviteToken))
                 throw new InvalidOperationException("User does not have an invite token.");
 
-            string link = $"https://culinary-command.com/account/setup?token={user.InviteToken}";
+            var firstName = user.Name?.Split(' ', StringSplitOptions.RemoveEmptyEntries).FirstOrDefault() ?? "there";
 
-            string subject = "Your CulinaryCommand Account Invitation";
-            string body = $@"
-                <h2>Welcome to CulinaryCommand!</h2>
-                <p>You have been invited to join <strong>{user.Company?.Name}</strong>.</p>
-                <p>Click the button below to set your password and activate your account:</p>
-                <p><a href='{link}' style='padding:10px 20px;background:#4CAF50;color:white;text-decoration:none;border-radius:4px;'>Set Your Password</a></p>
-                <p>If the button doesn't work, use this link:</p>
-                <p>{link}</p>
-            ";
-
-            // implement actual email send (SendGrid, SMTP, Mailgun, whatever)
-            await _emailSender.SendEmailAsync(user.Email!, subject, body);
+            await _emailSender.SendInviteEmailAsync(
+                user.Email!,
+                firstName,
+                user.InviteToken
+            );
         }
 
         public async Task<User?> GetUserByInviteTokenAsync(string token)

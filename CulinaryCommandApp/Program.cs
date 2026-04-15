@@ -23,6 +23,7 @@ using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.DataProtection;
 using CulinaryCommand.Vendor.Services;
 using System.IO;
+using Resend;
 using CulinaryCommandApp.Inventory.Entities;
 
 
@@ -165,7 +166,15 @@ builder.Services.AddScoped<ICompanyService, CompanyService>();
 builder.Services.AddScoped<IUnitService, UnitService>();
 builder.Services.AddScoped<IInventoryTransactionService, InventoryTransactionService>();
 builder.Services.AddScoped<IInventoryManagementService, InventoryManagementService>();
-builder.Services.AddScoped<IEmailSender, EmailSender>();
+builder.Services.AddOptions();  // Start of Email Setup
+builder.Services.AddHttpClient<ResendClient>();
+builder.Services.Configure<ResendClientOptions>(o =>
+{
+    o.ApiToken = builder.Configuration["Email:ResendApiToken"]
+        ?? throw new InvalidOperationException("Email:ResendApiToken is not set.");
+});
+builder.Services.AddTransient<IResend, ResendClient>();
+builder.Services.AddScoped<IEmailSender, EmailSender>();    // End of Email Setup
 builder.Services.AddScoped<ITaskAssignmentService, TaskAssignmentService>();
 builder.Services.AddScoped<ITaskLibraryService, TaskLibraryService>();
 builder.Services.AddScoped<IPurchaseOrderService, PurchaseOrderService>();

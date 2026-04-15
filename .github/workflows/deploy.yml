@@ -167,6 +167,7 @@ jobs:
     #               AWS__Region=${{ env.AWS_REGION }}
     #               LogoDev__PublishableKey=${{ secrets.LOGODEV_PUBLISHABLE_KEY }}
     #               LogoDev__SecretKey=${{ secrets.LOGODEV_SECRET_KEY }}
+    #               Email__ResendApiToken=${{ secrets.EMAIL__RESENDAPITOKEN }}
     #             EOF
     #               sudo chown ${{ secrets.LIGHTSAIL_USER }}:${{ secrets.LIGHTSAIL_USER }} /var/www/culinarycommand/.env
     #               sudo chmod 640 /var/www/culinarycommand/.env
@@ -184,6 +185,7 @@ jobs:
     #               export AWS__Region="${{ env.AWS_REGION }}"
     #               export LogoDev__PublishableKey="${{ secrets.LOGODEV_PUBLISHABLE_KEY }}"
     #               export LogoDev__SecretKey="${{ secrets.LOGODEV_SECRET_KEY }}"
+    #               export Email__ResendApiToken="${{ secrets.EMAIL__RESENDAPITOKEN }}"
     #             EOF
     #               sudo chown ${{ secrets.LIGHTSAIL_USER }}:${{ secrets.LIGHTSAIL_USER }} /var/www/culinarycommand/.env.export
     #               sudo chmod 640 /var/www/culinarycommand/.env.export
