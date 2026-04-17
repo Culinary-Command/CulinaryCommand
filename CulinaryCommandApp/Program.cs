@@ -124,12 +124,10 @@ builder.Services.AddAuthorization();
 // =====================
 // AI Services
 // =====================
-builder.Services.AddSingleton<Client>(sp =>
-{
-    var apiKey = builder.Configuration["Google:ApiKey"]
-        ?? throw new InvalidOperationException("Google:ApiKey is not configured.");
-    return new Client(apiKey: apiKey);
-});
+var googleApiKey = builder.Configuration["Google:ApiKey"]
+    ?? Environment.GetEnvironmentVariable("GOOGLE_API_KEY")
+    ?? throw new InvalidOperationException("Missing config: Google:ApiKey (or GOOGLE_API_KEY env var).");
+builder.Services.AddSingleton<Client>(new Client(apiKey: googleApiKey));
 builder.Services.AddScoped<AIReportingService>();
 
 //
