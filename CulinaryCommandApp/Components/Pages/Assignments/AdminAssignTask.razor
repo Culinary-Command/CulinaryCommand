@@ -3,15 +3,15 @@
 @using CulinaryCommand.Data.Entities
 @using CulinaryCommand.Services
 @using CulinaryCommand.Data.Enums;
+@using WorkTaskStatus = CulinaryCommand.Data.Enums.TaskStatus
 @using CulinaryCommand.Services.UserContextSpace
-@using CulinaryCommandApp.Recipe.Services;
 @using CulinaryCommandApp.Recipe.Services.Interfaces;
 @using CulinaryCommandApp.Recipe.Entities;
+@using CulinaryCommandApp.Components.Pages.Assignments
 @using CulinaryCommand.Data.Models
 @inject IUserContextService UserCtx
 @inject NavigationManager Nav
 @inject ILocationService LocationService
-@inject IUserService UserService
 @inject LocationState LocationState
 @inject ITaskAssignmentService TaskService
 @inject IRecipeService RecipeService
@@ -37,21 +37,21 @@ else if (!allowed)
 else
 {
     <div class="container-fluid px-3 px-lg-4 mt-4 assign-task-page">
-        @if (!string.IsNullOrWhiteSpace(createTemplateSuccess))
-            {
-                <div class="alert alert-success">
-                    @createTemplateSuccess
-                </div>
-            }
+        @if (!string.IsNullOrWhiteSpace(pageSuccess))
+        {
+            <div class="alert alert-success">
+                @pageSuccess
+            </div>
+        }
 
-            @if (!string.IsNullOrWhiteSpace(createTemplateError))
-            {
-                <div class="alert alert-danger">
-                    @createTemplateError
-                </div>
-            }
+        @if (!string.IsNullOrWhiteSpace(pageError))
+        {
+            <div class="alert alert-danger">
+                @pageError
+            </div>
+        }
         <div class="d-flex flex-column flex-lg-row justify-content-between align-items-lg-center gap-3 mb-4">
-            <div>
+            <div class="page-heading">
                 <div class="text-uppercase text-muted small fw-semibold mb-1">Kitchen Operations</div>
                 <h1 class="fw-bold mb-1">Task Assignment</h1>
                 <p class="text-muted mb-0">Manage task lists, assign library tasks fast, and track progress in one place.</p>
@@ -84,280 +84,36 @@ else
                 <div class="d-flex flex-column gap-4">
 
                     <!-- TASK LISTS -->
-                    <div class="card shadow-sm border-0">
-                        <div class="card-body">
-                            <div class="d-flex justify-content-between align-items-center mb-3">
-                                <div>
-                                    <h5 class="fw-semibold mb-1">Task Lists</h5>
-                                    <div class="text-muted small">Reusable groups like Dish Closing or Morning Prep</div>
-                                </div>
-
-                                <div class="d-flex align-items-center gap-2">
-                                    <span class="badge text-bg-primary">@taskLists.Count</span>
-                                    <button class="btn btn-primary btn-sm" @onclick="OpenCreateTaskListModal">
-                                        + New List
-                                    </button>
-                                </div>
-                            </div>
-
-                            <div class="input-group input-group-sm mb-3">
-                                <span class="input-group-text bg-white"><i class="bi bi-search"></i></span>
-                                <input class="form-control"
-                                    placeholder="Search lists..."
-                                    @bind="taskListSearch"
-                                    @bind:event="oninput" />
-                            </div>
-
-                            <div style="max-height: 320px; overflow-y: auto;">
-                                @if (!FilteredTaskLists.Any())
-                                {
-                                    <div class="text-muted small">No task lists found.</div>
-                                }
-                                else
-                                {
-                                    @foreach (var list in FilteredTaskLists)
-                                    {
-                                        <div class="border rounded-4 p-3 mb-3 bg-light-subtle">
-                                            <div class="d-flex justify-content-between align-items-start gap-3">
-                                                <div>
-                                                    <div class="fw-semibold">@list.Name</div>
-
-                                                    @if (!string.IsNullOrWhiteSpace(list.Description))
-                                                    {
-                                                        <div class="text-muted small mb-2">@list.Description</div>
-                                                    }
-
-                                                    <span class="badge bg-white text-secondary border">
-                                                        @(list.Items?.Count ?? 0) task@((list.Items?.Count ?? 0) == 1 ? "" : "s")
-                                                    </span>
-                                                </div>
-
-                                                <div class="d-flex flex-wrap gap-2 justify-content-end">
-                                                    <button class="btn btn-success btn-sm"
-                                                            @onclick="() => SelectTaskListAsync(list.Id)">
-                                                        Assign List
-                                                    </button>
-
-                                                    <button type="button"
-                                                            class="btn btn-outline-secondary btn-sm"
-                                                            @onclick="() => OpenManageTaskListTemplatesModal(list)">
-                                                        Manage Tasks
-                                                    </button>
-
-                                                    <button type="button"
-                                                            class="btn btn-outline-primary btn-sm"
-                                                            @onclick="() => OpenEditTaskListModal(list)">
-                                                        Edit
-                                                    </button>
-
-                                                    <button type="button"
-                                                            class="btn btn-outline-danger btn-sm"
-                                                            @onclick="() => ConfirmArchiveTaskList(list.Id)">
-                                                        Delete
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    }
-                                }
-                            </div>
-                        </div>
-                    </div>
+                    <TaskListsPanel
+                        TaskLists="FilteredTaskLists.ToList()"
+                        TaskListCount="taskLists.Count"
+                        @bind-TaskListSearch="taskListSearch"
+                        OnAssignList="SelectTaskListAsync"
+                        OnCreateTaskList="OpenCreateTaskListModal"
+                        OnEditTaskList="OpenEditTaskListModal"
+                        OnManageTemplates="OpenManageTaskListTemplatesModal"
+                        OnArchiveTaskList="ConfirmArchiveTaskList" />
 
                     <!-- TASK LIBRARY -->
-                    <div class="card shadow-sm border-0">
-                        <div class="card-body">
-                            <div class="d-flex justify-content-between align-items-center mb-3">
-                                <div>
-                                    <h5 class="fw-semibold mb-1">Task Library</h5>
-                                    <div class="text-muted small">Select one or more reusable tasks</div>
-                                </div>
-
-                                <div class="d-flex align-items-center gap-2">
-                                    <span class="badge text-bg-success">@taskTemplates.Count</span>
-                                    <button class="btn btn-success btn-sm" @onclick="OpenCreateTemplateModal">
-                                        + New Template
-                                    </button>
-                                </div>
-                            </div>
-
-                            <div class="input-group input-group-sm mb-3">
-                                <span class="input-group-text bg-white"><i class="bi bi-search"></i></span>
-                                <input class="form-control"
-                                       placeholder="Search templates..."
-                                       @bind="taskLibrarySearch"
-                                       @bind:event="oninput" />
-                            </div>
-
-                            @if (selectedTemplateIds.Any())
-                            {
-                                <div class="alert alert-success py-2 px-3 small mb-3">
-                                    <strong>@selectedTemplateIds.Count</strong> task@(selectedTemplateIds.Count == 1 ? "" : "s") selected
-                                </div>
-                            }
-
-                            <div style="max-height: 380px; overflow-y: auto;">
-                                @if (!FilteredTaskTemplates.Any())
-                                {
-                                    <div class="text-muted small">No task templates found.</div>
-                                }
-                                else
-                                {
-                                    @foreach (var template in FilteredTaskTemplates)
-                                    {
-                                        var isSelected = selectedTemplateIds.Contains(template.Id);
-
-                                        <div class="border rounded-4 p-3 mb-2 @(isSelected ? "border-success bg-success-subtle" : "bg-white")">
-                                            <div class="d-flex justify-content-between align-items-start gap-3">
-                                                <div class="d-flex gap-2">
-                                                    <input class="form-check-input mt-1"
-                                                        type="checkbox"
-                                                        checked="@isSelected"
-                                                        @onchange="() => ToggleTemplateSelection(template.Id)" />
-
-                                                    <div>
-                                                        <div class="fw-semibold">@template.Name</div>
-                                                        <div class="text-muted small">@template.Station</div>
-
-                                                        @if (!string.IsNullOrWhiteSpace(template.Notes))
-                                                        {
-                                                            <div class="text-muted small mt-1">@template.Notes</div>
-                                                        }
-
-                                                        <div class="d-flex gap-2 mt-2 flex-wrap">
-                                                            <span class="@PriorityBadge(template.Priority)">@template.Priority</span>
-
-                                                            @if (template.DefaultEstimatedMinutes.HasValue)
-                                                            {
-                                                                <span class="badge bg-light text-dark border">
-                                                                    @template.DefaultEstimatedMinutes min
-                                                                </span>
-                                                            }
-                                                        </div>
-                                                    </div>
-                                                </div>
-
-                                                <button type="button"
-                                                        class="btn btn-outline-primary btn-sm"
-                                                        @onclick="() => OpenEditTemplateModal(template)">
-                                                    Edit
-                                                </button>
-                                                <button type="button"
-                                                        class="btn btn-outline-danger btn-sm"
-                                                        @onclick="() => ConfirmArchive(template.Id)">
-                                                    Delete
-                                                </button>
-
-                                            </div>
-                                            
-                                        </div>
-                                    }
-                                }
-                            </div>
-                        </div>
-                    </div>
+                    <TaskLibraryPanel
+                        Templates="FilteredTaskTemplates.ToList()"
+                        TemplateCount="taskTemplates.Count"
+                        @bind-TaskLibrarySearch="taskLibrarySearch"
+                        SelectedTemplateIds="selectedTemplateIds"
+                        PriorityBadgeClass="GetPriorityBadgeClass"
+                        OnToggleSelection="ToggleTemplateSelection"
+                        OnCreateTemplate="OpenCreateTemplateModal"
+                        OnEditTemplate="OpenEditTemplateModal"
+                        OnArchiveTemplate="ConfirmArchive" />
 
                     <!-- MANUAL CREATE TASK -->
-                    <details class="card shadow-sm border-0">
-                        <summary class="card-body d-flex justify-content-between align-items-center fw-semibold" style="cursor:pointer; list-style:none;">
-                            <span>Create Task Manually</span>
-                            <span class="badge bg-light text-dark border">Team: @teamMembers.Count</span>
-                        </summary>
-
-                        <div class="card-body pt-0">
-                            <EditForm Model="newTask" OnValidSubmit="HandleSubmit">
-                                <DataAnnotationsValidator />
-                                <ValidationSummary />
-
-                                <div class="mb-3">
-                                    <label class="form-label">Task type</label>
-                                    <InputSelect class="form-select" @bind-Value="newTask.TaskType">
-                                        <option value="@WorkTaskKind.Generic">General task</option>
-                                        <option value="@WorkTaskKind.PrepFromRecipe">Prep from recipe / ingredient</option>
-                                    </InputSelect>
-                                </div>
-
-                                <div class="mb-3">
-                                    <label class="form-label">Task name</label>
-                                    <InputText class="form-control" @bind-Value="newTask.Name" />
-                                </div>
-
-                                <div class="row g-3">
-                                    <div class="col-12 col-sm-6">
-                                        <label class="form-label">Station</label>
-                                        <InputSelect class="form-select" @bind-Value="newTask.Station">
-                                            @foreach (var station in stationOptions)
-                                            {
-                                                <option value="@station">@station</option>
-                                            }
-                                        </InputSelect>
-                                    </div>
-
-                                    <div class="col-12 col-sm-6">
-                                        <label class="form-label">Priority</label>
-                                        <InputSelect class="form-select" @bind-Value="newTask.Priority">
-                                            @foreach (var p in priorityOptions)
-                                            {
-                                                <option value="@p">@p</option>
-                                            }
-                                        </InputSelect>
-                                    </div>
-                                </div>
-
-                                @if (newTask.TaskType == WorkTaskKind.PrepFromRecipe)
-                                {
-                                    <div class="mb-3 mt-3">
-                                        <label class="form-label">Recipe</label>
-                                        <InputSelect class="form-select" @bind-Value="newTask.RecipeId">
-                                            <option value="">Select a recipe</option>
-                                            @foreach (var r in recipes)
-                                            {
-                                                <option value="@r.RecipeId">@r.Title</option>
-                                            }
-                                        </InputSelect>
-                                    </div>
-
-                                    <div class="row g-3">
-                                        <div class="col-6">
-                                            <label class="form-label">Par</label>
-                                            <InputNumber class="form-control" @bind-Value="newTask.Par" />
-                                        </div>
-                                        <div class="col-6">
-                                            <label class="form-label">Current count</label>
-                                            <InputNumber class="form-control" @bind-Value="newTask.Count" />
-                                        </div>
-                                    </div>
-                                }
-
-                                <div class="row g-3 mt-1">
-                                    <div class="col-12 col-sm-6">
-                                        <label class="form-label">Assign to</label>
-                                        <InputSelect class="form-select" @bind-Value="newTask.UserId">
-                                            <option value="">Unassigned</option>
-                                            @foreach (var user in teamMembers)
-                                            {
-                                                <option value="@user.Id">@user.Name (@user.Role)</option>
-                                            }
-                                        </InputSelect>
-                                    </div>
-
-                                    <div class="col-12 col-sm-6">
-                                        <label class="form-label">Due date</label>
-                                        <InputDate class="form-control" @bind-Value="newTask.DueDate" />
-                                    </div>
-                                </div>
-
-                                <div class="mt-3">
-                                    <label class="form-label">Notes</label>
-                                    <InputTextArea class="form-control" rows="3" @bind-Value="newTask.Notes" />
-                                </div>
-
-                                <button type="submit" class="btn btn-success w-100 mt-4">
-                                    Assign Task
-                                </button>
-                            </EditForm>
-                        </div>
-                    </details>
+                    <ManualTaskForm
+                        Model="newTask"
+                        TeamMembers="teamMembers"
+                        Recipes="recipes"
+                        StationOptions="stationOptions"
+                        PriorityOptions="priorityOptions"
+                        OnSubmit="HandleSubmit" />
                 </div>
             </div>
 
@@ -368,169 +124,30 @@ else
                     <!-- QUICK ASSIGN -->
                     @if (SelectedTemplates.Any())
                     {
-                        <div class="card shadow-sm border-0">
-                            <div class="card-body">
-                                <div class="d-flex justify-content-between align-items-start mb-3">
-                                    <div>
-                                        <h5 class="fw-semibold mb-1 text-success">Quick Assign</h5>
-                                        <div class="text-muted small">
-                                            @SelectedTemplates.Count task@(SelectedTemplates.Count == 1 ? "" : "s") selected
-                                        </div>
-                                    </div>
-
-                                    <button class="btn btn-outline-secondary btn-sm" @onclick="ClearSelectedTemplates">
-                                        Clear
-                                    </button>
-                                </div>
-
-                                <div class="mb-3">
-                                    <div class="d-flex flex-wrap gap-2">
-                                        @foreach (var template in SelectedTemplates)
-                                        {
-                                            <span class="badge rounded-pill bg-light text-dark border px-3 py-2">
-                                                @template.Name
-                                            </span>
-                                        }
-                                    </div>
-                                </div>
-
-                                <div class="row g-3">
-                                    <div class="col-12 col-md-4">
-                                        <label class="form-label">Assign to</label>
-                                        <InputSelect class="form-select" @bind-Value="quickAssignUserId">
-                                            <option value="">Unassigned</option>
-                                            @foreach (var user in teamMembers)
-                                            {
-                                                <option value="@user.Id">@user.Name (@user.Role)</option>
-                                            }
-                                        </InputSelect>
-                                    </div>
-
-                                    <div class="col-12 col-md-4">
-                                        <label class="form-label">Due date</label>
-                                        <InputDate class="form-control" @bind-Value="quickAssignDueDate" />
-                                    </div>
-
-                                    <div class="col-12 col-md-4">
-                                        <label class="form-label">Priority override</label>
-                                        <InputSelect class="form-select" @bind-Value="quickAssignPriority">
-                                            <option value="Keep Original">Keep Original</option>
-                                            @foreach (var p in priorityOptions)
-                                            {
-                                                <option value="@p">@p</option>
-                                            }
-                                        </InputSelect>
-                                    </div>
-                                </div>
-
-                                <div class="d-flex justify-content-end gap-2 mt-4">
-                                    <button class="btn btn-light border" @onclick="ClearSelectedTemplates">
-                                        Cancel
-                                    </button>
-                                    <button class="btn btn-success" @onclick="QuickAssignSelectedTemplates">
-                                        Assign Selected Tasks
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
+                        <QuickAssignPanel
+                            SelectedTemplates="SelectedTemplates"
+                            TeamMembers="teamMembers"
+                            PriorityOptions="priorityOptions"
+                            AssignedUserId="quickAssignUserId"
+                            AssignedUserIdChanged="@(value => quickAssignUserId = value)"
+                            DueDate="quickAssignDueDate"
+                            DueDateChanged="@(value => quickAssignDueDate = value)"
+                            Priority="quickAssignPriority"
+                            PriorityChanged="@(value => quickAssignPriority = value)"
+                            OnAssign="QuickAssignSelectedTemplates"
+                            OnClear="ClearSelectedTemplates" />
                     }
 
-                    <!-- BOARD HEADER -->
-                    <div class="card shadow-sm border-0">
-                        <div class="card-body d-flex flex-column flex-lg-row gap-3 align-items-lg-center">
-                            <div>
-                                <h5 class="fw-semibold mb-1">Kitchen Task Board</h5>
-                                <div class="text-muted small">Track pending, active, and completed work</div>
-                            </div>
-
-                            <div class="ms-lg-auto">
-                                <div class="input-group input-group-sm">
-                                    <span class="input-group-text bg-white"><i class="bi bi-search"></i></span>
-                                    <input class="form-control"
-                                           placeholder="Search tasks or people"
-                                           @bind="searchTerm"
-                                           @bind:event="oninput" />
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- KANBAN BOARD -->
-                    <div class="row g-3">
-                        @foreach (var status in statusBuckets)
-                        {
-                            <div class="col-12 col-lg-4">
-                                <div class="card shadow-sm border-0 h-100">
-                                    <div class="card-body">
-                                        <div class="d-flex justify-content-between align-items-center mb-3">
-                                            <div class="fw-semibold">@status</div>
-                                            <span class="badge bg-light text-dark border">
-                                                @TasksByStatus(status).Count()
-                                            </span>
-                                        </div>
-
-                                        <div style="max-height: 720px; overflow-y: auto;">
-                                            @if (!TasksByStatus(status).Any())
-                                            {
-                                                <div class="border rounded-4 p-4 text-center text-muted small bg-light-subtle">
-                                                    No tasks in this column.
-                                                </div>
-                                            }
-                                            else
-                                            {
-                                                @foreach (var task in TasksByStatus(status))
-                                                {
-                                                    <div class="border rounded-4 p-3 mb-3 bg-white">
-                                                        <div class="d-flex justify-content-between align-items-start gap-2 mb-2">
-                                                            <span class="@PriorityBadge(task.Priority)">@task.Priority</span>
-                                                        </div>
-
-                                                        <div class="fw-semibold mb-1">@task.Name</div>
-                                                        <div class="text-muted small mb-1">@task.Station</div>
-                                                        <div class="text-muted small mb-1">@FormatAssignee(task.UserId)</div>
-                                                        <div class="text-muted small">Due @task.DueDate.ToString("MMM d")</div>
-
-                                                        @if (!string.IsNullOrWhiteSpace(task.Notes))
-                                                        {
-                                                            <div class="small text-muted mt-2">@task.Notes</div>
-                                                        }
-
-                                                        <div class="d-flex flex-wrap gap-2 mt-3">
-                                                            @if (task.Status == "Pending")
-                                                            {
-                                                                <button class="btn btn-outline-primary btn-sm"
-                                                                        @onclick="() => MarkInProgress(task.Id)">
-                                                                    Start
-                                                                </button>
-                                                            }
-
-                                                            @if (task.Status != "Completed")
-                                                            {
-                                                                <button class="btn btn-outline-success btn-sm"
-                                                                        @onclick="() => MarkComplete(task.Id)">
-                                                                    Mark done
-                                                                </button>
-                                                            }
-
-                                                            <button class="btn btn-outline-secondary btn-sm"
-                                                                    @onclick="() => BumpTask(task.Id)">
-                                                                Tomorrow
-                                                            </button>
-
-                                                            <button class="btn btn-outline-danger btn-sm"
-                                                                    @onclick="() => DeleteTask(task.Id)">
-                                                                Remove
-                                                            </button>
-                                                        </div>
-                                                    </div>
-                                                }
-                                            }
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        }
-                    </div>
+                    <TaskBoardPanel
+                        StatusBuckets="statusBuckets"
+                        TasksForStatus="TasksByStatus"
+                        PriorityBadgeClass="GetPriorityBadgeClass"
+                        AssigneeLabel="FormatAssigneeName"
+                        @bind-TaskBoardSearch="taskBoardSearch"
+                        OnMarkInProgress="MarkInProgress"
+                        OnMarkComplete="MarkComplete"
+                        OnBumpTask="BumpTask"
+                        OnDeleteTask="DeleteTask" />
                 </div>
             </div>
         </div>
@@ -580,38 +197,37 @@ else
     private List<Tasks> assignments = new();
     private TaskFormModel newTask = new();
     private int? selectedLocationId;
-    private string searchTerm = string.Empty;
-
+    private string taskBoardSearch = string.Empty;
     private List<Recipe> recipes = new();
-    
     private List<TaskTemplate> taskTemplates = new();
     private List<TaskList> taskLists = new();
-
     private List<int> selectedTemplateIds = new();
     private string taskLibrarySearch = string.Empty;
     private string taskListSearch = string.Empty;
-
     private int? quickAssignUserId;
     private DateTime quickAssignDueDate = DateTime.Today;
     private string quickAssignPriority = "Keep Original";
-
-    private readonly List<string> stationOptions = new() { "Prep", "Grill", "Saute", "Expo", "Pastry", "Dish" };
-    private readonly List<string> priorityOptions = new() { "Low", "Normal", "High", "Critical" };
-    private readonly List<string> statusBuckets = new() { "Pending", "In Progress", "Completed" };
-
     private bool showCreateTemplateModal;
-    private string? createTemplateError;
-    private string? createTemplateSuccess;
     private bool showEditTemplateModal;
     private TaskTemplate? editingTemplate;
     private bool showCreateTaskListModal;
     private bool showEditTaskListModal;
     private bool showManageTaskListTemplatesModal;
-
     private TaskList? editingTaskList;
     private TaskList? managingTaskList;
-
     private List<TaskTemplate> selectedTaskListTemplates = new();
+    private string? pageError;
+    private string? pageSuccess;
+
+    private readonly List<string> stationOptions = new() { "Prep", "Grill", "Saute", "Expo", "Pastry", "Dish" };
+    private readonly List<string> priorityOptions = new() { "Low", "Normal", "High", "Critical" };
+    private readonly List<string> statusBuckets = new()
+    {
+        WorkTaskStatus.Pending,
+        WorkTaskStatus.InProgress,
+        WorkTaskStatus.Completed
+    };
+
     protected override async Task OnInitializedAsync()
     {
         _ctx = await UserCtx.GetAsync();
@@ -622,7 +238,6 @@ else
             return;
         }
 
-        // Invite-only: authenticated but not in DB
         if (_ctx.User is null)
         {
             Nav.NavigateTo("/no-access", true);
@@ -639,24 +254,30 @@ else
             return;
         }
 
-        // Ensure LocationState is hydrated if user deep-links here
         if (LocationState.ManagedLocations.Count == 0 && _ctx.AccessibleLocations.Any())
             await LocationState.SetLocationsAsync(_ctx.AccessibleLocations);
 
-        // Source of truth: header-selected location
         selectedLocationId = LocationState.CurrentLocation?.Id;
-
         LocationState.OnChange += HandleLocationStateChanged;
 
+        await LoadPageDataAsync();
+
+        ready = true;
+    }
+
+    public void Dispose()
+    {
+        LocationState.OnChange -= HandleLocationStateChanged;
+    }
+
+    private async Task LoadPageDataAsync()
+    {
         await LoadTeamAsync();
         await LoadRecipesAsync();
         await LoadAssignmentsAsync();
         await LoadTaskTemplatesAsync();
         await LoadTaskListsAsync();
-
-        ready = true;
     }
-
 
     private async Task LoadTeamAsync()
     {
@@ -670,12 +291,13 @@ else
             }
             catch
             {
-                // fallback sample users
             }
         }
 
         if (!teamMembers.Any())
         {
+            // Demo fallback so the page still renders assignable users
+            // if location-based user lookup fails or returns empty.
             teamMembers = new()
             {
                 new User { Id = 101, Name = "Ava Thompson", Role = "Prep Cook" },
@@ -706,7 +328,9 @@ else
 
     private async Task LoadAssignmentsAsync()
     {
-        if (!selectedLocationId.HasValue) return;
+        if (!selectedLocationId.HasValue)
+            return;
+
         assignments = await TaskService.GetByLocationAsync(selectedLocationId.Value);
     }
 
@@ -744,6 +368,16 @@ else
         }
     }
 
+    private void HandleLocationStateChanged()
+    {
+        _ = InvokeAsync(async () =>
+        {
+            selectedLocationId = LocationState.CurrentLocation?.Id;
+            await LoadPageDataAsync();
+            StateHasChanged();
+        });
+    }
+
     private async Task HandleSubmit()
     {
         if (!selectedLocationId.HasValue)
@@ -768,7 +402,7 @@ else
             Name = name,
             Station = newTask.Station,
             Priority = newTask.Priority,
-            Status = "Pending",
+            Status = WorkTaskStatus.Pending,
             UserId = newTask.UserId,
             DueDate = newTask.DueDate ?? DateTime.Today,
             Notes = newTask.Notes?.Trim(),
@@ -777,10 +411,10 @@ else
             Kind = newTask.TaskType,
             Par = newTask.Par,
             Count = newTask.Count,
-            RecipeId = newTask.RecipeId, 
+            RecipeId = newTask.RecipeId,
             CreatedAt = DateTime.UtcNow,
             UpdatedAt = DateTime.UtcNow,
-            Date = DateTime.UtcNow             // required DB field
+            Date = DateTime.UtcNow
         };
 
         var created = await TaskService.CreateAsync(task);
@@ -788,17 +422,14 @@ else
 
         newTask = new TaskFormModel
         {
-            TaskType = task.Kind,   // keep last used type
+            TaskType = task.Kind,
             Station = task.Station,
             Priority = task.Priority,
             DueDate = task.DueDate,
             Notes = string.Empty
-            // RecipeId left null; choose fresh per task
         };
 
-        //
         await TaskNotifier.NotifyTasksChangedAsync(selectedLocationId.Value);
-
         await InvokeAsync(StateHasChanged);
     }
 
@@ -814,8 +445,7 @@ else
             quickAssignUserId,
             quickAssignDueDate,
             assignerName,
-            quickAssignPriority == "Keep Original" ? null : quickAssignPriority
-        );
+            quickAssignPriority == "Keep Original" ? null : quickAssignPriority);
 
         if (createdTasks.Any())
         {
@@ -828,72 +458,6 @@ else
         quickAssignPriority = "Keep Original";
 
         await InvokeAsync(StateHasChanged);
-    }
-
-    private IEnumerable<Tasks> TasksByStatus(string status) =>
-        assignments.Where(t => t.LocationId == (selectedLocationId ?? t.LocationId))
-                   .Where(t => string.Equals(t.Status, status, StringComparison.OrdinalIgnoreCase))
-                   .Where(FilterBySearch);
-
-    private bool FilterBySearch(Tasks task)
-    {
-        if (string.IsNullOrWhiteSpace(searchTerm))
-            return true;
-
-        var term = searchTerm.Trim().ToLowerInvariant();
-        return task.Name.ToLowerInvariant().Contains(term)
-            || task.Station.ToLowerInvariant().Contains(term)
-            || FormatAssignee(task.UserId).ToLowerInvariant().Contains(term);
-    }
-
-    private async Task MoveToStatus(int id, string status)
-    {
-        await TaskService.UpdateStatusAsync(id, status);
-
-        var t = assignments.FirstOrDefault(x => x.Id == id);
-        if (t == null) return;
-
-        t.Status = status;
-        t.UpdatedAt = DateTime.UtcNow;
-
-        await InvokeAsync(StateHasChanged);
-    }
-
-    private Task MarkComplete(int id) => MoveToStatus(id, "Completed");
-    private Task MarkInProgress(int id) => MoveToStatus(id, "In Progress");
-
-    private async Task BumpTask(int id)
-    {
-        await TaskService.BumpDueDateAsync(id, 1);
-
-        var t = assignments.FirstOrDefault(x => x.Id == id);
-        if (t == null) return;
-
-        t.DueDate = t.DueDate.AddDays(1);
-        t.UpdatedAt = DateTime.UtcNow;
-
-        await InvokeAsync(StateHasChanged);
-    }
-
-    private async Task DeleteTask(int id)
-    {
-        await TaskService.DeleteAsync(id);
-        assignments.RemoveAll(t => t.Id == id);
-        await InvokeAsync(StateHasChanged);
-    }
-
-    private void HandleLocationStateChanged()
-    {
-        _ = InvokeAsync(async () =>
-        {
-            selectedLocationId = LocationState.CurrentLocation?.Id;
-            await LoadTeamAsync();
-            await LoadRecipesAsync();
-            await LoadAssignmentsAsync();
-            await LoadTaskTemplatesAsync();
-            await LoadTaskListsAsync();
-            StateHasChanged();
-        });
     }
 
     private void ToggleTemplateSelection(int templateId)
@@ -917,8 +481,7 @@ else
 
     private void OpenCreateTemplateModal()
     {
-        createTemplateError = null;
-        createTemplateSuccess = null;
+        ClearMessages();
         showCreateTemplateModal = true;
     }
 
@@ -930,8 +493,7 @@ else
 
     private async Task SaveTemplate(CreateTaskTemplateRequest request)
     {
-        createTemplateError = null;
-        createTemplateSuccess = null;
+        ClearMessages();
 
         try
         {
@@ -940,11 +502,11 @@ else
             showCreateTemplateModal = false;
             await LoadTaskTemplatesAsync();
 
-            createTemplateSuccess = $"Template '{createdTemplate.Name}' created successfully.";
+            SetSuccess($"Template '{createdTemplate.Name}' created successfully.");
         }
         catch (Exception ex)
         {
-            createTemplateError = ex.Message;
+            SetError(ex.Message);
         }
 
         await InvokeAsync(StateHasChanged);
@@ -952,9 +514,7 @@ else
 
     private void OpenEditTemplateModal(TaskTemplate template)
     {
-        createTemplateError = null;
-        createTemplateSuccess = null;
-
+        ClearMessages();
         editingTemplate = template;
         showEditTemplateModal = true;
     }
@@ -968,8 +528,7 @@ else
 
     private async Task SaveEditedTemplate(UpdateTaskTemplateRequest request)
     {
-        createTemplateError = null;
-        createTemplateSuccess = null;
+        ClearMessages();
 
         try
         {
@@ -977,14 +536,13 @@ else
 
             showEditTemplateModal = false;
             editingTemplate = null;
-
             await LoadTaskTemplatesAsync();
 
-            createTemplateSuccess = $"Template '{updatedTemplate.Name}' updated successfully.";
+            SetSuccess($"Template '{updatedTemplate.Name}' updated successfully.");
         }
         catch (Exception ex)
         {
-            createTemplateError = ex.Message;
+            SetError(ex.Message);
         }
 
         await InvokeAsync(StateHasChanged);
@@ -996,20 +554,17 @@ else
         {
             await TaskLibraryService.ArchiveTemplateAsync(templateId);
             await LoadTaskTemplatesAsync();
-
-            createTemplateSuccess = "Template removed successfully.";
+            SetSuccess("Template removed successfully.");
         }
         catch (Exception ex)
         {
-            createTemplateError = ex.Message;
+            SetError(ex.Message);
         }
     }
 
     private async Task ConfirmArchive(int templateId)
     {
-        var confirm = await JS.InvokeAsync<bool>("confirm", "Delete this template?");
-        
-        if (confirm)
+        if (await ConfirmAsync("Delete this template?"))
         {
             await ArchiveTemplate(templateId);
         }
@@ -1017,8 +572,7 @@ else
 
     private void OpenCreateTaskListModal()
     {
-        createTemplateError = null;
-        createTemplateSuccess = null;
+        ClearMessages();
         showCreateTaskListModal = true;
     }
 
@@ -1030,8 +584,7 @@ else
 
     private async Task SaveTaskList(CreateTaskListRequest request)
     {
-        createTemplateError = null;
-        createTemplateSuccess = null;
+        ClearMessages();
 
         try
         {
@@ -1040,11 +593,11 @@ else
             showCreateTaskListModal = false;
             await LoadTaskListsAsync();
 
-            createTemplateSuccess = $"Task list '{createdTaskList.Name}' created successfully.";
+            SetSuccess($"Task list '{createdTaskList.Name}' created successfully.");
         }
         catch (Exception ex)
         {
-            createTemplateError = ex.Message;
+            SetError(ex.Message);
         }
 
         await InvokeAsync(StateHasChanged);
@@ -1052,8 +605,7 @@ else
 
     private void OpenEditTaskListModal(TaskList taskList)
     {
-        createTemplateError = null;
-        createTemplateSuccess = null;
+        ClearMessages();
         editingTaskList = taskList;
         showEditTaskListModal = true;
     }
@@ -1067,8 +619,7 @@ else
 
     private async Task SaveEditedTaskList(UpdateTaskListRequest request)
     {
-        createTemplateError = null;
-        createTemplateSuccess = null;
+        ClearMessages();
 
         try
         {
@@ -1076,14 +627,13 @@ else
 
             showEditTaskListModal = false;
             editingTaskList = null;
-
             await LoadTaskListsAsync();
 
-            createTemplateSuccess = $"Task list '{updatedTaskList.Name}' updated successfully.";
+            SetSuccess($"Task list '{updatedTaskList.Name}' updated successfully.");
         }
         catch (Exception ex)
         {
-            createTemplateError = ex.Message;
+            SetError(ex.Message);
         }
 
         await InvokeAsync(StateHasChanged);
@@ -1091,8 +641,7 @@ else
 
     private async Task ConfirmArchiveTaskList(int taskListId)
     {
-        var confirm = await JS.InvokeAsync<bool>("confirm", "Delete this task list?");
-        if (confirm)
+        if (await ConfirmAsync("Delete this task list?"))
         {
             await ArchiveTaskList(taskListId);
         }
@@ -1100,19 +649,18 @@ else
 
     private async Task ArchiveTaskList(int taskListId)
     {
-        createTemplateError = null;
-        createTemplateSuccess = null;
+        ClearMessages();
 
         try
         {
             await TaskLibraryService.ArchiveTaskListAsync(taskListId);
             await LoadTaskListsAsync();
 
-            createTemplateSuccess = "Task list removed successfully.";
+            SetSuccess("Task list removed successfully.");
         }
         catch (Exception ex)
         {
-            createTemplateError = ex.Message;
+            SetError(ex.Message);
         }
 
         await InvokeAsync(StateHasChanged);
@@ -1120,9 +668,7 @@ else
 
     private async Task OpenManageTaskListTemplatesModal(TaskList taskList)
     {
-        createTemplateError = null;
-        createTemplateSuccess = null;
-
+        ClearMessages();
         managingTaskList = taskList;
         selectedTaskListTemplates = await TaskLibraryService.GetTemplatesForTaskListAsync(taskList.Id);
         showManageTaskListTemplatesModal = true;
@@ -1141,8 +687,7 @@ else
         if (managingTaskList == null || !templateIds.Any())
             return;
 
-        createTemplateError = null;
-        createTemplateSuccess = null;
+        ClearMessages();
 
         try
         {
@@ -1150,11 +695,11 @@ else
             selectedTaskListTemplates = await TaskLibraryService.GetTemplatesForTaskListAsync(managingTaskList.Id);
             await LoadTaskListsAsync();
 
-            createTemplateSuccess = "Templates added to task list.";
+            SetSuccess("Templates added to task list.");
         }
         catch (Exception ex)
         {
-            createTemplateError = ex.Message;
+            SetError(ex.Message);
         }
 
         await InvokeAsync(StateHasChanged);
@@ -1165,38 +710,94 @@ else
         if (managingTaskList == null)
             return;
 
-        createTemplateError = null;
-        createTemplateSuccess = null;
+        ClearMessages();
 
         try
         {
             await TaskLibraryService.RemoveTemplateFromTaskListAsync(managingTaskList.Id, templateId);
             selectedTaskListTemplates = await TaskLibraryService.GetTemplatesForTaskListAsync(managingTaskList.Id);
 
-            createTemplateSuccess = "Template removed from task list.";
+            SetSuccess("Template removed from task list.");
         }
         catch (Exception ex)
         {
-            createTemplateError = ex.Message;
+            SetError(ex.Message);
         }
 
         await InvokeAsync(StateHasChanged);
     }
+
+    private IEnumerable<Tasks> TasksByStatus(string status) =>
+        assignments.Where(t => t.LocationId == (selectedLocationId ?? t.LocationId))
+            .Where(t => string.Equals(t.Status, status, StringComparison.OrdinalIgnoreCase))
+            .Where(FilterBySearch);
+
+    private bool FilterBySearch(Tasks task)
+    {
+        if (string.IsNullOrWhiteSpace(taskBoardSearch))
+            return true;
+
+        var term = taskBoardSearch.Trim().ToLowerInvariant();
+        return (task.Name ?? string.Empty).ToLowerInvariant().Contains(term)
+            || (task.Station ?? string.Empty).ToLowerInvariant().Contains(term)
+            || FormatAssigneeName(task.UserId).ToLowerInvariant().Contains(term);
+    }
+
+    private async Task MoveToStatus(int id, string status)
+    {
+        await TaskService.UpdateStatusAsync(id, status);
+
+        var t = assignments.FirstOrDefault(x => x.Id == id);
+        if (t == null)
+            return;
+
+        t.Status = status;
+        t.UpdatedAt = DateTime.UtcNow;
+
+        await InvokeAsync(StateHasChanged);
+    }
+
+    private Task MarkComplete(int id) => MoveToStatus(id, WorkTaskStatus.Completed);
+
+    private Task MarkInProgress(int id) => MoveToStatus(id, WorkTaskStatus.InProgress);
+
+    private async Task BumpTask(int id)
+    {
+        await TaskService.BumpDueDateAsync(id, 1);
+
+        var t = assignments.FirstOrDefault(x => x.Id == id);
+        if (t == null)
+            return;
+
+        t.DueDate = t.DueDate.AddDays(1);
+        t.UpdatedAt = DateTime.UtcNow;
+
+        await InvokeAsync(StateHasChanged);
+    }
+
+    private async Task DeleteTask(int id)
+    {
+        await TaskService.DeleteAsync(id);
+        assignments.RemoveAll(t => t.Id == id);
+        await InvokeAsync(StateHasChanged);
+    }
+
     private string SelectedLocationName =>
         LocationState.CurrentLocation?.Name ?? "Select a location";
 
     private IEnumerable<Tasks> TasksForCurrentLocation =>
         assignments.Where(t => !selectedLocationId.HasValue || t.LocationId == selectedLocationId.Value);
 
-    private int OpenTaskCount => TasksForCurrentLocation.Count(t => t.Status != "Completed");
+    private int OpenTaskCount => TasksForCurrentLocation.Count(t => t.Status != WorkTaskStatus.Completed);
+
     private int DueTodayCount => TasksForCurrentLocation.Count(t => t.DueDate.Date == DateTime.Today);
 
     private IEnumerable<TaskTemplate> FilteredTaskTemplates =>
-    taskTemplates.Where(t =>
-        string.IsNullOrWhiteSpace(taskLibrarySearch) ||
-        t.Name.Contains(taskLibrarySearch, StringComparison.OrdinalIgnoreCase) ||
-        t.Station.Contains(taskLibrarySearch, StringComparison.OrdinalIgnoreCase) ||
-        (t.Notes?.Contains(taskLibrarySearch, StringComparison.OrdinalIgnoreCase) ?? false));
+        taskTemplates.Where(t =>
+            string.IsNullOrWhiteSpace(taskLibrarySearch) ||
+            t.Name.Contains(taskLibrarySearch, StringComparison.OrdinalIgnoreCase) ||
+            t.Station.Contains(taskLibrarySearch, StringComparison.OrdinalIgnoreCase) ||
+            (t.Notes?.Contains(taskLibrarySearch, StringComparison.OrdinalIgnoreCase) ?? false));
 
     private IEnumerable<TaskList> FilteredTaskLists =>
         taskLists.Where(t =>
@@ -1207,13 +808,15 @@ else
     private List<TaskTemplate> SelectedTemplates =>
         taskTemplates.Where(t => selectedTemplateIds.Contains(t.Id)).ToList();
 
-    private string FormatAssignee(int? id)
+    private string FormatAssigneeName(int? id)
     {
-        if (!id.HasValue) return "Unassigned";
+        if (!id.HasValue)
+            return "Unassigned";
+
         return teamMembers.FirstOrDefault(u => u.Id == id.Value)?.Name ?? "Unassigned";
     }
 
-    private string PriorityBadge(string priority) => priority switch
+    private string GetPriorityBadgeClass(string priority) => priority switch
     {
         "Critical" => "badge bg-danger",
         "High" => "badge bg-warning text-dark",
@@ -1222,57 +825,26 @@ else
         _ => "badge bg-secondary"
     };
 
-    public void Dispose()
+    private void ClearMessages()
     {
-        LocationState.OnChange -= HandleLocationStateChanged;
+        pageError = null;
+        pageSuccess = null;
     }
 
-    private class TaskFormModel
+    private void SetSuccess(string message)
     {
-        [Required, StringLength(128)]
-        public string Name { get; set; } = string.Empty;
+        pageError = null;
+        pageSuccess = message;
+    }
 
-        [Required]
-        public string Station { get; set; } = "Prep";
+    private void SetError(string message)
+    {
+        pageSuccess = null;
+        pageError = message;
+    }
 
-        [Required]
-        public string Priority { get; set; } = "Normal";
-
-        public int? UserId { get; set; }
-
-        [Required]
-        public DateTime? DueDate { get; set; } = DateTime.Today;
-
-        [StringLength(512)]
-        public string? Notes { get; set; } = string.Empty;
-
-        public WorkTaskKind TaskType { get; set; } = WorkTaskKind.Generic;
-
-        public int? Par { get; set; }
-        public int? Count { get; set; }
-
-        public int? RecipeId { get; set; }
+    private async Task<bool> ConfirmAsync(string message)
+    {
+        return await JS.InvokeAsync<bool>("confirm", message);
     }
 }
-
-<style>
-    .assign-task-page .card {
-        border-radius: 1rem;
-    }
-
-    .assign-task-page .form-control,
-    .assign-task-page .form-select,
-    .assign-task-page .input-group-text,
-    .assign-task-page .btn {
-        border-radius: .8rem;
-    }
-
-    .assign-task-page .badge {
-        font-weight: 600;
-    }
-
-    .assign-task-page details summary::-webkit-details-marker {
-        display: none;
-    }
-</style>
-

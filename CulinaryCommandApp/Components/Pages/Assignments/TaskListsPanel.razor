@@ -1,0 +1,109 @@
+@using CulinaryCommand.Data.Entities
+
+<div class="card shadow-sm border-0">
+    <div class="card-body">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <div>
+                <h5 class="fw-semibold mb-1">Task Lists</h5>
+                <div class="text-muted small">Reusable groups like Dish Closing or Morning Prep</div>
+            </div>
+
+            <div class="d-flex align-items-center gap-2">
+                <span class="badge text-bg-primary">@TaskListCount</span>
+                <button class="btn btn-primary btn-sm" @onclick="HandleCreateTaskList">
+                    + New List
+                </button>
+            </div>
+        </div>
+
+        <div class="input-group input-group-sm mb-3">
+            <span class="input-group-text bg-white"><i class="bi bi-search"></i></span>
+            <input class="form-control"
+                   placeholder="Search lists..."
+                   @bind="TaskListSearchValue"
+                   @bind:event="oninput" />
+        </div>
+
+        <div style="max-height: 320px; overflow-y: auto;">
+            @if (!TaskLists.Any())
+            {
+                <div class="text-muted small">No task lists found.</div>
+            }
+            else
+            {
+                @foreach (var list in TaskLists)
+                {
+                    <div class="border rounded-4 p-3 mb-3 bg-light-subtle">
+                        <div class="d-flex justify-content-between align-items-start gap-3">
+                            <div>
+                                <div class="fw-semibold">@list.Name</div>
+
+                                @if (!string.IsNullOrWhiteSpace(list.Description))
+                                {
+                                    <div class="text-muted small mb-2">@list.Description</div>
+                                }
+
+                                <span class="badge bg-white text-secondary border">
+                                    @(list.Items?.Count ?? 0) task@((list.Items?.Count ?? 0) == 1 ? "" : "s")
+                                </span>
+                            </div>
+
+                            <div class="d-flex flex-wrap gap-2 justify-content-end">
+                                <button class="btn btn-success btn-sm"
+                                        @onclick="() => HandleAssignList(list.Id)">
+                                    Assign List
+                                </button>
+
+                                <button type="button"
+                                        class="btn btn-outline-secondary btn-sm"
+                                        @onclick="() => HandleManageTemplates(list)">
+                                    Manage Tasks
+                                </button>
+
+                                <button type="button"
+                                        class="btn btn-outline-primary btn-sm"
+                                        @onclick="() => HandleEditTaskList(list)">
+                                    Edit
+                                </button>
+
+                                <button type="button"
+                                        class="btn btn-outline-danger btn-sm"
+                                        @onclick="() => HandleArchiveTaskList(list.Id)">
+                                    Delete
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter] public List<TaskList> TaskLists { get; set; } = new();
+    [Parameter] public int TaskListCount { get; set; }
+    [Parameter] public string TaskListSearch { get; set; } = string.Empty;
+    [Parameter] public EventCallback<string> TaskListSearchChanged { get; set; }
+    [Parameter] public EventCallback<int> OnAssignList { get; set; }
+    [Parameter] public EventCallback OnCreateTaskList { get; set; }
+    [Parameter] public EventCallback<TaskList> OnEditTaskList { get; set; }
+    [Parameter] public EventCallback<TaskList> OnManageTemplates { get; set; }
+    [Parameter] public EventCallback<int> OnArchiveTaskList { get; set; }
+
+    private string TaskListSearchValue
+    {
+        get => TaskListSearch;
+        set => _ = TaskListSearchChanged.InvokeAsync(value);
+    }
+
+    private Task HandleAssignList(int taskListId) => OnAssignList.InvokeAsync(taskListId);
+
+    private Task HandleCreateTaskList() => OnCreateTaskList.InvokeAsync();
+
+    private Task HandleEditTaskList(TaskList taskList) => OnEditTaskList.InvokeAsync(taskList);
+
+    private Task HandleManageTemplates(TaskList taskList) => OnManageTemplates.InvokeAsync(taskList);
+
+    private Task HandleArchiveTaskList(int taskListId) => OnArchiveTaskList.InvokeAsync(taskListId);
+}
