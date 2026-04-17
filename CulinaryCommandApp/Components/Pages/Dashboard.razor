@@ -1,6 +1,5 @@
 @page "/dashboard"
 @rendermode InteractiveServer
-@implements IDisposable
 
 @using CulinaryCommand.Components.Custom
 @using CulinaryCommand.Services.UserContextSpace
@@ -8,19 +7,12 @@
 @using CulinaryCommandApp.AIDashboard.Services.DTOs
 @using CulinaryCommand.Services
 @using CulinaryCommandApp.Inventory.DTOs
-@using CulinaryCommandApp.Inventory.Services.Interfaces
-@using CulinaryCommand.Data.Entities
-@using CulinaryCommand.PurchaseOrder.Entities
-@using Microsoft.EntityFrameworkCore
-
+@using CulinaryCommandApp.Data.Models
 @inject Microsoft.AspNetCore.Hosting.IWebHostEnvironment Env
 @inject NavigationManager Nav
 @inject LocationState LocationState
 @inject AIReportingService ReportingService
 @inject IUserContextService UserCtx
-@inject IInventoryManagementService InventorySvc
-@inject ITaskAssignmentService TaskSvc
-@inject AppDbContext Db
 
 @if (!_ready)
 {
@@ -29,15 +21,13 @@
 else if (!_isSignedIn)
 {
     <div class="text-center mt-5">
-        You're not signed in.
+        You’re not signed in.
         <button class="btn btn-success" @onclick="NavigateToSignIn">Go to Sign In</button>
     </div>
 }
 else
 {
     <div class="container-fluid px-3 px-lg-4 mt-4">
-
-        <!-- ── Page Header ─────────────────────────────────────────── -->
         <div class="d-flex flex-column flex-lg-row justify-content-between align-items-lg-center gap-3 mb-4">
             <div>
                 <div class="text-uppercase text-muted small fw-semibold mb-1">Kitchen Operations</div>
@@ -53,7 +43,7 @@ else
                 <div class="d-flex gap-3">
                     <div>
                         <div class="text-muted small">Low Stock</div>
-                        <div class="fs-5 fw-semibold text-danger">@_lowStockItems.Count</div>
+                        <div class="fs-5 fw-semibold">@_lowStockItems.Count</div>
                     </div>
                     <div>
                         <div class="text-muted small">Open Tasks</div>
@@ -78,269 +68,93 @@ else
 
         <hr />
 
-        <!-- ═══════════════════════════════════════════════════════════
-             OPERATIONAL CHARTS
-             ═══════════════════════════════════════════════════════════ -->
-
-        <!-- Row 1 ── Card 1: Low Stock  |  Card 2: Task Status Donut -->
-        <div class="row g-4 mt-2">
-
-            <!-- Card 1: Low Stock Items -->
-            <div class="col-lg-8">
-                <div class="card h-100 shadow-sm">
-                    <div class="card-header fw-semibold d-flex align-items-center gap-2">
-                        <i class="bi bi-exclamation-triangle-fill text-danger"></i>
-                        Low Stock Items
-                        <span class="badge text-bg-danger ms-1">@_lowStockItems.Count</span>
-                    </div>
-                    <div class="card-body p-0">
-                        @if (_lowStockItems.Any())
-                        {
-                            <div class="table-responsive">
-                                <table class="table table-sm table-hover mb-0">
-                                    <thead class="table-light">
-                                        <tr>
-                                            <th>Ingredient</th>
-                                            <th>Category</th>
-                                            <th>In Stock</th>
-                                            <th>Reorder Level</th>
-                                            <th>Unit</th>
-                                            <th>Vendor</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @foreach (var item in _lowStockItems)
-                                        {
-                                            <tr class="table-warning">
-                                                <td>@item.Name</td>
-                                                <td>@item.Category</td>
-                                                <td>@item.CurrentQuantity.ToString("0.##")</td>
-                                                <td>@item.ReorderLevel.ToString("0.##")</td>
-                                                <td>@item.Unit</td>
-                                                <td>@(item.VendorName ?? "—")</td>
-                                            </tr>
-                                        }
-                                    </tbody>
-                                </table>
-                            </div>
-                        }
-                        else
-                        {
-                            <div class="d-flex align-items-center justify-content-center py-5">
-                                <p class="text-muted mb-0">
-                                    <i class="bi bi-check-circle-fill text-success me-2"></i>All items sufficiently stocked.
-                                </p>
-                            </div>
-                        }
-                    </div>
-                </div>
-            </div>
-
-            <!-- Card 2: Task Status Breakdown -->
-            <div class="col-lg-4">
-                <div class="card h-100 shadow-sm">
-                    <div class="card-header fw-semibold">Task Status Breakdown</div>
-                    <div class="card-body p-1">
-                        @if (_taskData.Any())
-                        {
-                            <PlotlyChart @bind-Config="_dashChartConfig"
-                                         @bind-Layout="_taskStatusLayout"
-                                         @bind-Data="_taskStatusChartData" />
-                        }
-                        else
-                        {
-                            <p class="text-muted p-3 mb-0">No tasks for this location.</p>
-                        }
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Row 2 ── Card 3: Tasks per Employee  |  Card 4: Live Activity -->
-        <div class="row g-4 mt-2">
-
-            <!-- Card 3: Tasks Completed per Employee -->
-            <div class="col-lg-5">
-                <div class="card h-100 shadow-sm">
-                    <div class="card-header fw-semibold">Tasks Completed per Employee</div>
-                    <div class="card-body p-0">
-                        @if (_empTaskCounts.Any())
-                        {
-                            <table class="table table-sm table-hover mb-0">
-                                <thead class="table-light">
-                                    <tr>
-                                        <th>Employee</th>
-                                        <th class="text-center">Completed</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach (var e in _empTaskCounts)
-                                    {
-                                        <tr>
-                                            <td>@e.Name</td>
-                                            <td class="text-center">
-                                                <span class="badge text-bg-success">@e.Count</span>
-                                            </td>
-                                        </tr>
-                                    }
-                                </tbody>
-                            </table>
-                        }
-                        else
-                        {
-                            <p class="text-muted p-3 mb-0">No completed tasks yet.</p>
-                        }
-                    </div>
-                </div>
-            </div>
-
-            <!-- Card 4: Live Activity Timeline -->
-            <div class="col-lg-7">
-                <div class="card h-100 shadow-sm">
-                    <div class="card-header fw-semibold d-flex justify-content-between align-items-center">
-                        <span><i class="bi bi-activity me-1 text-primary"></i>Live Activity (Last 7 Days)</span>
-                        <small class="text-muted">
-                            <i class="bi bi-arrow-clockwise me-1"></i>@_activityRefreshedAt.ToLocalTime().ToString("HH:mm:ss")
-                        </small>
-                    </div>
-                    <div class="card-body p-1">
-                        @if (_activityChartData.Any())
-                        {
-                            <PlotlyChart @bind-Config="_dashChartConfig"
-                                         @bind-Layout="_activityLayout"
-                                         @bind-Data="_activityChartData" />
-                        }
-                        else
-                        {
-                            <p class="text-muted p-3 mb-0">No recent activity in the last 7 days.</p>
-                        }
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <hr class="mt-4" />
-
-        <!-- ═══════════════════════════════════════════════════════════
-             AI WEEKLY ANALYSIS
-             ═══════════════════════════════════════════════════════════ -->
-        <div class="card mt-4 shadow-sm">
-            <div class="card-header fw-semibold d-flex justify-content-between align-items-center">
-                <span><i class="bi bi-robot me-1 text-primary"></i>Weekly Report Analysis</span>
-                @if (_aiAnalysisObj != null)
-                {
-                    <small class="text-muted">Generated: @_aiAnalysisObj.GeneratedAt?.ToLocalTime().ToString("g")</small>
-                }
-            </div>
+        <div class="card mt-4">
             <div class="card-body">
+                <h5 class="card-title">Weekly Report Analysis</h5>
 
                 @if (_aiLoading)
                 {
-                    <div class="text-center py-4">
-                        <div class="spinner-border text-primary" role="status"></div>
-                        <p class="text-muted mt-2 mb-0">Loading analysis from Gemini…</p>
-                    </div>
+                    <div>Loading analysis from Gemini...</div>
                 }
                 else if (_aiAnalysisObj == null)
                 {
-                    <p class="text-muted mb-0">No analysis available.</p>
+                    <div class="text-muted">No analysis available.</div>
                 }
                 else
                 {
-                    <!-- Row 1: Summary | Confidence gauge | Metrics bar -->
                     <div class="row g-3">
-
-                        <div class="col-lg-4">
-                            <div class="card h-100 border-0 bg-light">
+                        <div class="col-md-4">
+                            <div class="card h-100">
                                 <div class="card-body">
                                     <h5 class="card-title">@_aiAnalysisObj.Title</h5>
                                     <p class="card-text">@_aiAnalysisObj.Summary</p>
+                                    <p class="mb-1"><small class="text-muted">Generated: @_aiAnalysisObj.GeneratedAt?.ToLocalTime().ToString("g")</small></p>
+                                    <p><small class="text-muted">Confidence: @((_aiAnalysisObj.Confidence ?? 0).ToString("P0"))</small></p>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="col-lg-3">
-                            <div class="card h-100">
-                                <div class="card-header small fw-semibold">AI Confidence</div>
-                                <div class="card-body p-1">
-                                    <PlotlyChart @bind-Config="_aiChartConfig"
-                                                 @bind-Layout="_aiGaugeLayout"
-                                                 @bind-Data="_aiGaugeData" />
-                                </div>
-                            </div>
-                        </div>
-
-                        @if (_aiMetricsData.Any())
-                        {
-                            <div class="col-lg-5">
-                                <div class="card h-100">
-                                    <div class="card-header small fw-semibold">Key Metrics</div>
-                                    <div class="card-body p-1">
-                                        <PlotlyChart @bind-Config="_aiChartConfig"
-                                                     @bind-Layout="_aiMetricsLayout"
-                                                     @bind-Data="_aiMetricsData" />
-                                    </div>
-                                </div>
-                            </div>
-                        }
-                    </div>
-
-                    <!-- Row 2: Recommendations + Sections -->
-                    <div class="row g-3 mt-1">
-
-                        @if (_aiAnalysisObj.Recommendations != null && _aiAnalysisObj.Recommendations.Any())
-                        {
-                            <div class="col-lg-4">
-                                <div class="card h-100">
-                                    <div class="card-header small fw-semibold">Recommendations</div>
-                                    <ul class="list-group list-group-flush">
-                                        @foreach (var r in _aiAnalysisObj.Recommendations)
-                                        {
-                                            <li class="list-group-item small">
-                                                <i class="bi bi-lightbulb text-warning me-2"></i>@r
-                                            </li>
-                                        }
-                                    </ul>
-                                </div>
-                            </div>
-                        }
-
-                        @if (_aiAnalysisObj.Sections != null && _aiAnalysisObj.Sections.Any())
-                        {
-                            <div class="col-lg-8">
-                                <div class="row g-3">
-                                    @foreach (var s in _aiAnalysisObj.Sections)
+                        <div class="col-md-8">
+                            <div class="row g-3">
+                                @if (_aiAnalysisObj.Metrics != null && _aiAnalysisObj.Metrics.Any())
+                                {
+                                    foreach (var m in _aiAnalysisObj.Metrics)
                                     {
                                         <div class="col-sm-6">
-                                            <div class="card h-100">
+                                            <div class="card h-100 border-primary">
                                                 <div class="card-body">
-                                                    <h6 class="card-title">@s.Heading</h6>
-                                                    <p class="card-text small">@s.Body</p>
+                                                    <h6 class="card-subtitle mb-2 text-muted">@m.Label</h6>
+                                                    <p class="card-text fs-4">@m.Value @(!string.IsNullOrWhiteSpace(m.Unit) ? m.Unit : "")</p>
                                                 </div>
                                             </div>
                                         </div>
                                     }
-                                </div>
+                                }
                             </div>
-                        }
+
+                            <div class="mt-3">
+                                @if (_aiAnalysisObj.Recommendations != null && _aiAnalysisObj.Recommendations.Any())
+                                {
+                                    <h6>Recommendations</h6>
+                                    <ul class="list-group list-group-flush">
+                                        @foreach (var r in _aiAnalysisObj.Recommendations)
+                                        {
+                                            <li class="list-group-item">@r</li>
+                                        }
+                                    </ul>
+                                }
+                            </div>
+                        </div>
                     </div>
 
-                    <!-- Row 3: Anomalies -->
+                    @if (_aiAnalysisObj.Sections != null && _aiAnalysisObj.Sections.Any())
+                    {
+                        <div class="row mt-3 g-3">
+                            @foreach (var s in _aiAnalysisObj.Sections)
+                            {
+                                <div class="col-md-6">
+                                    <div class="card h-100">
+                                        <div class="card-body">
+                                            <h6 class="card-title">@s.Heading</h6>
+                                            <p class="card-text">@s.Body</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    }
+
                     @if (_aiAnalysisObj.Anomalies != null && _aiAnalysisObj.Anomalies.Any())
                     {
                         <div class="mt-3">
-                            <h6 class="text-danger"><i class="bi bi-exclamation-triangle me-1"></i>Anomalies</h6>
+                            <h6>Anomalies</h6>
                             <div class="table-responsive">
-                                <table class="table table-sm table-hover">
-                                    <thead class="table-light">
-                                        <tr><th>Row</th><th>Reason</th></tr>
-                                    </thead>
+                                <table class="table table-sm">
+                                    <thead><tr><th>Row</th><th>Reason</th></tr></thead>
                                     <tbody>
                                         @foreach (var a in _aiAnalysisObj.Anomalies)
                                         {
-                                            <tr class="table-warning">
-                                                <td>@a.Row</td><td>@a.Reason</td>
-                                            </tr>
+                                            <tr><td>@a.Row</td><td>@a.Reason</td></tr>
                                         }
                                     </tbody>
                                 </table>
@@ -350,83 +164,27 @@ else
                 }
             </div>
         </div>
-
     </div>
 }
 
 @code {
-
-    // ── Auth / location ───────────────────────────────────────────────
-    private bool   _ready;
-    private bool   _isSignedIn;
+    private bool _ready;
+    private bool _isSignedIn;
     private string? _role;
-    private int?   _locationId;
 
-    // ── Raw data ──────────────────────────────────────────────────────
     private List<InventoryItemDTO> _lowStockItems = new();
-    private List<Tasks>            _taskData      = new();
-    private List<PurchaseOrder>    _recentOrders  = new();
+    private List<TaskAssignmentModel> _taskData = new();
 
-    // ── Plotly – shared config (no mode bar) ──────────────────────────
-    private Config _dashChartConfig = new()
-    {
-        Responsive   = true,
-        DisplayModeBar = Plotly.Blazor.ConfigLib.DisplayModeBarEnum.False
-    };
-
-    // ── Card 2: Task Status Donut ─────────────────────────────────────
-    private IList<ITrace> _taskStatusChartData = new List<ITrace>();
-    private Layout        _taskStatusLayout    = new();
-
-    // ── Card 3: Employee Task Completion (table) ──────────────────────
-    private record EmployeeCount(string Name, int Count);
-    private List<EmployeeCount> _empTaskCounts = new();
-
-    // ── Card 4: Live Activity Timeline ───────────────────────────────
-    private IList<ITrace> _activityChartData   = new List<ITrace>();
-    private Layout        _activityLayout      = new();
-    private DateTime      _activityRefreshedAt = DateTime.UtcNow;
-    private System.Threading.Timer? _refreshTimer;
-
-    // ── AI analysis ───────────────────────────────────────────────────
-    private bool   _aiLoading;
+    private bool _aiLoading;
     private string? _aiAnalysis;
     private AIAnalysisResultDTO? _aiAnalysisObj;
-    private bool   _aiLoadedOnce;
-
-    private Config _aiChartConfig = new()
-    {
-        Responsive   = true,
-        DisplayModeBar = Plotly.Blazor.ConfigLib.DisplayModeBarEnum.False
-    };
-    private IList<ITrace> _aiGaugeData    = new List<ITrace>();
-    private Layout        _aiGaugeLayout  = new();
-    private IList<ITrace> _aiMetricsData  = new List<ITrace>();
-    private Layout        _aiMetricsLayout = new();
-
-    // ─────────────────────────────────────────────────────────────────
+    private bool _aiLoadedOnce;
 
     protected override async Task OnInitializedAsync()
     {
         var ctx = await UserCtx.GetAsync();
         _isSignedIn = ctx.User?.Id != null;
-        _role       = ctx.User?.Role;
-
-        await LocationState.SetLocationsAsync(ctx.AccessibleLocations);
-        _locationId = LocationState.CurrentLocation?.Id;
-
-        if (_isSignedIn && _locationId.HasValue)
-        {
-            await LoadDashboardDataAsync(_locationId.Value);
-
-            // Auto-refresh the activity chart every 30 s
-            _refreshTimer = new System.Threading.Timer(async _ =>
-            {
-                await LoadActivityAsync(_locationId!.Value);
-                BuildActivityChart();
-                await InvokeAsync(StateHasChanged);
-            }, null, TimeSpan.FromSeconds(30), TimeSpan.FromSeconds(30));
-        }
+        _role = ctx.User?.Role;
 
         _ready = true;
     }
@@ -438,298 +196,42 @@ else
         if (_isSignedIn && !_aiLoadedOnce)
         {
             _aiLoadedOnce = true;
-            _aiLoading    = true;
+            _aiLoading = true;
             StateHasChanged();
 
-            try
-            {
-                var csvPath = Path.Combine(Env.ContentRootPath, "AIDashboard", "Services", "Reporting", "test_data.csv");
-                _aiAnalysis = await ReportingService.AnalyzeCsvAsync(csvPath);
-
-                if (!string.IsNullOrWhiteSpace(_aiAnalysis))
+            try{
+               if (!string.IsNullOrWhiteSpace(_aiAnalysis))
                 {
-                    var options = new System.Text.Json.JsonSerializerOptions { PropertyNameCaseInsensitive = true };
-                    _aiAnalysisObj = System.Text.Json.JsonSerializer.Deserialize<AIAnalysisResultDTO>(_aiAnalysis, options);
-
-                    if (_aiAnalysisObj != null)
-                        BuildAICharts(_aiAnalysisObj);
-                }
+                    var csvPath = Path.Combine(Env.ContentRootPath, "AIDashboard", "Services", "Reporting", "test_data.csv");
+                    _aiAnalysis = await ReportingService.AnalyzeCsvAsync(csvPath);
+                    
+                    // Try to deserialize the returned JSON into the DTO so we can render structured cards UI.
+                    if (!string.IsNullOrWhiteSpace(_aiAnalysis))
+                    {
+                        var options = new System.Text.Json.JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+                        _aiAnalysisObj = System.Text.Json.JsonSerializer.Deserialize<AIAnalysisResultDTO>(_aiAnalysis, options);
+                    }
+                } 
             }
-            catch (Exception e)
+            catch(Exception e)
             {
                 Console.WriteLine($"AI Analysis failed: {e.Message}");
                 _aiAnalysisObj = null;
-                _aiAnalysis    = null;
+                _aiAnalysis = null;
+
             }
-            finally
-            {
+            finally {
                 _aiLoading = false;
                 StateHasChanged();
             }
+            _aiLoading = false;
+            //_aiAnalysisObj = null;          //  Uncoomment above and delete curent like to activate AI
+            StateHasChanged();
         }
     }
 
-    // ── Data loaders ──────────────────────────────────────────────────
-
-    private async Task LoadDashboardDataAsync(int locationId)
+    private void NavigateToSignIn()
     {
-        var allInventory = await InventorySvc.GetItemsByLocationAsync(locationId);
-        _lowStockItems = allInventory
-            .Where(i => i.IsLowStock)
-            .OrderBy(i => i.CurrentQuantity)
-            .ToList();
-
-        _taskData = await TaskSvc.GetByLocationAsync(locationId);
-
-        await LoadActivityAsync(locationId);
-        BuildOperationalCharts();
+        Nav.NavigateTo("/login", forceLoad: true);
     }
-
-    private async Task LoadActivityAsync(int locationId)
-    {
-        var cutoff = DateTime.UtcNow.AddDays(-7);
-        _recentOrders = await Db.PurchaseOrders
-            .Where(po => po.LocationId == locationId && po.CreatedAt >= cutoff)
-            .OrderByDescending(po => po.CreatedAt)
-            .Take(25)
-            .ToListAsync();
-
-        _activityRefreshedAt = DateTime.UtcNow;
-    }
-
-    // ── Chart builders ────────────────────────────────────────────────
-
-    private void BuildOperationalCharts()
-    {
-        BuildTaskStatusChart();
-        BuildEmpTaskCounts();
-        BuildActivityChart();
-    }
-
-    private void BuildEmpTaskCounts()
-    {
-        _empTaskCounts = _taskData
-            .Where(t => string.Equals(t.Status, "Completed", StringComparison.OrdinalIgnoreCase)
-                        && t.User != null)
-            .GroupBy(t => t.User!.Name ?? "Unknown")
-            .Select(g => new EmployeeCount(g.Key, g.Count()))
-            .OrderByDescending(e => e.Count)
-            .ToList();
-    }
-
-    private void BuildTaskStatusChart()
-    {
-        if (!_taskData.Any()) return;
-
-        var groups = _taskData
-            .GroupBy(t => string.IsNullOrWhiteSpace(t.Status) ? "Unknown" : t.Status)
-            .ToDictionary(g => g.Key, g => g.Count());
-
-        _taskStatusChartData = new List<ITrace>
-        {
-            new Pie
-            {
-                Labels = groups.Keys.Select(k => (object)k).ToList(),
-                Values = groups.Values.Select(v => (object)v).ToList(),
-                Hole   = (decimal?)0.45,
-                Marker = new Plotly.Blazor.Traces.PieLib.Marker
-                {
-                    Colors = groups.Keys.Select(k => (object)StatusColor(k)).ToList()
-                }
-            }
-        };
-
-        _taskStatusLayout = new Layout
-        {
-            PaperBgColor = "transparent",
-            PlotBgColor  = "transparent",
-            Height       = 280,
-            Margin       = new Margin { T = 20, B = 20, L = 10, R = 10 },
-            ShowLegend   = true,
-            Legend       = new List<Plotly.Blazor.LayoutLib.Legend>
-            {
-                new() { Orientation = Plotly.Blazor.LayoutLib.LegendLib.OrientationEnum.H, Y = (decimal?)-0.1 }
-            }
-        };
-    }
-
-    private void BuildActivityChart()
-    {
-        var cutoff  = DateTime.UtcNow.AddDays(-7);
-        var traces  = new List<ITrace>();
-
-        // Completed tasks
-        var completed = _taskData
-            .Where(t => string.Equals(t.Status, "Completed", StringComparison.OrdinalIgnoreCase)
-                        && t.UpdatedAt >= cutoff)
-            .OrderBy(t => t.UpdatedAt)
-            .Take(30)
-            .ToList();
-
-        if (completed.Any())
-        {
-            traces.Add(new Scatter
-            {
-                Name          = "Task Completed",
-                Mode          = Plotly.Blazor.Traces.ScatterLib.ModeFlag.Markers,
-                X             = completed.Select(t => (object?)t.UpdatedAt.ToString("yyyy-MM-dd HH:mm:ss")).ToList(),
-                Y             = completed.Select(_ => (object?)"Task Completed").ToList(),
-                CustomData    = completed.Select(t => (object?)(t.Name ?? "—")).ToList(),
-                HoverTemplate = "%{customdata}<br>%{x}<extra></extra>",
-                Marker        = new Plotly.Blazor.Traces.ScatterLib.Marker { Color = "#198754", Size = (decimal?)14 }
-            });
-        }
-
-        var created = _taskData
-            .Where(t => !string.Equals(t.Status, "Completed", StringComparison.OrdinalIgnoreCase)
-                        && t.CreatedAt >= cutoff)
-            .OrderBy(t => t.CreatedAt)
-            .Take(20)
-            .ToList();
-
-        if (created.Any())
-        {
-            traces.Add(new Scatter
-            {
-                Name          = "Task Created",
-                Mode          = Plotly.Blazor.Traces.ScatterLib.ModeFlag.Markers,
-                X             = created.Select(t => (object?)t.CreatedAt.ToString("yyyy-MM-dd HH:mm:ss")).ToList(),
-                Y             = created.Select(_ => (object?)"Task Created").ToList(),
-                CustomData    = created.Select(t => (object?)(t.Name ?? "—")).ToList(),
-                HoverTemplate = "%{customdata}<br>%{x}<extra></extra>",
-                Marker        = new Plotly.Blazor.Traces.ScatterLib.Marker { Color = "#0d6efd", Size = (decimal?)14 }
-            });
-        }
-
-        if (_recentOrders.Any())
-        {
-            traces.Add(new Scatter
-            {
-                Name          = "Purchase Order",
-                Mode          = Plotly.Blazor.Traces.ScatterLib.ModeFlag.Markers,
-                X             = _recentOrders.Select(po => (object?)po.CreatedAt.ToString("yyyy-MM-dd HH:mm:ss")).ToList(),
-                Y             = _recentOrders.Select(_ => (object?)"Purchase Order").ToList(),
-                CustomData    = _recentOrders.Select(po => (object?)$"{po.OrderNumber} – {po.VendorName}").ToList(),
-                HoverTemplate = "%{customdata}<br>%{x}<extra></extra>",
-                Marker        = new Plotly.Blazor.Traces.ScatterLib.Marker { Color = "#fd7e14", Size = (decimal?)14 }
-            });
-        }
-
-        _activityChartData = traces;
-
-        _activityLayout = new Layout
-        {
-            PaperBgColor = "transparent",
-            PlotBgColor  = "transparent",
-            Height       = 280,
-            Margin       = new Margin { T = 10, B = 40, L = 10, R = 10 },
-            ShowLegend   = true,
-            Legend       = new List<Plotly.Blazor.LayoutLib.Legend>
-            {
-                new() { Orientation = Plotly.Blazor.LayoutLib.LegendLib.OrientationEnum.H, Y = (decimal?)-0.2 }
-            },
-            XAxis        = new List<Plotly.Blazor.LayoutLib.XAxis>
-            {
-                new() { Type = Plotly.Blazor.LayoutLib.XAxisLib.TypeEnum.Date }
-            },
-            YAxis        = new List<Plotly.Blazor.LayoutLib.YAxis>
-            {
-                new() { AutoMargin = Plotly.Blazor.LayoutLib.YAxisLib.AutoMarginFlag.True }
-            }
-        };
-    }
-
-    // ── AI chart builders ─────────────────────────────────────────────
-
-    private void BuildAICharts(AIAnalysisResultDTO result)
-    {
-        var confidencePercent = (decimal?)((result.Confidence ?? 0) * 100);
-
-        _aiGaugeData = new List<ITrace>
-        {
-            new Indicator
-            {
-                Mode   = Plotly.Blazor.Traces.IndicatorLib.ModeFlag.Gauge
-                       | Plotly.Blazor.Traces.IndicatorLib.ModeFlag.Number,
-                Value  = confidencePercent,
-                Number = new Plotly.Blazor.Traces.IndicatorLib.Number { Suffix = "%" },
-                Gauge  = new Plotly.Blazor.Traces.IndicatorLib.Gauge
-                {
-                    Axis  = new Plotly.Blazor.Traces.IndicatorLib.GaugeLib.Axis { Range = new List<object?> { 0, 100 } },
-                    Bar   = new Plotly.Blazor.Traces.IndicatorLib.GaugeLib.Bar { Color = "#198754" },
-                    Steps = new List<Plotly.Blazor.Traces.IndicatorLib.GaugeLib.Step>
-                    {
-                        new() { Range = new List<object?> { 0,  50 }, Color = "#f8d7da" },
-                        new() { Range = new List<object?> { 50, 75 }, Color = "#fff3cd" },
-                        new() { Range = new List<object?> { 75, 100 }, Color = "#d1e7dd" }
-                    }
-                }
-            }
-        };
-
-        _aiGaugeLayout = new Layout
-        {
-            PaperBgColor = "transparent",
-            PlotBgColor  = "transparent",
-            Height       = 220,
-            Margin       = new Margin { T = 10, B = 10, L = 20, R = 20 }
-        };
-
-        if (result.Metrics == null || !result.Metrics.Any()) return;
-
-        var parsed = result.Metrics
-            .Select(m => (label: m.Label ?? "", num: TryParseMetric(m.Value)))
-            .Where(x => x.num.HasValue)
-            .ToList();
-
-        if (!parsed.Any()) return;
-
-        _aiMetricsData = new List<ITrace>
-        {
-            new Bar
-            {
-                Y           = parsed.Select(x => (object?)x.label).ToList(),
-                X           = parsed.Select(x => (object?)x.num).ToList(),
-                Orientation = Plotly.Blazor.Traces.BarLib.OrientationEnum.H,
-                Marker      = new Plotly.Blazor.Traces.BarLib.Marker
-                {
-                    Color = new List<object> { "#0d6efd" }
-                }
-            }
-        };
-
-        _aiMetricsLayout = new Layout
-        {
-            PaperBgColor = "transparent",
-            PlotBgColor  = "transparent",
-            Height       = 220,
-            Margin       = new Margin { T = 10, B = 30, L = 10, R = 10 },
-            XAxis        = new List<Plotly.Blazor.LayoutLib.XAxis> { new() { AutoMargin = Plotly.Blazor.LayoutLib.XAxisLib.AutoMarginFlag.True } },
-            YAxis        = new List<Plotly.Blazor.LayoutLib.YAxis> { new() { AutoMargin = Plotly.Blazor.LayoutLib.YAxisLib.AutoMarginFlag.True } }
-        };
-    }
-
-    // ── Helpers ───────────────────────────────────────────────────────
-
-    private static string StatusColor(string status) => status.ToLowerInvariant() switch
-    {
-        "completed"   => "#198754",
-        "pending"     => "#ffc107",
-        "in progress" => "#0d6efd",
-        "in-progress" => "#0d6efd",
-        "cancelled"   => "#dc3545",
-        _             => "#6c757d"
-    };
-
-    private static double? TryParseMetric(string? raw)
-    {
-        if (string.IsNullOrWhiteSpace(raw)) return null;
-        var cleaned = System.Text.RegularExpressions.Regex.Replace(raw, @"[^0-9.\-]", "");
-        return double.TryParse(cleaned, System.Globalization.NumberStyles.Any,
-            System.Globalization.CultureInfo.InvariantCulture, out var d) ? d : null;
-    }
-
-    private void NavigateToSignIn() => Nav.NavigateTo("/login", forceLoad: true);
-
-    public void Dispose() => _refreshTimer?.Dispose();
 }

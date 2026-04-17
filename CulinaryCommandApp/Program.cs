@@ -119,14 +119,7 @@ builder.Services.AddAuthorization();
 // =====================
 // AI Services
 // =====================
-builder.Services.AddSingleton<Client>(sp =>
-{
-    var config = sp.GetRequiredService<IConfiguration>();
-    var apiKey = config["Google:ApiKey"]
-        ?? throw new InvalidOperationException(
-            "Missing configuration key 'Google:ApiKey'. Add it to appsettings or set the GOOGLE_API_KEY environment variable.");
-    return new Client(apiKey: apiKey);
-});
+builder.Services.AddSingleton<Client>(_ => new Client());
 builder.Services.AddScoped<AIReportingService>();
 
 //
