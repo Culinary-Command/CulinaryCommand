@@ -35,6 +35,16 @@
                         </span>
                     </div>
 
+                    @if (status == WorkTaskStatus.Pending && tasks.Any())
+                    {
+                        <div class="mb-3">
+                            <button class="btn btn-outline-primary btn-sm"
+                                    @onclick="HandleStartAllPending">
+                                Start All Pending
+                            </button>
+                        </div>
+                    }
+
                     <div style="max-height: 720px; overflow-y: auto;">
                         @if (!tasks.Any())
                         {
@@ -125,6 +135,7 @@
     [Parameter] public EventCallback<int> OnMarkComplete { get; set; }
     [Parameter] public EventCallback<int> OnBumpTask { get; set; }
     [Parameter] public EventCallback<int> OnDeleteTask { get; set; }
+    [Parameter] public EventCallback OnStartAllPending { get; set; }
 
     private string TaskBoardSearchValue
     {
@@ -139,4 +150,6 @@
     private Task HandleBumpTask(int taskId) => OnBumpTask.InvokeAsync(taskId);
 
     private Task HandleDeleteTask(int taskId) => OnDeleteTask.InvokeAsync(taskId);
+
+    private Task HandleStartAllPending() => OnStartAllPending.InvokeAsync();
 }

@@ -368,6 +368,46 @@
     color: #1f2a37;
 }
 
+.rv-stock-meta {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 4px;
+    flex-wrap: wrap;
+}
+
+.rv-stock-state {
+    font-size: 0.77rem;
+    font-weight: 700;
+    color: #b42318;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+}
+
+.rv-stock-action {
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: #0a8f3c;
+    font: inherit;
+    font-size: 0.8rem;
+    font-weight: 600;
+    line-height: 1.2;
+    text-decoration: underline;
+    text-underline-offset: 0.14em;
+    cursor: pointer;
+}
+
+.rv-stock-action:hover:not(:disabled) {
+    color: #087136;
+}
+
+.rv-stock-action:disabled {
+    color: #9ca3af;
+    cursor: default;
+    text-decoration: none;
+}
+
 .rv-subrecipe-pill {
     display: inline-flex;
     align-items: center;

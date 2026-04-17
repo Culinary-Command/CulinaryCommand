@@ -147,7 +147,8 @@ else
                         OnMarkInProgress="MarkInProgress"
                         OnMarkComplete="MarkComplete"
                         OnBumpTask="BumpTask"
-                        OnDeleteTask="DeleteTask" />
+                        OnDeleteTask="DeleteTask"
+                        OnStartAllPending="StartAllPending" />
                 </div>
             </div>
         </div>
@@ -788,6 +789,18 @@ else
     private Task MarkComplete(int id) => MoveToStatus(id, WorkTaskStatus.Completed);
 
     private Task MarkInProgress(int id) => MoveToStatus(id, WorkTaskStatus.InProgress);
+
+    private async Task StartAllPending()
+    {
+        var pendingTaskIds = TasksByStatus(WorkTaskStatus.Pending)
+            .Select(t => t.Id)
+            .ToList();
+
+        foreach (var taskId in pendingTaskIds)
+        {
+            await MarkInProgress(taskId);
+        }
+    }
 
     private async Task BumpTask(int id)
     {
