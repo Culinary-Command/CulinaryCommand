@@ -53,6 +53,12 @@
                 </NavLink>
             </div>
             <div class="nav-item px-3">
+                <a class="nav-link @(Nav.Uri.Contains("/inventory-management") ? "active" : "")"
+                href="#" @onclick="async () => await GoToInventory()" @onclick:preventDefault="true">
+                    <span class="bi bi-box-seam nav-icon" aria-hidden="true"></span> Inventory
+                </a>
+            </div>
+            <div class="nav-item px-3">
                 <NavLink class="nav-link" href="recipes">
                     <span class="bi bi-journal-text nav-icon"></span> Recipes
                 </NavLink>
@@ -86,6 +92,23 @@
         _role = ctx.User?.Role;
 
         LocationState.OnChange += HandleLocationChange;
+    }
+
+    private async Task GoToInventory()
+    {
+        var locId = LocationState.CurrentLocation?.Id;
+
+        if (!locId.HasValue)
+        {
+            var ctx = await UserCtx.GetAsync();
+            locId = ctx.AccessibleLocations.FirstOrDefault()?.Id;
+        }
+
+        var href = locId.HasValue
+            ? $"/inventory-management/{locId.Value}"
+            : "/inventory-management";
+
+        Nav.NavigateTo(href);
     }
 
     private void HandleLocationChange()

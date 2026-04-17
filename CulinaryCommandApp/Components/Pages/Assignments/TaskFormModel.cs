@@ -3,9 +3,9 @@ using CulinaryCommand.Data.Enums;
 
 namespace CulinaryCommandApp.Components.Pages.Assignments;
 
-public class TaskFormModel : IValidatableObject
+public class TaskFormModel
 {
-    [StringLength(128)]
+    [Required, StringLength(128)]
     public string Name { get; set; } = string.Empty;
 
     [Required]
@@ -28,25 +28,4 @@ public class TaskFormModel : IValidatableObject
     public int? Count { get; set; }
 
     public int? RecipeId { get; set; }
-
-    public int PrepNeeded => Math.Max((Par ?? 0) - (Count ?? 0), 0);
-
-    public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
-    {
-        if (TaskType == WorkTaskKind.PrepFromRecipe)
-        {
-            if (!RecipeId.HasValue)
-            {
-                yield return new ValidationResult(
-                    "A recipe is required for prep-from-recipe tasks.",
-                    new[] { nameof(RecipeId) });
-            }
-        }
-        else if (string.IsNullOrWhiteSpace(Name))
-        {
-            yield return new ValidationResult(
-                "Task name is required.",
-                new[] { nameof(Name) });
-        }
-    }
 }

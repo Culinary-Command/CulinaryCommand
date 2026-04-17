@@ -1,14 +1,13 @@
 @using CulinaryCommand.Data.Entities
 @using CulinaryCommand.Data.Enums
 @using CulinaryCommand.Data.Models
-@using CulinaryCommandApp.Recipe.Entities
 @using Microsoft.AspNetCore.Components.Forms
 
 @if (IsOpen && Template != null)
 {
-    <div class="modal fade show d-block template-modal-backdrop" tabindex="-1">
+    <div class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0,0,0,.45);">
         <div class="modal-dialog modal-dialog-centered modal-lg">
-            <div class="modal-content border-0 shadow template-modal">
+            <div class="modal-content border-0 shadow rounded-4">
                 <div class="modal-header">
                     <h5 class="modal-title">Edit Task Template</h5>
                     <button type="button" class="btn-close" @onclick="Close"></button>
@@ -21,17 +20,14 @@
                     <div class="modal-body">
                         <div class="row g-3">
 
-                            @if (Model.Kind != WorkTaskKind.PrepFromRecipe)
-                            {
-                                <div class="col-12 col-md-6">
-                                    <label class="form-label">Task Name</label>
-                                    <InputText class="form-control assign-soft-input" @bind-Value="Model.Name" />
-                                </div>
-                            }
+                            <div class="col-12 col-md-6">
+                                <label class="form-label">Task Name</label>
+                                <InputText class="form-control" @bind-Value="Model.Name" />
+                            </div>
 
                             <div class="col-12 col-md-6">
                                 <label class="form-label">Station</label>
-                                <InputSelect class="form-select assign-soft-input" @bind-Value="Model.Station">
+                                <InputSelect class="form-select" @bind-Value="Model.Station">
                                     @foreach (var station in StationOptions)
                                     {
                                         <option value="@station">@station</option>
@@ -41,7 +37,7 @@
 
                             <div class="col-12 col-md-6">
                                 <label class="form-label">Task Type</label>
-                                <InputSelect class="form-select assign-soft-input" @bind-Value="Model.Kind">
+                                <InputSelect class="form-select" @bind-Value="Model.Kind">
                                     <option value="@WorkTaskKind.Generic">General</option>
                                     <option value="@WorkTaskKind.PrepFromRecipe">Prep from Recipe</option>
                                 </InputSelect>
@@ -49,7 +45,7 @@
 
                             <div class="col-12 col-md-6">
                                 <label class="form-label">Priority</label>
-                                <InputSelect class="form-select assign-soft-input" @bind-Value="Model.Priority">
+                                <InputSelect class="form-select" @bind-Value="Model.Priority">
                                     @foreach (var p in PriorityOptions)
                                     {
                                         <option value="@p">@p</option>
@@ -59,41 +55,12 @@
 
                             <div class="col-12 col-md-6">
                                 <label class="form-label">Estimated Minutes</label>
-                                <InputNumber class="form-control assign-soft-input" @bind-Value="Model.DefaultEstimatedMinutes" />
+                                <InputNumber class="form-control" @bind-Value="Model.DefaultEstimatedMinutes" />
                             </div>
-
-                            @if (Model.Kind == WorkTaskKind.PrepFromRecipe)
-                            {
-                                <div class="col-12 col-md-6">
-                                    <label class="form-label">Recipe</label>
-                                    <InputSelect class="form-select assign-soft-input" @bind-Value="Model.RecipeId" @bind-Value:after="SyncRecipeName">
-                                        <option value="">Select a recipe</option>
-                                        @foreach (var recipe in Recipes)
-                                        {
-                                            <option value="@recipe.RecipeId">@recipe.Title</option>
-                                        }
-                                    </InputSelect>
-                                </div>
-
-                                <div class="col-12 col-md-3">
-                                    <label class="form-label">Par</label>
-                                    <InputNumber class="form-control assign-soft-input" @bind-Value="Model.Par" />
-                                </div>
-
-                                <div class="col-12 col-md-3">
-                                    <label class="form-label">Count</label>
-                                    <InputNumber class="form-control assign-soft-input" @bind-Value="Model.Count" />
-                                </div>
-
-                                <div class="col-12 col-md-6">
-                                    <label class="form-label">Prep Needed</label>
-                                    <input class="form-control assign-soft-input" value="@Model.PrepNeeded" readonly />
-                                </div>
-                            }
 
                             <div class="col-12">
                                 <label class="form-label">Notes</label>
-                                <InputTextArea class="form-control assign-soft-input" rows="3" @bind-Value="Model.Notes" />
+                                <InputTextArea class="form-control" rows="3" @bind-Value="Model.Notes" />
                             </div>
 
                         </div>
@@ -116,7 +83,6 @@
 @code {
     [Parameter] public bool IsOpen { get; set; }
     [Parameter] public TaskTemplate? Template { get; set; }
-    [Parameter] public List<Recipe> Recipes { get; set; } = new();
     [Parameter] public EventCallback OnClose { get; set; }
     [Parameter] public EventCallback<UpdateTaskTemplateRequest> OnSave { get; set; }
 
@@ -159,18 +125,8 @@
     private async Task HandleSubmit()
     {
         IsSaving = true;
-        SyncRecipeName();
         await OnSave.InvokeAsync(Model);
         IsSaving = false;
-    }
-
-    private void SyncRecipeName()
-    {
-        if (Model.Kind != WorkTaskKind.PrepFromRecipe)
-            return;
-
-        var recipeName = Recipes.FirstOrDefault(r => r.RecipeId == Model.RecipeId)?.Title;
-        Model.Name = recipeName?.Trim() ?? string.Empty;
     }
 
     private async Task Close()

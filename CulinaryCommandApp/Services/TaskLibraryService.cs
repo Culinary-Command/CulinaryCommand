@@ -3,7 +3,6 @@ using CulinaryCommand.Data.Entities;
 using CulinaryCommand.Data.Models;
 using Microsoft.EntityFrameworkCore;
 using CulinaryCommand.Data.Enums;
-using RecipeEntity = CulinaryCommandApp.Recipe.Entities.Recipe;
 
 namespace CulinaryCommand.Services
 {
@@ -31,8 +30,8 @@ namespace CulinaryCommand.Services
             return await _db.TaskLists
                 .AsNoTracking()
                 .Where(l => l.LocationId == locationId && l.IsActive)
-                .Include(l => l.Items.Where(i => i.TaskTemplate != null && i.TaskTemplate.IsActive))
-                    .ThenInclude(i => i.TaskTemplate!)
+                .Include(l => l.Items)
+                    .ThenInclude(i => i.TaskTemplate)
                 .OrderBy(l => l.Name)
                 .ToListAsync();
         }
@@ -57,13 +56,16 @@ namespace CulinaryCommand.Services
 
         public async Task<TaskTemplate> CreateTemplateAsync(CreateTaskTemplateRequest request)
         {
+            if (string.IsNullOrWhiteSpace(request.Name))
+                throw new ArgumentException("Template name is required.");
+
             if (string.IsNullOrWhiteSpace(request.Station))
                 throw new ArgumentException("Station is required.");
 
             if (request.LocationId <= 0)
                 throw new ArgumentException("A valid location is required.");
 
-            var normalizedName = await ResolveTemplateNameAsync(request);
+            var normalizedName = request.Name.Trim();
             var normalizedStation = request.Station.Trim();
             var normalizedPriority = string.IsNullOrWhiteSpace(request.Priority)
                 ? "Normal"
@@ -88,10 +90,10 @@ namespace CulinaryCommand.Services
                 DefaultEstimatedMinutes = request.DefaultEstimatedMinutes,
                 LocationId = request.LocationId,
                 CreatedByUserId = request.CreatedByUserId,
-                RecipeId = request.Kind == WorkTaskKind.PrepFromRecipe ? request.RecipeId : null,
-                IngredientId = request.Kind == WorkTaskKind.PrepFromRecipe ? request.IngredientId : null,
-                Par = request.Kind == WorkTaskKind.PrepFromRecipe ? request.Par : null,
-                Count = request.Kind == WorkTaskKind.PrepFromRecipe ? request.Count : null,
+                RecipeId = request.RecipeId,
+                IngredientId = request.IngredientId,
+                Par = request.Par,
+                Count = request.Count,
                 IsActive = true,
                 CreatedAt = DateTime.UtcNow,
                 UpdatedAt = DateTime.UtcNow
@@ -108,6 +110,9 @@ namespace CulinaryCommand.Services
             if (request.Id <= 0)
                 throw new ArgumentException("A valid template id is required.");
 
+            if (string.IsNullOrWhiteSpace(request.Name))
+                throw new ArgumentException("Template name is required.");
+
             if (string.IsNullOrWhiteSpace(request.Station))
                 throw new ArgumentException("Station is required.");
 
@@ -116,7 +121,7 @@ namespace CulinaryCommand.Services
             if (template == null)
                 throw new InvalidOperationException("Task template not found.");
 
-            var normalizedName = await ResolveTemplateNameAsync(request);
+            var normalizedName = request.Name.Trim();
             var normalizedStation = request.Station.Trim();
             var normalizedPriority = string.IsNullOrWhiteSpace(request.Priority)
                 ? "Normal"
@@ -139,10 +144,10 @@ namespace CulinaryCommand.Services
             template.Notes = string.IsNullOrWhiteSpace(request.Notes) ? null : request.Notes.Trim();
             template.DefaultEstimatedMinutes = request.DefaultEstimatedMinutes;
             template.LocationId = request.LocationId;
-            template.RecipeId = request.Kind == WorkTaskKind.PrepFromRecipe ? request.RecipeId : null;
-            template.IngredientId = request.Kind == WorkTaskKind.PrepFromRecipe ? request.IngredientId : null;
-            template.Par = request.Kind == WorkTaskKind.PrepFromRecipe ? request.Par : null;
-            template.Count = request.Kind == WorkTaskKind.PrepFromRecipe ? request.Count : null;
+            template.RecipeId = request.RecipeId;
+            template.IngredientId = request.IngredientId;
+            template.Par = request.Par;
+            template.Count = request.Count;
             template.IsActive = request.IsActive;
             template.UpdatedAt = DateTime.UtcNow;
 
@@ -195,33 +200,6 @@ namespace CulinaryCommand.Services
 
             _db.TaskLists.Add(taskList);
             await _db.SaveChangesAsync();
-
-            var validTemplateIds = await _db.TaskTemplates
-                .Where(t =>
-                    request.TaskTemplateIds.Contains(t.Id) &&
-                    t.LocationId == request.LocationId &&
-                    t.IsActive)
-                .OrderBy(t => t.Station)
-                .ThenBy(t => t.Name)
-                .Select(t => t.Id)
-                .ToListAsync();
-
-            if (validTemplateIds.Any())
-            {
-                var sortOrder = 0;
-                foreach (var templateId in validTemplateIds.Distinct())
-                {
-                    _db.TaskListItems.Add(new TaskListItem
-                    {
-                        TaskListId = taskList.Id,
-                        TaskTemplateId = templateId,
-                        SortOrder = sortOrder++
-                    });
-                }
-
-                taskList.UpdatedAt = DateTime.UtcNow;
-                await _db.SaveChangesAsync();
-            }
 
             return taskList;
         }
@@ -418,49 +396,6 @@ namespace CulinaryCommand.Services
                 Priority = finalPriority ?? "Normal",
                 Notes = template.Notes
             };
-        }
-
-        private async Task<string> ResolveTemplateNameAsync(CreateTaskTemplateRequest request)
-        {
-            if (request.Kind != WorkTaskKind.PrepFromRecipe)
-            {
-                if (string.IsNullOrWhiteSpace(request.Name))
-                    throw new ArgumentException("Template name is required.");
-
-                return request.Name.Trim();
-            }
-
-            var recipe = await GetRecipeForTemplateAsync(request.LocationId, request.RecipeId);
-            return recipe.Title.Trim();
-        }
-
-        private async Task<string> ResolveTemplateNameAsync(UpdateTaskTemplateRequest request)
-        {
-            if (request.Kind != WorkTaskKind.PrepFromRecipe)
-            {
-                if (string.IsNullOrWhiteSpace(request.Name))
-                    throw new ArgumentException("Template name is required.");
-
-                return request.Name.Trim();
-            }
-
-            var recipe = await GetRecipeForTemplateAsync(request.LocationId, request.RecipeId);
-            return recipe.Title.Trim();
-        }
-
-        private async Task<RecipeEntity> GetRecipeForTemplateAsync(int locationId, int? recipeId)
-        {
-            if (!recipeId.HasValue)
-                throw new ArgumentException("A recipe is required for prep-from-recipe templates.");
-
-            var recipe = await _db.Recipes
-                .AsNoTracking()
-                .FirstOrDefaultAsync(r => r.RecipeId == recipeId.Value && r.LocationId == locationId);
-
-            if (recipe == null)
-                throw new InvalidOperationException("The selected recipe could not be found for this location.");
-
-            return recipe;
         }
     }
 }

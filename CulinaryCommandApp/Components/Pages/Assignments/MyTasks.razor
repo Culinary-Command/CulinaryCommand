@@ -34,43 +34,15 @@ else if (_ctx?.IsAuthenticated != true)
 }
 else
 {
-    <div class="container-fluid px-3 px-lg-4 mt-4 my-tasks-page">
-        <div class="d-flex flex-column flex-lg-row justify-content-between align-items-lg-center gap-3 mb-4">
-            <div class="page-heading">
-                <div class="text-uppercase text-muted small fw-semibold mb-1">Kitchen Operations</div>
-                <h1 class="fw-bold mb-1">My Tasks</h1>
-                <p class="text-muted mb-0">Track your assigned work, review recipe prep, and close out tasks quickly.</p>
-            </div>
-
-            <div class="d-flex align-items-center gap-3">
-                <div class="text-end">
-                    <div class="small text-muted fw-semibold">Location</div>
-                    <div class="fw-semibold">@SelectedLocationName</div>
-                </div>
-
-                <div class="vr d-none d-md-block"></div>
-
-                <div class="d-flex gap-3">
-                    <div>
-                        <div class="text-muted small">Open</div>
-                        <div class="fs-5 fw-semibold">@OpenTaskCount</div>
-                    </div>
-                    <div>
-                        <div class="text-muted small">Recipe Prep</div>
-                        <div class="fs-5 fw-semibold">@PrepTaskCount</div>
-                    </div>
-                </div>
-            </div>
-        </div>
+    <div class="container mt-4">
+        <h1 class="fw-bold mb-1">Welcome, @username</h1>
+        <div class="text-muted mb-1">Location: @SelectedLocationName</div>
+        <div class="text-muted mb-3">Here's what needs your attention today.</div>
 
         @if (prepTasks is null || prepTasks.Count == 0)
         {
-            <div class="card shadow-sm border-0">
-                <div class="card-body p-4">
-                    <div class="alert alert-info mb-0">
-                        You don't have any active tasks assigned right now.
-                    </div>
-                </div>
+            <div class="alert alert-info">
+                You don't have any prep tasks assigned right now.
             </div>
         }
         else
@@ -200,10 +172,6 @@ else
 
     private string SelectedLocationName =>
         LocationState.CurrentLocation?.Name ?? "No location selected";
-
-    private int OpenTaskCount => prepTasks.Count;
-
-    private int PrepTaskCount => prepTasks.Count(t => t.Kind == WorkTaskKind.PrepFromRecipe);
 
     public void Dispose()
     {

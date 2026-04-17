@@ -16,7 +16,5 @@ namespace CulinaryCommand.Data.Models
         public int? CreatedByUserId { get; set; }
 
         public bool IsActive { get; set; } = true;
-
-        public List<int> TaskTemplateIds { get; set; } = new();
     }
 }

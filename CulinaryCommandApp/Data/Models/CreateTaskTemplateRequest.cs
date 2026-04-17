@@ -3,9 +3,9 @@ using CulinaryCommand.Data.Enums;
 
 namespace CulinaryCommand.Data.Models
 {
-    public class CreateTaskTemplateRequest : IValidatableObject
+    public class CreateTaskTemplateRequest
     {
-        [StringLength(256)]
+        [Required, StringLength(256)]
         public string Name { get; set; } = string.Empty;
 
         [Required, StringLength(128)]
@@ -32,26 +32,5 @@ namespace CulinaryCommand.Data.Models
 
         public int? Par { get; set; }
         public int? Count { get; set; }
-
-        public int PrepNeeded => Math.Max((Par ?? 0) - (Count ?? 0), 0);
-
-        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
-        {
-            if (Kind == WorkTaskKind.PrepFromRecipe)
-            {
-                if (!RecipeId.HasValue)
-                {
-                    yield return new ValidationResult(
-                        "A recipe is required for prep-from-recipe templates.",
-                        new[] { nameof(RecipeId) });
-                }
-            }
-            else if (string.IsNullOrWhiteSpace(Name))
-            {
-                yield return new ValidationResult(
-                    "Template name is required.",
-                    new[] { nameof(Name) });
-            }
-        }
     }
 }

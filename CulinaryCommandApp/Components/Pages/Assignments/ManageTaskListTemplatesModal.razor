@@ -2,109 +2,75 @@
 
 @if (IsOpen && TaskList != null)
 {
-    <div class="modal fade show d-block manage-task-list-modal-backdrop" tabindex="-1">
+    <div class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0,0,0,.45);">
         <div class="modal-dialog modal-dialog-centered modal-lg">
-            <div class="modal-content border-0 shadow rounded-4 manage-task-list-modal">
+            <div class="modal-content border-0 shadow rounded-4">
                 <div class="modal-header">
                     <h5 class="modal-title">Manage Templates - @TaskList.Name</h5>
                     <button type="button" class="btn-close" @onclick="Close"></button>
                 </div>
 
                 <div class="modal-body">
-                    <div class="row g-4">
-                        <div class="col-12 col-lg-6">
-                            <div class="manage-task-list-panel p-3 h-100">
-                                <div class="d-flex justify-content-between align-items-center mb-3">
-                                    <div>
-                                        <div class="fw-semibold">Available Templates</div>
-                                        <div class="text-muted small">Search and select templates to add to this list.</div>
+                    <div class="mb-3">
+                        <label class="form-label">Add templates to this list</label>
+                        <div style="max-height: 280px; overflow-y: auto;" class="border rounded-3 p-3 bg-light">
+                            @if (!AvailableTemplates.Any())
+                            {
+                                <div class="text-muted small">No templates available.</div>
+                            }
+                            else
+                            {
+                                @foreach (var template in AvailableTemplates)
+                                {
+                                    var isSelected = SelectedTemplateIds.Contains(template.Id);
+
+                                    <div class="form-check mb-2">
+                                        <input class="form-check-input"
+                                               type="checkbox"
+                                               checked="@isSelected"
+                                               @onchange="() => ToggleTemplate(template.Id)" />
+                                        <label class="form-check-label">
+                                            <strong>@template.Name</strong> - @template.Station
+                                        </label>
                                     </div>
-                                    <span class="badge text-bg-success">@FilteredAvailableTemplates.Count()</span>
-                                </div>
-
-                                <div class="input-group input-group-sm mb-3 modal-search-group">
-                                    <span class="input-group-text bg-white"><i class="bi bi-search"></i></span>
-                                    <input class="form-control"
-                                           placeholder="Search templates..."
-                                           @bind="TemplateSearch"
-                                           @bind:event="oninput" />
-                                </div>
-
-                                <div class="manage-task-list-template-list">
-                                    @if (!FilteredAvailableTemplates.Any())
-                                    {
-                                        <div class="text-muted small">No templates available.</div>
-                                    }
-                                    else
-                                    {
-                                        @foreach (var template in FilteredAvailableTemplates)
-                                        {
-                                            var isSelected = SelectedTemplateIds.Contains(template.Id);
-
-                                            <button type="button"
-                                                    class="manage-task-list-template-item @(isSelected ? "selected" : null)"
-                                                    @onclick="() => ToggleTemplate(template.Id)">
-                                                <div class="form-check m-0">
-                                                    <input class="form-check-input"
-                                                           type="checkbox"
-                                                           tabindex="-1"
-                                                           checked="@isSelected" />
-                                                </div>
-                                                <div class="flex-grow-1 text-start">
-                                                    <div class="fw-semibold">@template.Name</div>
-                                                    <div class="text-muted small">@template.Station</div>
-                                                    @if (!string.IsNullOrWhiteSpace(template.Notes))
-                                                    {
-                                                        <div class="text-muted small mt-1">@template.Notes</div>
-                                                    }
-                                                </div>
-                                            </button>
-                                        }
-                                    }
-                                </div>
-
-                                <div class="mt-3">
-                                    <button class="btn btn-success btn-sm" @onclick="SaveSelectedTemplates" disabled="@IsSaving || !SelectedTemplateIds.Any()">
-                                        @(IsSaving ? "Saving..." : "Add Selected Templates")
-                                    </button>
-                                </div>
-                            </div>
+                                }
+                            }
                         </div>
+                    </div>
 
-                        <div class="col-12 col-lg-6">
-                            <div class="manage-task-list-panel p-3 h-100">
-                                <div class="d-flex justify-content-between align-items-center mb-3">
-                                    <div>
-                                        <div class="fw-semibold">Currently In This List</div>
-                                        <div class="text-muted small">Templates already included in @TaskList.Name.</div>
+                    <div class="mb-3">
+                        <button class="btn btn-success btn-sm" @onclick="SaveSelectedTemplates" disabled="@IsSaving">
+                            @(IsSaving ? "Saving..." : "Add Selected Templates")
+                        </button>
+                    </div>
+
+                    <hr />
+
+                    <div>
+                        <label class="form-label">Templates currently in this list</label>
+
+                        <div style="max-height: 240px; overflow-y: auto;">
+                            @if (!CurrentTemplates.Any())
+                            {
+                                <div class="text-muted small">No templates in this task list yet.</div>
+                            }
+                            else
+                            {
+                                @foreach (var template in CurrentTemplates)
+                                {
+                                    <div class="d-flex justify-content-between align-items-center border rounded-3 p-2 mb-2">
+                                        <div>
+                                            <div class="fw-semibold">@template.Name</div>
+                                            <div class="text-muted small">@template.Station</div>
+                                        </div>
+
+                                        <button class="btn btn-outline-danger btn-sm"
+                                                @onclick="() => RemoveTemplate.InvokeAsync(template.Id)">
+                                            Remove
+                                        </button>
                                     </div>
-                                    <span class="badge bg-light text-dark border">@CurrentTemplates.Count</span>
-                                </div>
-
-                                <div class="manage-task-list-template-list">
-                                    @if (!CurrentTemplates.Any())
-                                    {
-                                        <div class="text-muted small">No templates in this task list yet.</div>
-                                    }
-                                    else
-                                    {
-                                        @foreach (var template in CurrentTemplates)
-                                        {
-                                            <div class="manage-task-list-current-item d-flex justify-content-between align-items-center border p-3 bg-white mb-2">
-                                                <div>
-                                                    <div class="fw-semibold">@template.Name</div>
-                                                    <div class="text-muted small">@template.Station</div>
-                                                </div>
-
-                                                <button class="btn btn-outline-danger btn-sm"
-                                                        @onclick="() => RemoveTemplate.InvokeAsync(template.Id)">
-                                                    Remove
-                                                </button>
-                                            </div>
-                                        }
-                                    }
-                                </div>
-                            </div>
+                                }
+                            }
                         </div>
                     </div>
                 </div>
@@ -130,14 +96,12 @@
 
     private HashSet<int> SelectedTemplateIds = new();
     private bool IsSaving;
-    private string TemplateSearch = string.Empty;
 
     protected override void OnParametersSet()
     {
         if (IsOpen)
         {
             SelectedTemplateIds = new HashSet<int>();
-            TemplateSearch = string.Empty;
         }
     }
 
@@ -156,15 +120,6 @@
         SelectedTemplateIds.Clear();
         IsSaving = false;
     }
-
-    private IEnumerable<TaskTemplate> FilteredAvailableTemplates =>
-        AvailableTemplates
-            .Where(t => CurrentTemplates.All(current => current.Id != t.Id))
-            .Where(t =>
-                string.IsNullOrWhiteSpace(TemplateSearch) ||
-                t.Name.Contains(TemplateSearch, StringComparison.OrdinalIgnoreCase) ||
-                t.Station.Contains(TemplateSearch, StringComparison.OrdinalIgnoreCase) ||
-                (t.Notes?.Contains(TemplateSearch, StringComparison.OrdinalIgnoreCase) ?? false));
 
     private async Task Close()
     {
