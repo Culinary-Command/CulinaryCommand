@@ -41,6 +41,13 @@ jobs:
             - name: Add .NET tools to PATH
               run: echo "${HOME}/.dotnet/tools" >> $GITHUB_PATH
 
+            - name: Write appsettings.Production.json
+              env:
+                GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
+              run: |
+                printf '{"Google":{"ApiKey":"%s"}}' "$GOOGLE_API_KEY" \
+                  > CulinaryCommandApp/appsettings.Production.json
+
             - name: Build and publish Blazor Server
               run: |
                 dotnet restore "${{ env.PROJECT_PATH }}"
