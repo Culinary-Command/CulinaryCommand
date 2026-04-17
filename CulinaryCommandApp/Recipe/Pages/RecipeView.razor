@@ -55,17 +55,10 @@
 
                 @* Image card *@
                 <div class="rv-image-card">
-                    @if (!string.IsNullOrWhiteSpace(recipe.ImageData))
-                    {
-                        <img src="@recipe.ImageData" alt="@recipe.Title" class="rv-image" />
-                    }
-                    else
-                    {
-                        <div class="rv-image-placeholder">
-                            <i class="bi bi-image"></i>
-                            <span>@recipe.Title</span>
-                        </div>
-                    }
+                    <div class="rv-image-placeholder">
+                        <i class="bi bi-image"></i>
+                        <span>@recipe.Title</span>
+                    </div>
                 </div>
 
                 @* Title *@
@@ -101,14 +94,6 @@
                                     <text> @recipe.YieldUnit</text>
                                 }
                             </span>
-                        </li>
-                    }
-                    @if (!string.IsNullOrWhiteSpace(recipe.PortionSize))
-                    {
-                        <li>
-                            <i class="bi bi-cup-hot"></i>
-                            <span class="rv-meta-label">Portion</span>
-                            <span class="rv-meta-value">@recipe.PortionSize</span>
                         </li>
                     }
                 </ul>

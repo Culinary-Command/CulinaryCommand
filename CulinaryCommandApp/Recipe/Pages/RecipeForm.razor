@@ -163,53 +163,6 @@ else {
 
             <hr />
 
-            @* ---- Section: Recipe Image ---- *@
-            <h6 class="text-uppercase text-muted fw-semibold mb-3">Recipe Image</h6>
-
-            <div class="mb-4">
-                <div class="rf-image-card">
-                    @if (!string.IsNullOrWhiteSpace(Model.ImageData))
-                    {
-                        <div class="rf-image-preview">
-                            <img src="@Model.ImageData" alt="Recipe preview" class="rf-preview-img" />
-                            <button type="button" class="rf-remove-img" @onclick="RemoveImage" title="Remove image">
-                                <i class="bi bi-x-lg"></i>
-                            </button>
-                        </div>
-                    }
-                    else
-                    {
-                        <div class="rf-image-placeholder">
-                            <i class="bi bi-image"></i>
-                            <p>No image uploaded</p>
-                            <p class="rf-upload-hint">JPG, PNG or WEBP · max 5 MB</p>
-                        </div>
-                    }
-                </div>
-                <InputFile id="recipeImageInput"
-                           class="form-control mt-2"
-                           accept="image/*"
-                           OnChange="HandleImageUpload" />
-                @if (!string.IsNullOrWhiteSpace(_imageError))
-                {
-                    <div class="text-danger small mt-1">@_imageError</div>
-                }
-            </div>
-
-            <hr />
-
-            @* ---- Section: Serving Info ---- *@
-            <h6 class="text-uppercase text-muted fw-semibold mb-3">Serving &amp; Nutrition</h6>
-
-            <div class="row mb-3">
-                <div class="col-md-6">
-                    <label class="form-label fw-semibold">Portion Size</label>
-                    <input class="form-control"
-                           placeholder="e.g. 6 oz serving"
-                           @bind="Model.PortionSize" />
-                </div>
-            </div>
-
             <hr />
 
             @* ---- Section 2: Ingredient Lines ----*@
@@ -450,9 +403,6 @@ else {
     private bool _dataLoaded;
     private bool _dataLoading;
     private readonly SemaphoreSlim _loadSemaphore = new(1, 1);
-
-    // Image upload
-    private string? _imageError;
 
     // Reference data
     private List<string> _recipeTypes = new();
@@ -818,45 +768,6 @@ else {
     private void DismissConflict() => _conflictDetected = false;
 
     private void Cancel() => Nav.NavigateTo("/recipes");
-
-    // *** Image upload ***
-
-    private async Task HandleImageUpload(InputFileChangeEventArgs e)
-    {
-        _imageError = null;
-        var file = e.File;
-
-        const long maxBytes = 5 * 1024 * 1024; // 5 MB
-        if (file.Size > maxBytes)
-        {
-            _imageError = "Image must be under 5 MB.";
-            return;
-        }
-
-        if (!file.ContentType.StartsWith("image/"))
-        {
-            _imageError = "Please select a valid image file.";
-            return;
-        }
-
-        try
-        {
-            using var ms = new System.IO.MemoryStream();
-            await using var stream = file.OpenReadStream(maxBytes);
-            await stream.CopyToAsync(ms);
-            var base64 = Convert.ToBase64String(ms.ToArray());
-            Model.ImageData = $"data:{file.ContentType};base64,{base64}";
-        }
-        catch
-        {
-            _imageError = "Failed to read the image. Please try again.";
-        }
-    }
-
-    private void RemoveImage()
-    {
-        Model.ImageData = null;
-    }
 
     // *** View model for ingredient lines ***
 

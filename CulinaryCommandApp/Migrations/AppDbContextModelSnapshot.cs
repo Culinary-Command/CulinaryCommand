@@ -911,18 +911,12 @@ namespace CulinaryCommand.Migrations
                     b.Property<DateTime?>("CreatedAt")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<string>("ImageData")
-                        .HasColumnType("longtext");
-
                     b.Property<bool>("IsSubRecipe")
                         .HasColumnType("bit(1)");
 
                     b.Property<int>("LocationId")
                         .HasColumnType("int");
 
-                    b.Property<string>("PortionSize")
-                        .HasMaxLength(128)
-                        .HasColumnType("varchar(128)");
 
                     b.Property<string>("RecipeType")
                         .IsRequired()

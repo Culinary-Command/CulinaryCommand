@@ -29,12 +29,6 @@ namespace CulinaryCommandApp.Recipe.Entities
 
         public bool IsSubRecipe { get; set; } = false;
 
-        [MaxLength(128)]
-        public string? PortionSize { get; set; }
-
-        // Base64-encoded image (no MaxLength → LONGTEXT in MySQL)
-        public string? ImageData { get; set; }
-
         public DateTime? CreatedAt { get; set; }
 
         // Optimistic concurrency token — backed by a MySQL timestamp(6) column
