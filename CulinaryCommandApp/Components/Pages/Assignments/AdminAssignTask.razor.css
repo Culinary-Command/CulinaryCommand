@@ -1,0 +1,52 @@
+.assign-task-page {
+    --assign-green: #009A3B;
+    --assign-green-dark: #007a2f;
+    --assign-green-soft: #2ca259;
+}
+
+.assign-task-page .page-heading {
+    border-left: 4px solid var(--assign-green-soft);
+    padding-left: 1rem;
+}
+
+.assign-task-page ::deep .card {
+    border-radius: 1.1rem;
+    border: 1px solid #e9ecef;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
+}
+
+.assign-task-page ::deep .form-control,
+.assign-task-page ::deep .form-select,
+.assign-task-page ::deep .input-group-text,
+.assign-task-page ::deep .btn {
+    border-radius: 0.9rem;
+}
+
+.assign-task-page ::deep .btn-success,
+.assign-task-page ::deep .btn-primary {
+    background-color: var(--assign-green);
+    border-color: var(--assign-green);
+}
+
+.assign-task-page ::deep .btn-success:hover,
+.assign-task-page ::deep .btn-primary:hover,
+.assign-task-page ::deep .btn-success:focus,
+.assign-task-page ::deep .btn-primary:focus {
+    background-color: var(--assign-green-dark);
+    border-color: var(--assign-green-dark);
+}
+
+.assign-task-page ::deep .badge {
+    font-weight: 600;
+    border-radius: 999px;
+}
+
+.assign-task-page ::deep .bg-success,
+.assign-task-page ::deep .text-bg-success {
+    background-color: var(--assign-green) !important;
+    color: #ffffff !important;
+}
+
+.assign-task-page ::deep details summary::-webkit-details-marker {
+    display: none;
+}

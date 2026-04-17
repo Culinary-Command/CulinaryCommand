@@ -1,0 +1,126 @@
+@using CulinaryCommand.Data.Entities
+@using WorkTaskStatus = CulinaryCommand.Data.Enums.TaskStatus
+
+<div class="card shadow-sm border-0">
+    <div class="card-body d-flex flex-column flex-lg-row gap-3 align-items-lg-center">
+        <div>
+            <h5 class="fw-semibold mb-1">Kitchen Task Board</h5>
+            <div class="text-muted small">Track pending, active, and completed work</div>
+        </div>
+
+        <div class="ms-lg-auto">
+            <div class="input-group input-group-sm">
+                <span class="input-group-text bg-white"><i class="bi bi-search"></i></span>
+                <input class="form-control"
+                       placeholder="Search tasks or people"
+                       @bind="TaskBoardSearchValue"
+                       @bind:event="oninput" />
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-3">
+    @foreach (var status in StatusBuckets)
+    {
+        var tasks = TasksForStatus(status).ToList();
+
+        <div class="col-12 col-lg-4">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <div class="fw-semibold">@status</div>
+                        <span class="badge bg-light text-dark border">
+                            @tasks.Count
+                        </span>
+                    </div>
+
+                    <div style="max-height: 720px; overflow-y: auto;">
+                        @if (!tasks.Any())
+                        {
+                            <div class="border rounded-4 p-4 text-center text-muted small bg-light-subtle">
+                                No tasks in this column.
+                            </div>
+                        }
+                        else
+                        {
+                            @foreach (var task in tasks)
+                            {
+                                <div class="border rounded-4 p-3 mb-3 bg-white">
+                                    <div class="d-flex justify-content-between align-items-start gap-2 mb-2">
+                                        <span class="@PriorityBadgeClass(task.Priority)">@task.Priority</span>
+                                    </div>
+
+                                    <div class="fw-semibold mb-1">@task.Name</div>
+                                    <div class="text-muted small mb-1">@task.Station</div>
+                                    <div class="text-muted small mb-1">@AssigneeLabel(task.UserId)</div>
+                                    <div class="text-muted small">Due @task.DueDate.ToString("MMM d")</div>
+
+                                    @if (!string.IsNullOrWhiteSpace(task.Notes))
+                                    {
+                                        <div class="small text-muted mt-2">@task.Notes</div>
+                                    }
+
+                                    <div class="d-flex flex-wrap gap-2 mt-3">
+                                        @if (task.Status == WorkTaskStatus.Pending)
+                                        {
+                                            <button class="btn btn-outline-primary btn-sm"
+                                                    @onclick="() => HandleMarkInProgress(task.Id)">
+                                                Start
+                                            </button>
+                                        }
+
+                                        @if (task.Status != WorkTaskStatus.Completed)
+                                        {
+                                            <button class="btn btn-outline-success btn-sm"
+                                                    @onclick="() => HandleMarkComplete(task.Id)">
+                                                Mark done
+                                            </button>
+                                        }
+
+                                        <button class="btn btn-outline-secondary btn-sm"
+                                                @onclick="() => HandleBumpTask(task.Id)">
+                                            Tomorrow
+                                        </button>
+
+                                        <button class="btn btn-outline-danger btn-sm"
+                                                @onclick="() => HandleDeleteTask(task.Id)">
+                                            Remove
+                                        </button>
+                                    </div>
+                                </div>
+                            }
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+@code {
+    [Parameter] public string TaskBoardSearch { get; set; } = string.Empty;
+    [Parameter] public EventCallback<string> TaskBoardSearchChanged { get; set; }
+    [Parameter] public List<string> StatusBuckets { get; set; } = new();
+    [Parameter] public Func<string, IEnumerable<Tasks>> TasksForStatus { get; set; } = default!;
+    [Parameter] public Func<string, string> PriorityBadgeClass { get; set; } = default!;
+    [Parameter] public Func<int?, string> AssigneeLabel { get; set; } = default!;
+    [Parameter] public EventCallback<int> OnMarkInProgress { get; set; }
+    [Parameter] public EventCallback<int> OnMarkComplete { get; set; }
+    [Parameter] public EventCallback<int> OnBumpTask { get; set; }
+    [Parameter] public EventCallback<int> OnDeleteTask { get; set; }
+
+    private string TaskBoardSearchValue
+    {
+        get => TaskBoardSearch;
+        set => _ = TaskBoardSearchChanged.InvokeAsync(value);
+    }
+
+    private Task HandleMarkInProgress(int taskId) => OnMarkInProgress.InvokeAsync(taskId);
+
+    private Task HandleMarkComplete(int taskId) => OnMarkComplete.InvokeAsync(taskId);
+
+    private Task HandleBumpTask(int taskId) => OnBumpTask.InvokeAsync(taskId);
+
+    private Task HandleDeleteTask(int taskId) => OnDeleteTask.InvokeAsync(taskId);
+}
