@@ -17,16 +17,19 @@
 
             <div class="mb-3">
                 <label class="form-label">Task type</label>
-                <InputSelect class="form-select" @bind-Value="Model.TaskType">
+                <InputSelect class="form-select" @bind-Value="Model.TaskType" @bind-Value:after="HandleTaskTypeChanged">
                     <option value="@WorkTaskKind.Generic">General task</option>
                     <option value="@WorkTaskKind.PrepFromRecipe">Prep from recipe / ingredient</option>
                 </InputSelect>
             </div>
 
-            <div class="mb-3">
-                <label class="form-label">Task name</label>
-                <InputText class="form-control" @bind-Value="Model.Name" />
-            </div>
+            @if (Model.TaskType != WorkTaskKind.PrepFromRecipe)
+            {
+                <div class="mb-3">
+                    <label class="form-label">Task name</label>
+                    <InputText class="form-control" @bind-Value="Model.Name" />
+                </div>
+            }
 
             <div class="row g-3">
                 <div class="col-12 col-sm-6">
@@ -54,7 +57,7 @@
             {
                 <div class="mb-3 mt-3">
                     <label class="form-label">Recipe</label>
-                    <InputSelect class="form-select" @bind-Value="Model.RecipeId">
+                    <InputSelect class="form-select" @bind-Value="Model.RecipeId" @bind-Value:after="SyncRecipeName">
                         <option value="">Select a recipe</option>
                         @foreach (var recipe in Recipes)
                         {
@@ -71,6 +74,10 @@
                     <div class="col-6">
                         <label class="form-label">Current count</label>
                         <InputNumber class="form-control" @bind-Value="Model.Count" />
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label">Prep Needed</label>
+                        <input class="form-control" value="@Model.PrepNeeded" readonly />
                     </div>
                 </div>
             }
@@ -114,4 +121,26 @@
     [Parameter] public EventCallback OnSubmit { get; set; }
 
     private Task HandleSubmit() => OnSubmit.InvokeAsync();
+
+    private void HandleTaskTypeChanged()
+    {
+        if (Model.TaskType == WorkTaskKind.PrepFromRecipe)
+        {
+            SyncRecipeName();
+            return;
+        }
+
+        Model.RecipeId = null;
+        Model.Par = null;
+        Model.Count = null;
+    }
+
+    private void SyncRecipeName()
+    {
+        if (Model.TaskType != WorkTaskKind.PrepFromRecipe)
+            return;
+
+        var recipeName = Recipes.FirstOrDefault(r => r.RecipeId == Model.RecipeId)?.Title;
+        Model.Name = recipeName?.Trim() ?? string.Empty;
+    }
 }

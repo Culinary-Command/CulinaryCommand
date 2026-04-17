@@ -17,7 +17,10 @@
 
 .assign-task-page ::deep .form-control,
 .assign-task-page ::deep .form-select,
-.assign-task-page ::deep .input-group-text,
+.assign-task-page ::deep .input-group-text {
+    border-radius: 1rem;
+}
+
 .assign-task-page ::deep .btn {
     border-radius: 0.9rem;
 }

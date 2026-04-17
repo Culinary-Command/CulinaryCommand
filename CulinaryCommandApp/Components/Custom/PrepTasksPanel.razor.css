@@ -1,149 +1,233 @@
 /* Card shell */
 .cc-card {
-        background: #ffffff;
-        border: 1px solid #e6e8eb;
-        border-radius: 12px;
-        box-shadow: 0 1px 2px rgba(16, 24, 40, 0.04);
-    }
-    
-    .cc-card-header {
-        padding: 16px 20px;
-        border-bottom: 1px solid #eef0f2;
-    }
-    
-    .cc-card-header h3 {
-        margin: 0;
-        font-size: 16px;
-        font-weight: 600;
-        color: #111827;
-    }
-    
-    .cc-empty {
-        padding: 20px;
-        color: #6b7280;
-    }
-    
-    /* Task list */
-    .cc-task-list {
-        list-style: none;
-        margin: 0;
-        padding: 0;
-    }
-    
+    background: #ffffff;
+    border-radius: 1.1rem;
+    border: 1px solid #e9ecef;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
+    overflow: hidden;
+}
+
+.cc-card-header {
+    padding: 1.5rem;
+    border-bottom: 1px solid #eef0f2;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+}
+
+.cc-section-label {
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #6b7280;
+    margin-bottom: 4px;
+}
+
+.cc-card-header h3 {
+    margin: 0 0 4px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #111827;
+}
+
+.cc-card-header p {
+    margin: 0;
+    color: #6b7280;
+    font-size: 0.92rem;
+}
+
+.cc-count-pill {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 2.25rem;
+    padding: 0.4rem 0.75rem;
+    border-radius: 999px;
+    background: #009A3B;
+    color: #ffffff;
+    font-weight: 700;
+    font-size: 0.85rem;
+}
+
+.cc-empty {
+    padding: 1.5rem;
+    color: #6b7280;
+}
+
+.cc-task-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.cc-task {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 1.25rem 1.5rem;
+    border-bottom: 1px solid #f2f4f7;
+}
+
+.cc-task:last-child {
+    border-bottom: none;
+}
+
+.cc-task-done .cc-title {
+    color: #6b7280;
+    text-decoration: line-through;
+}
+
+.cc-check {
+    border: 0;
+    background: transparent;
+    padding: 0;
+    cursor: pointer;
+    margin-top: 5px;
+}
+
+.cc-check-circle {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: 2px solid #cbd5e1;
+    display: inline-block;
+}
+
+.cc-check-circle.checked {
+    background: #009A3B;
+    border-color: #009A3B;
+    box-shadow: inset 0 0 0 2px #ffffff;
+}
+
+.cc-task-main {
+    flex: 1 1 auto;
+    min-width: 0;
+}
+
+.cc-title-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 6px;
+}
+
+.cc-title {
+    font-weight: 700;
+    color: #111827;
+}
+
+.cc-kind-badge {
+    display: inline-flex;
+    align-items: center;
+    border-radius: 999px;
+    padding: 0.2rem 0.65rem;
+    font-size: 0.74rem;
+    font-weight: 700;
+}
+
+.cc-kind-prep {
+    background: #dcfce7;
+    color: #166534;
+}
+
+.cc-kind-general {
+    background: #f3f4f6;
+    color: #374151;
+}
+
+.cc-metrics {
+    display: flex;
+    gap: 16px;
+    color: #6b7280;
+    font-size: 13px;
+    margin-bottom: 8px;
+    flex-wrap: wrap;
+}
+
+.cc-metrics strong {
+    color: #111827;
+    font-weight: 700;
+}
+
+.cc-action-row {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.cc-details-toggle {
+    border-radius: 0.9rem;
+}
+
+.cc-details {
+    margin-top: 10px;
+    padding: 12px 14px;
+    border: 1px solid #e5e7eb;
+    border-radius: 0.9rem;
+    background: #f9fafb;
+    color: #4b5563;
+    font-size: 0.92rem;
+    line-height: 1.45;
+}
+
+.cc-task-meta {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 10px;
+    margin-left: 12px;
+}
+
+.cc-duration {
+    color: #6b7280;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.cc-mark {
+    border: 1px solid #d1d5db;
+    background: #ffffff;
+    color: #111827;
+    border-radius: 0.9rem;
+    padding: 8px 12px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.cc-mark:hover {
+    background: #f3f4f6;
+}
+
+.cc-mark:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+@media (max-width: 767.98px) {
+    .cc-card-header,
     .cc-task {
-        display: flex;
-        align-items: flex-start;
-        gap: 12px;
-        padding: 16px 20px;
-        border-bottom: 1px solid #f2f4f7;
+        padding-left: 1rem;
+        padding-right: 1rem;
     }
-    
-    .cc-task:last-child {
-        border-bottom: none;
-    }
-    
-    .cc-task-done .cc-title {
-        color: #6b7280;
-        text-decoration: line-through;
-    }
-    
-    /* Checkbox */
-    .cc-check {
-        border: 0;
-        background: transparent;
-        padding: 0;
-        cursor: pointer;
-        margin-top: 4px;
-    }
-    
-    .cc-check-circle {
-        width: 20px;
-        height: 20px;
-        border-radius: 50%;
-        border: 2px solid #cbd5e1;
-        display: inline-block;
-    }
-    
-    .cc-check-circle.checked {
-        background: #009A3B;
-        border-color: #009A3B;
-        box-shadow: inset 0 0 0 2px #ffffff;
-    }
-    
-    /* Main task content */
-    .cc-task-main {
-        flex: 1 1 auto;
-        min-width: 0;
-    }
-    
-    .cc-title {
-        font-weight: 600;
-        color: #111827;
-        margin-bottom: 4px;
-    }
-    
-    .cc-metrics {
-        display: flex;
-        gap: 16px;
-        color: #6b7280;
-        font-size: 13px;
-        margin-bottom: 4px;
-    }
-    
-    .cc-metrics strong {
-        color: #111827;
-        font-weight: 600;
-    }
-    
-    /* "Recipe details" button */
-    .cc-recipe-btn {
-        margin-top: 4px;
-        border: 1px solid #d1d5db;
-        background: #f9fafb;
-        border-radius: 9999px;
-        padding: 4px 10px;
-        font-size: 12px;
-        font-weight: 500;
-        color: #111827;
-        cursor: pointer;
-    }
-    
-    .cc-recipe-btn:hover {
-        background: #f3f4f6;
-    }
-    
-    /* Right-hand meta (due date + mark done) */
-    .cc-task-meta {
-        display: flex;
+
+    .cc-card-header {
         flex-direction: column;
-        align-items: flex-end;
-        gap: 8px;
-        margin-left: 8px;
+        align-items: flex-start;
     }
-    
-    .cc-duration {
-        color: #6b7280;
-        font-size: 13px;
+
+    .cc-task {
+        flex-wrap: wrap;
     }
-    
-    .cc-mark {
-        border: 1px solid #e5e7eb;
-        background: #f9fafb;
-        color: #111827;
-        border-radius: 8px;
-        padding: 8px 12px;
-        font-weight: 600;
-        cursor: pointer;
+
+    .cc-task-meta {
+        width: 100%;
+        margin-left: 34px;
+        align-items: flex-start;
     }
-    
-    .cc-mark:hover {
-        background: #f3f4f6;
-    }
-    
-    .cc-mark:disabled {
-        opacity: 0.6;
-        cursor: not-allowed;
-    }
+}
     
     /* ===== Full-screen modal overlay ===== */
     

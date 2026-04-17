@@ -158,12 +158,14 @@ else
     IsOpen="@showCreateTemplateModal"
     LocationId="@(selectedLocationId ?? 0)"
     CreatedByUserId="@_ctx?.User?.Id"
+    Recipes="recipes"
     OnClose="CloseCreateTemplateModal"
     OnSave="SaveTemplate" />
 
 <EditTaskTemplateModal
     IsOpen="@showEditTemplateModal"
     Template="@editingTemplate"
+    Recipes="recipes"
     OnClose="CloseEditTemplateModal"
     OnSave="SaveEditedTemplate" />
 
@@ -171,6 +173,7 @@ else
     IsOpen="@showCreateTaskListModal"
     LocationId="@(selectedLocationId ?? 0)"
     CreatedByUserId="@_ctx?.User?.Id"
+    AvailableTemplates="@taskTemplates"
     OnClose="CloseCreateTaskListModal"
     OnSave="SaveTaskList" />
 
@@ -383,18 +386,29 @@ else
         if (!selectedLocationId.HasValue)
             return;
 
+        if (newTask.TaskType == WorkTaskKind.PrepFromRecipe && !newTask.RecipeId.HasValue)
+        {
+            SetError("Select a recipe for prep-from-recipe tasks.");
+            return;
+        }
+
         // Decide final task name (auto-fill from recipe if prep task & name is blank)
         var name = newTask.Name?.Trim() ?? string.Empty;
 
         if (newTask.TaskType == WorkTaskKind.PrepFromRecipe &&
-            newTask.RecipeId.HasValue &&
-            string.IsNullOrWhiteSpace(name))
+            newTask.RecipeId.HasValue)
         {
             var recipe = recipes.FirstOrDefault(r => r.RecipeId == newTask.RecipeId.Value);
             if (recipe != null && !string.IsNullOrWhiteSpace(recipe.Title))
             {
                 name = recipe.Title;
             }
+        }
+
+        if (string.IsNullOrWhiteSpace(name))
+        {
+            SetError("Task name is required.");
+            return;
         }
 
         Tasks? task = new Tasks
@@ -501,6 +515,7 @@ else
 
             showCreateTemplateModal = false;
             await LoadTaskTemplatesAsync();
+            await LoadTaskListsAsync();
 
             SetSuccess($"Template '{createdTemplate.Name}' created successfully.");
         }
@@ -537,6 +552,12 @@ else
             showEditTemplateModal = false;
             editingTemplate = null;
             await LoadTaskTemplatesAsync();
+            await LoadTaskListsAsync();
+
+            if (managingTaskList != null)
+            {
+                selectedTaskListTemplates = await TaskLibraryService.GetTemplatesForTaskListAsync(managingTaskList.Id);
+            }
 
             SetSuccess($"Template '{updatedTemplate.Name}' updated successfully.");
         }
@@ -554,6 +575,13 @@ else
         {
             await TaskLibraryService.ArchiveTemplateAsync(templateId);
             await LoadTaskTemplatesAsync();
+            await LoadTaskListsAsync();
+
+            if (managingTaskList != null)
+            {
+                selectedTaskListTemplates = await TaskLibraryService.GetTemplatesForTaskListAsync(managingTaskList.Id);
+            }
+
             SetSuccess("Template removed successfully.");
         }
         catch (Exception ex)

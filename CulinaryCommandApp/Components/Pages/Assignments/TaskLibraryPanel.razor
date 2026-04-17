@@ -16,7 +16,7 @@
             </div>
         </div>
 
-        <div class="input-group input-group-sm mb-3">
+        <div class="input-group input-group-sm mb-3 assign-search-group">
             <span class="input-group-text bg-white"><i class="bi bi-search"></i></span>
             <input class="form-control"
                    placeholder="Search templates..."
@@ -42,7 +42,7 @@
                 {
                     var isSelected = SelectedTemplateIds.Contains(template.Id);
 
-                    <div class="border rounded-4 p-3 mb-2 @(isSelected ? "border-success bg-success-subtle" : "bg-white")">
+                    <div class="assign-item-card border p-3 mb-2 @(isSelected ? "border-success bg-success-subtle" : "bg-white")">
                         <div class="d-flex justify-content-between align-items-start gap-3">
                             <div class="d-flex gap-2">
                                 <input class="form-check-input mt-1"
@@ -72,17 +72,30 @@
                                 </div>
                             </div>
 
-                            <div class="d-flex gap-2">
+                            <div class="dropdown">
                                 <button type="button"
-                                        class="btn btn-outline-primary btn-sm"
-                                        @onclick="() => HandleEditTemplate(template)">
-                                    Edit
+                                        class="btn btn-outline-secondary btn-sm dropdown-toggle manage-action-toggle"
+                                        data-bs-toggle="dropdown"
+                                        aria-expanded="false">
+                                    Manage
                                 </button>
-                                <button type="button"
-                                        class="btn btn-outline-danger btn-sm"
-                                        @onclick="() => HandleArchiveTemplate(template.Id)">
-                                    Delete
-                                </button>
+                                <ul class="dropdown-menu dropdown-menu-end manage-action-menu">
+                                    <li>
+                                        <button type="button"
+                                                class="dropdown-item"
+                                                @onclick="() => HandleEditTemplate(template)">
+                                            Edit
+                                        </button>
+                                    </li>
+                                    <li><hr class="dropdown-divider" /></li>
+                                    <li>
+                                        <button type="button"
+                                                class="dropdown-item text-danger"
+                                                @onclick="() => HandleArchiveTemplate(template.Id)">
+                                            Delete
+                                        </button>
+                                    </li>
+                                </ul>
                             </div>
                         </div>
                     </div>

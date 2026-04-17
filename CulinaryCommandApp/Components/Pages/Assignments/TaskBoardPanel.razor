@@ -9,7 +9,7 @@
         </div>
 
         <div class="ms-lg-auto">
-            <div class="input-group input-group-sm">
+            <div class="input-group input-group-sm assign-search-group">
                 <span class="input-group-text bg-white"><i class="bi bi-search"></i></span>
                 <input class="form-control"
                        placeholder="Search tasks or people"
@@ -38,7 +38,7 @@
                     <div style="max-height: 720px; overflow-y: auto;">
                         @if (!tasks.Any())
                         {
-                            <div class="border rounded-4 p-4 text-center text-muted small bg-light-subtle">
+                            <div class="assign-item-card border p-4 text-center text-muted small bg-light-subtle">
                                 No tasks in this column.
                             </div>
                         }
@@ -46,7 +46,7 @@
                         {
                             @foreach (var task in tasks)
                             {
-                                <div class="border rounded-4 p-3 mb-3 bg-white">
+                                <div class="assign-item-card border p-3 mb-3 bg-white">
                                     <div class="d-flex justify-content-between align-items-start gap-2 mb-2">
                                         <span class="@PriorityBadgeClass(task.Priority)">@task.Priority</span>
                                     </div>
@@ -61,7 +61,7 @@
                                         <div class="small text-muted mt-2">@task.Notes</div>
                                     }
 
-                                    <div class="d-flex flex-wrap gap-2 mt-3">
+                                    <div class="d-flex flex-wrap gap-2 mt-3 align-items-start">
                                         @if (task.Status == WorkTaskStatus.Pending)
                                         {
                                             <button class="btn btn-outline-primary btn-sm"
@@ -78,15 +78,31 @@
                                             </button>
                                         }
 
-                                        <button class="btn btn-outline-secondary btn-sm"
-                                                @onclick="() => HandleBumpTask(task.Id)">
-                                            Tomorrow
-                                        </button>
-
-                                        <button class="btn btn-outline-danger btn-sm"
-                                                @onclick="() => HandleDeleteTask(task.Id)">
-                                            Remove
-                                        </button>
+                                        <div class="dropdown">
+                                            <button type="button"
+                                                    class="btn btn-outline-secondary btn-sm dropdown-toggle manage-action-toggle"
+                                                    data-bs-toggle="dropdown"
+                                                    aria-expanded="false">
+                                                Manage
+                                            </button>
+                                            <ul class="dropdown-menu dropdown-menu-end manage-action-menu">
+                                                <li>
+                                                    <button type="button"
+                                                            class="dropdown-item"
+                                                            @onclick="() => HandleBumpTask(task.Id)">
+                                                        Tomorrow
+                                                    </button>
+                                                </li>
+                                                <li><hr class="dropdown-divider" /></li>
+                                                <li>
+                                                    <button type="button"
+                                                            class="dropdown-item text-danger"
+                                                            @onclick="() => HandleDeleteTask(task.Id)">
+                                                        Remove
+                                                    </button>
+                                                </li>
+                                            </ul>
+                                        </div>
                                     </div>
                                 </div>
                             }
