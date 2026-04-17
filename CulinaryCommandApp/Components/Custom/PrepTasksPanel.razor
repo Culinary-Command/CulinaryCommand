@@ -2,6 +2,7 @@
 @using CulinaryCommand.Data.Entities
 @using CulinaryCommand.Data.Enums
 @using Microsoft.AspNetCore.Components
+@inject NavigationManager Nav
 
 <div class="card shadow-sm border-0 cc-card">
     <div class="cc-card-header">
@@ -208,6 +209,12 @@
 
     private void OpenRecipe(Tasks t)
     {
+        if (t.RecipeId.HasValue)
+        {
+            Nav.NavigateTo($"/recipes/view/{t.RecipeId.Value}?from=mytasks");
+            return;
+        }
+
         selectedTask = t;
         showRecipe = true;
     }
