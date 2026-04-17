@@ -1,10 +1,16 @@
 @namespace CulinaryCommand.Components.Custom
 @using CulinaryCommand.Data.Entities
+@using CulinaryCommand.Data.Enums
 @using Microsoft.AspNetCore.Components
 
-<div class="cc-card">
+<div class="card shadow-sm border-0 cc-card">
     <div class="cc-card-header">
-        <h3>Today's Prep Tasks</h3>
+        <div>
+            <div class="cc-section-label">Assigned Tasks</div>
+            <h3>Today’s Task List</h3>
+            <p>Review assigned work, expand general task notes, and complete prep with recipe context where needed.</p>
+        </div>
+        <span class="cc-count-pill">@Tasks.Count</span>
     </div>
 
     @if (Tasks is null || Tasks.Count == 0)
@@ -26,29 +32,55 @@
                     </button>
 
                     <div class="cc-task-main">
-                        <div class="cc-title">
-                            @DisplayTitle(t)
+                        <div class="cc-title-row">
+                            <div class="cc-title">
+                                @DisplayTitle(t)
+                            </div>
+                            <span class="cc-kind-badge @(IsPrepTask(t) ? "cc-kind-prep" : "cc-kind-general")">
+                                @(IsPrepTask(t) ? "Recipe Prep" : "General")
+                            </span>
                         </div>
 
-                        <div class="cc-metrics">
-                            <span>Par: <strong>@(t.Par?.ToString() ?? "-")</strong></span>
-                            <span>Count: <strong>@(t.Count?.ToString() ?? "-")</strong></span>
-                            <span>Prep: <strong>@t.Prep</strong></span>
-                        </div>
-
-                        @if (t.Recipe is not null)
+                        @if (IsPrepTask(t))
                         {
-                            <button class="btn btn-light border btn-sm"
-                                    type="button"
-                                    @onclick="() => OpenRecipe(t)">
-                                Recipe Details
-                            </button>
+                            <div class="cc-metrics">
+                                <span>Par: <strong>@(t.Par?.ToString() ?? "0")</strong></span>
+                                <span>Count: <strong>@(t.Count?.ToString() ?? "0")</strong></span>
+                                <span>Prep: <strong>@t.Prep</strong></span>
+                            </div>
+                        }
+
+                        <div class="cc-action-row">
+                            @if (ShouldShowRecipeDetails(t))
+                            {
+                                <button class="btn btn-light border btn-sm cc-details-toggle"
+                                        type="button"
+                                        @onclick="() => OpenRecipe(t)">
+                                    Recipe Details
+                                </button>
+                            }
+
+                            @if (!IsPrepTask(t) && !string.IsNullOrWhiteSpace(t.Notes))
+                            {
+                                <button class="btn btn-light border btn-sm cc-details-toggle"
+                                        type="button"
+                                        @onclick="() => ToggleDetails(t.Id)">
+                                    @(IsExpanded(t.Id) ? "Hide Details" : "Show Details")
+                                </button>
+                            }
+                        </div>
+
+                        @if (!IsPrepTask(t) && IsExpanded(t.Id) && !string.IsNullOrWhiteSpace(t.Notes))
+                        {
+                            <div class="cc-details">
+                                @t.Notes
+                            </div>
                         }
                     </div>
 
                     <div class="cc-task-meta">
                         <div class="cc-duration">
-                            @t.DueDate.ToString("MMM d · h:mm tt")
+                            @FormatAssignedDate(t)
                         </div>
                         <button class="cc-mark"
                                 @onclick="() => OnMarkDoneClicked(t)"
@@ -154,13 +186,14 @@
 
     private bool showRecipe;
     private Tasks? selectedTask;
+    private readonly HashSet<int> expandedTaskIds = new();
 
     private string DisplayTitle(Tasks t)
     {
         if (t.Recipe is not null && !string.IsNullOrWhiteSpace(t.Recipe.Title))
             return t.Recipe.Title;
 
-        return t.Name;
+        return t.Name ?? "Untitled Task";
     }
 
     private async Task OnMarkDoneClicked(Tasks t)
@@ -169,6 +202,8 @@
         {
             await OnMarkDone.InvokeAsync(t);
         }
+
+        expandedTaskIds.Remove(t.Id);
     }
 
     private void OpenRecipe(Tasks t)
@@ -196,5 +231,25 @@
         }
 
         return q.ToString("0.##");
+    }
+
+    private static bool IsPrepTask(Tasks task) => task.Kind == WorkTaskKind.PrepFromRecipe;
+
+    private static bool ShouldShowRecipeDetails(Tasks task) => IsPrepTask(task) && task.Recipe is not null;
+
+    private bool IsExpanded(int taskId) => expandedTaskIds.Contains(taskId);
+
+    private void ToggleDetails(int taskId)
+    {
+        if (!expandedTaskIds.Add(taskId))
+        {
+            expandedTaskIds.Remove(taskId);
+        }
+    }
+
+    private static string FormatAssignedDate(Tasks task)
+    {
+        var date = task.Date ?? task.CreatedAt;
+        return date.ToString("MMM d");
     }
 }

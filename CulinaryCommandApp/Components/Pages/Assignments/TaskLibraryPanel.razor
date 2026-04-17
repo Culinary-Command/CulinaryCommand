@@ -1,0 +1,133 @@
+@using CulinaryCommand.Data.Entities
+
+<div class="card shadow-sm border-0">
+    <div class="card-body">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <div>
+                <h5 class="fw-semibold mb-1">Task Library</h5>
+                <div class="text-muted small">Select one or more reusable tasks</div>
+            </div>
+
+            <div class="d-flex align-items-center gap-2">
+                <span class="badge text-bg-success">@TemplateCount</span>
+                <button class="btn btn-success btn-sm" @onclick="HandleCreateTemplate">
+                    + New Template
+                </button>
+            </div>
+        </div>
+
+        <div class="input-group input-group-sm mb-3 assign-search-group">
+            <span class="input-group-text bg-white"><i class="bi bi-search"></i></span>
+            <input class="form-control"
+                   placeholder="Search templates..."
+                   @bind="TaskLibrarySearchValue"
+                   @bind:event="oninput" />
+        </div>
+
+        @if (SelectedTemplateIds.Any())
+        {
+            <div class="alert alert-success py-2 px-3 small mb-3">
+                <strong>@SelectedTemplateIds.Count</strong> task@(SelectedTemplateIds.Count == 1 ? "" : "s") selected
+            </div>
+        }
+
+        <div style="max-height: 380px; overflow-y: auto;">
+            @if (!Templates.Any())
+            {
+                <div class="text-muted small">No task templates found.</div>
+            }
+            else
+            {
+                @foreach (var template in Templates)
+                {
+                    var isSelected = SelectedTemplateIds.Contains(template.Id);
+
+                    <div class="assign-item-card border p-3 mb-2 @(isSelected ? "border-success bg-success-subtle" : "bg-white")">
+                        <div class="d-flex justify-content-between align-items-start gap-3">
+                            <div class="d-flex gap-2">
+                                <input class="form-check-input mt-1"
+                                       type="checkbox"
+                                       checked="@isSelected"
+                                       @onchange="() => HandleToggleSelection(template.Id)" />
+
+                                <div>
+                                    <div class="fw-semibold">@template.Name</div>
+                                    <div class="text-muted small">@template.Station</div>
+
+                                    @if (!string.IsNullOrWhiteSpace(template.Notes))
+                                    {
+                                        <div class="text-muted small mt-1">@template.Notes</div>
+                                    }
+
+                                    <div class="d-flex gap-2 mt-2 flex-wrap">
+                                        <span class="@PriorityBadgeClass(template.Priority)">@template.Priority</span>
+
+                                        @if (template.DefaultEstimatedMinutes.HasValue)
+                                        {
+                                            <span class="badge bg-light text-dark border">
+                                                @template.DefaultEstimatedMinutes min
+                                            </span>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="dropdown">
+                                <button type="button"
+                                        class="btn btn-outline-secondary btn-sm dropdown-toggle manage-action-toggle"
+                                        data-bs-toggle="dropdown"
+                                        aria-expanded="false">
+                                    Manage
+                                </button>
+                                <ul class="dropdown-menu dropdown-menu-end manage-action-menu">
+                                    <li>
+                                        <button type="button"
+                                                class="dropdown-item"
+                                                @onclick="() => HandleEditTemplate(template)">
+                                            Edit
+                                        </button>
+                                    </li>
+                                    <li><hr class="dropdown-divider" /></li>
+                                    <li>
+                                        <button type="button"
+                                                class="dropdown-item text-danger"
+                                                @onclick="() => HandleArchiveTemplate(template.Id)">
+                                            Delete
+                                        </button>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter] public List<TaskTemplate> Templates { get; set; } = new();
+    [Parameter] public int TemplateCount { get; set; }
+    [Parameter] public string TaskLibrarySearch { get; set; } = string.Empty;
+    [Parameter] public EventCallback<string> TaskLibrarySearchChanged { get; set; }
+    [Parameter] public IReadOnlyCollection<int> SelectedTemplateIds { get; set; } = Array.Empty<int>();
+    [Parameter] public Func<string, string> PriorityBadgeClass { get; set; } = default!;
+    [Parameter] public EventCallback<int> OnToggleSelection { get; set; }
+    [Parameter] public EventCallback OnCreateTemplate { get; set; }
+    [Parameter] public EventCallback<TaskTemplate> OnEditTemplate { get; set; }
+    [Parameter] public EventCallback<int> OnArchiveTemplate { get; set; }
+
+    private string TaskLibrarySearchValue
+    {
+        get => TaskLibrarySearch;
+        set => _ = TaskLibrarySearchChanged.InvokeAsync(value);
+    }
+
+    private Task HandleToggleSelection(int templateId) => OnToggleSelection.InvokeAsync(templateId);
+
+    private Task HandleCreateTemplate() => OnCreateTemplate.InvokeAsync();
+
+    private Task HandleEditTemplate(TaskTemplate template) => OnEditTemplate.InvokeAsync(template);
+
+    private Task HandleArchiveTemplate(int templateId) => OnArchiveTemplate.InvokeAsync(templateId);
+}
