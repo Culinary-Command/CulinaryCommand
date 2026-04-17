@@ -1,11 +1,12 @@
 @using CulinaryCommand.Data.Models
+@using CulinaryCommand.Data.Entities
 @using Microsoft.AspNetCore.Components.Forms
 
 @if (IsOpen)
 {
-    <div class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0,0,0,.45);">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content border-0 shadow rounded-4">
+    <div class="modal fade show d-block task-list-modal-backdrop" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered modal-xl">
+            <div class="modal-content border-0 shadow rounded-4 task-list-modal">
                 <div class="modal-header">
                     <h5 class="modal-title">Create Task List</h5>
                     <button type="button" class="btn-close" @onclick="Close"></button>
@@ -16,14 +17,88 @@
                     <ValidationSummary />
 
                     <div class="modal-body">
-                        <div class="mb-3">
-                            <label class="form-label">Task List Name</label>
-                            <InputText class="form-control" @bind-Value="Model.Name" />
-                        </div>
+                        <div class="row g-4">
+                            <div class="col-12 col-lg-5">
+                                <div class="mb-3">
+                                    <label class="form-label">Task List Name</label>
+                                    <InputText class="form-control assign-soft-input" @bind-Value="Model.Name" />
+                                </div>
 
-                        <div class="mb-3">
-                            <label class="form-label">Notes</label>
-                            <InputTextArea class="form-control" rows="3" @bind-Value="Model.Description" />
+                                <div class="mb-3">
+                                    <label class="form-label">Notes</label>
+                                    <InputTextArea class="form-control assign-soft-input" rows="4" @bind-Value="Model.Description" />
+                                </div>
+
+                                @if (SelectedTemplateIds.Any())
+                                {
+                                    <div class="task-list-modal-panel p-3">
+                                        <div class="d-flex justify-content-between align-items-center mb-2">
+                                            <div class="fw-semibold">Selected Templates</div>
+                                            <span class="badge text-bg-success">@SelectedTemplateIds.Count</span>
+                                        </div>
+
+                                        <div class="d-flex flex-wrap gap-2">
+                                            @foreach (var template in SelectedTemplates)
+                                            {
+                                                <span class="badge bg-light text-dark border">@template.Name</span>
+                                            }
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+
+                            <div class="col-12 col-lg-7">
+                                <div class="task-list-modal-panel p-3">
+                                    <div class="d-flex justify-content-between align-items-center mb-3">
+                                        <div>
+                                            <div class="fw-semibold">Add Templates Now</div>
+                                            <div class="text-muted small">Search and select templates to include in this new task list.</div>
+                                        </div>
+                                        <span class="badge text-bg-success">@FilteredTemplates.Count()</span>
+                                    </div>
+
+                                    <div class="input-group input-group-sm mb-3 modal-search-group">
+                                        <span class="input-group-text bg-white"><i class="bi bi-search"></i></span>
+                                        <input class="form-control"
+                                               placeholder="Search templates..."
+                                               @bind="TemplateSearch"
+                                               @bind:event="oninput" />
+                                    </div>
+
+                                    <div class="task-list-template-list">
+                                        @if (!FilteredTemplates.Any())
+                                        {
+                                            <div class="text-muted small">No templates match your search.</div>
+                                        }
+                                        else
+                                        {
+                                            @foreach (var template in FilteredTemplates)
+                                            {
+                                                var isSelected = SelectedTemplateIds.Contains(template.Id);
+
+                                                <button type="button"
+                                                        class="task-list-template-item @(isSelected ? "selected" : null)"
+                                                        @onclick="() => ToggleTemplate(template.Id)">
+                                                    <div class="form-check m-0">
+                                                        <input class="form-check-input"
+                                                               type="checkbox"
+                                                               tabindex="-1"
+                                                               checked="@isSelected" />
+                                                    </div>
+                                                    <div class="flex-grow-1 text-start">
+                                                        <div class="fw-semibold">@template.Name</div>
+                                                        <div class="text-muted small">@template.Station</div>
+                                                        @if (!string.IsNullOrWhiteSpace(template.Notes))
+                                                        {
+                                                            <div class="text-muted small mt-1">@template.Notes</div>
+                                                        }
+                                                    </div>
+                                                </button>
+                                            }
+                                        }
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
@@ -45,11 +120,14 @@
     [Parameter] public bool IsOpen { get; set; }
     [Parameter] public int LocationId { get; set; }
     [Parameter] public int? CreatedByUserId { get; set; }
+    [Parameter] public List<TaskTemplate> AvailableTemplates { get; set; } = new();
     [Parameter] public EventCallback OnClose { get; set; }
     [Parameter] public EventCallback<CreateTaskListRequest> OnSave { get; set; }
 
     private CreateTaskListRequest Model = new();
     private bool IsSaving;
+    private string TemplateSearch = string.Empty;
+    private HashSet<int> SelectedTemplateIds = new();
 
     protected override void OnParametersSet()
     {
@@ -61,6 +139,8 @@
                 CreatedByUserId = CreatedByUserId,
                 IsActive = true
             };
+            TemplateSearch = string.Empty;
+            SelectedTemplateIds = new HashSet<int>();
         }
     }
 
@@ -69,8 +149,27 @@
         IsSaving = true;
         Model.LocationId = LocationId;
         Model.CreatedByUserId = CreatedByUserId;
+        Model.TaskTemplateIds = SelectedTemplateIds.ToList();
         await OnSave.InvokeAsync(Model);
         IsSaving = false;
+    }
+
+    private IEnumerable<TaskTemplate> FilteredTemplates =>
+        AvailableTemplates.Where(t =>
+            string.IsNullOrWhiteSpace(TemplateSearch) ||
+            t.Name.Contains(TemplateSearch, StringComparison.OrdinalIgnoreCase) ||
+            t.Station.Contains(TemplateSearch, StringComparison.OrdinalIgnoreCase) ||
+            (t.Notes?.Contains(TemplateSearch, StringComparison.OrdinalIgnoreCase) ?? false));
+
+    private IEnumerable<TaskTemplate> SelectedTemplates =>
+        AvailableTemplates.Where(t => SelectedTemplateIds.Contains(t.Id));
+
+    private void ToggleTemplate(int templateId)
+    {
+        if (!SelectedTemplateIds.Add(templateId))
+        {
+            SelectedTemplateIds.Remove(templateId);
+        }
     }
 
     private async Task Close()

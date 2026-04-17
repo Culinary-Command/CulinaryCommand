@@ -8,216 +8,266 @@
 @inject IUserContextService UserCtx
 @inject NavigationManager Nav
 
-<ProduceRecipeDialog @ref="_produceDialog"
-                     RecipeId="@Id"
-                     RecipeTitle="@(_model?.Title ?? string.Empty)" />
-
 <PageTitle>@(_model?.Title ?? "Recipe")</PageTitle>
 
-@if (!_ready)
-{
-    <div class="d-flex justify-content-center py-5">
-        <div class="spinner-border text-success" role="status">
-            <span class="visually-hidden">Loading…</span>
+<div class="rv-page">
+    @if (!_ready)
+    {
+        <div class="text-center mt-5">
+            <div class="rv-spinner" role="status">
+                <span class="visually-hidden">Loading…</span>
+            </div>
         </div>
-    </div>
-}
-else if (_notFound)
-{
-    <div class="container py-4" style="max-width: 860px;">
-        <div class="alert alert-danger">
+    }
+    else if (_notFound)
+    {
+        <div class="alert alert-danger mt-4">
             Recipe not found. It may have been deleted.
             <a href="/recipes" class="alert-link ms-2">Back to Recipes</a>
         </div>
-    </div>
-}
-else
-{
-    var recipe = _model!;
+    }
+    else
+    {
+        var recipe = _model!;
 
-    <div class="rv-container">
+        @* ── Back button ── *@
+        <div class="rv-back-row">
+            <a href="/recipes" class="rv-btn rv-btn-outline">
+                <i class="bi bi-arrow-left"></i> Back
+            </a>
+        </div>
 
-        @* ── Header card ── *@
-        <div class="rv-header-card">
-            <div class="rv-header-main">
-                <div>
-                    <div class="rv-title-row">
-                        <h1 class="rv-title">@recipe.Title</h1>
-                        @if (recipe.IsSubRecipe)
-                        {
-                            <span class="rv-sub-badge">
-                                <i class="bi bi-diagram-3"></i> Sub-Recipe
-                            </span>
-                        }
+        @* ── Two-column layout ── *@
+        <div class="rv-layout">
+
+            @* ════ LEFT PANEL ════ *@
+            <aside class="rv-left">
+
+                @* Edit button *@
+                @if (_priv)
+                {
+                    <div class="rv-edit-row">
+                        <a href="/recipes/edit/@recipe.RecipeId" class="rv-btn rv-btn-primary rv-btn-full">
+                            <i class="bi bi-pencil"></i> Edit Recipe
+                        </a>
                     </div>
-                    <div class="rv-meta-row">
-                        @if (!string.IsNullOrWhiteSpace(recipe.Category))
-                        {
-                            <span class="rv-pill">@recipe.Category</span>
-                        }
-                        @if (!string.IsNullOrWhiteSpace(recipe.RecipeType))
-                        {
-                            <span class="rv-pill rv-pill-type">@recipe.RecipeType</span>
-                        }
-                        @if (recipe.CreatedAt.HasValue)
-                        {
-                            <span class="rv-meta-text">
-                                <i class="bi bi-calendar3 me-1"></i>
-                                @recipe.CreatedAt.Value.ToString("MMM d, yyyy")
-                            </span>
-                        }
-                    </div>
+                }
+
+                @* Image card *@
+                <div class="rv-image-card">
+                    @if (!string.IsNullOrWhiteSpace(recipe.ImageData))
+                    {
+                        <img src="@recipe.ImageData" alt="@recipe.Title" class="rv-image" />
+                    }
+                    else
+                    {
+                        <div class="rv-image-placeholder">
+                            <i class="bi bi-image"></i>
+                            <span>@recipe.Title</span>
+                        </div>
+                    }
                 </div>
 
-                <div class="rv-stat-group">
+                @* Title *@
+                <h1 class="rv-title">@recipe.Title</h1>
+
+                @* Meta list *@
+                <ul class="rv-meta-list">
+                    @if (!string.IsNullOrWhiteSpace(recipe.Category))
+                    {
+                        <li>
+                            <i class="bi bi-tag"></i>
+                            <span class="rv-meta-label">Category</span>
+                            <span class="rv-meta-value">@recipe.Category</span>
+                        </li>
+                    }
+                    @if (!string.IsNullOrWhiteSpace(recipe.RecipeType))
+                    {
+                        <li>
+                            <i class="bi bi-clock"></i>
+                            <span class="rv-meta-label">Menu</span>
+                            <span class="rv-meta-value">@recipe.RecipeType</span>
+                        </li>
+                    }
                     @if (recipe.YieldAmount.HasValue)
                     {
-                        <div class="rv-stat">
-                            <span class="rv-stat-label">Yield</span>
-                            <span class="rv-stat-value">
+                        <li>
+                            <i class="bi bi-people"></i>
+                            <span class="rv-meta-label">Yield</span>
+                            <span class="rv-meta-value">
                                 @recipe.YieldAmount.Value.ToString("G29")
                                 @if (!string.IsNullOrWhiteSpace(recipe.YieldUnit))
                                 {
-                                    <span class="rv-stat-unit"> @recipe.YieldUnit</span>
+                                    <text> @recipe.YieldUnit</text>
                                 }
                             </span>
-                        </div>
+                        </li>
                     }
-                    @if (recipe.CostPerYield.HasValue)
+                    @if (!string.IsNullOrWhiteSpace(recipe.PortionSize))
                     {
-                        <div class="rv-stat">
-                            <span class="rv-stat-label">Cost / Yield</span>
-                            <span class="rv-stat-value rv-cost">@recipe.CostPerYield.Value.ToString("C2")</span>
+                        <li>
+                            <i class="bi bi-cup-hot"></i>
+                            <span class="rv-meta-label">Portion</span>
+                            <span class="rv-meta-value">@recipe.PortionSize</span>
+                        </li>
+                    }
+                </ul>
+
+                @* Allergens *@
+                @if (!string.IsNullOrWhiteSpace(recipe.Allergens))
+                {
+                    <div class="rv-section-block">
+                        <h4 class="rv-section-label">Allergens</h4>
+                        <div class="rv-allergen-row">
+                            <i class="bi bi-exclamation-triangle-fill"></i>
+                            <span>Contains: @recipe.Allergens</span>
+                        </div>
+                    </div>
+                }
+
+
+            </aside>
+
+            @* ════ RIGHT PANEL ════ *@
+            <main class="rv-right">
+
+                @* ── Ingredients ── *@
+                <div class="rv-card">
+                    <div class="rv-card-header">
+                        <span>Ingredients</span>
+                        @if (recipe.YieldAmount.HasValue && recipe.YieldAmount.Value > 0)
+                        {
+                            <div class="rv-scale-wrap">
+                                <label class="rv-scale-label">Scale:</label>
+                                <select class="rv-scale-select" value="@_scaleServings"
+                                        @onchange="e => { if (decimal.TryParse(e.Value?.ToString(), out var v)) _scaleServings = v; }">
+                                    @foreach (var opt in GetScaleOptions(recipe.YieldAmount.Value, recipe.YieldUnit))
+                                    {
+                                        <option value="@opt.Value">@opt.Label</option>
+                                    }
+                                </select>
+                            </div>
+                        }
+                    </div>
+
+                    @if (!recipe.RecipeIngredients.Any())
+                    {
+                        <p class="rv-card-empty">No ingredients added.</p>
+                    }
+                    else
+                    {
+                        <div class="rv-table-wrap">
+                            <table class="rv-ing-table">
+                                <thead>
+                                    <tr>
+                                        <th class="col-qty">Quantity</th>
+                                        <th>Ingredient</th>
+                                        <th>Prep Notes</th>
+                                        <th>Supplier</th>
+                                        <th class="col-inv">Inv</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var line in recipe.RecipeIngredients.OrderBy(l => l.SortOrder))
+                                    {
+                                        <tr>
+                                            <td class="col-qty">
+                                                @ScaledQty(line.Quantity, recipe.YieldAmount)
+                                                @if (line.Unit is not null)
+                                                {
+                                                    <span class="rv-unit">@line.Unit.Abbreviation</span>
+                                                }
+                                            </td>
+                                            <td>
+                                                @if (line.SubRecipeId.HasValue)
+                                                {
+                                                    <span class="rv-subrecipe-pill">
+                                                        <i class="bi bi-diagram-3"></i>
+                                                        @(line.SubRecipe?.Title ?? $"Sub-Recipe #{line.SubRecipeId}")
+                                                    </span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="rv-ing-name">@(line.Ingredient?.Name ?? "—")</span>
+                                                }
+                                            </td>
+                                            <td class="rv-prepnote">
+                                                @(string.IsNullOrWhiteSpace(line.PrepNote) ? "—" : line.PrepNote)
+                                            </td>
+                                            <td class="rv-supplier">
+                                                @(line.Ingredient?.Vendor?.Name ?? "—")
+                                            </td>
+                                            <td class="col-inv">
+                                                @if (line.IngredientId.HasValue)
+                                                {
+                                                    <a href="/inventory" class="rv-inv-link" title="View in inventory">
+                                                        <i class="bi bi-box-seam"></i>
+                                                    </a>
+                                                }
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
                         </div>
                     }
                 </div>
-            </div>
 
-            <div class="rv-actions">
-                <a href="/recipes" class="btn btn-outline-secondary btn-sm">
-                    <i class="bi bi-arrow-left me-1"></i> Back
-                </a>
-                @if (_priv)
-                {
-                    <a href="/recipes/edit/@recipe.RecipeId" class="btn btn-success btn-sm">
-                        <i class="bi bi-pencil me-1"></i> Edit
-                    </a>
-                    <button class="btn btn-primary btn-sm"
-                            @onclick="() => _produceDialog!.OpenAsync()">
-                        <i class="bi bi-play-circle me-1"></i> Produce
-                    </button>
-                }
-            </div>
-        </div>
+                @* ── Steps ── *@
+                <div class="rv-card">
+                    <div class="rv-card-header">
+                        <span>Step-by-Step Instructions</span>
+                    </div>
 
-        <div class="rv-body">
-
-            @* ── Ingredients ── *@
-            <div class="rv-card">
-                <div class="rv-card-header">
-                    <i class="bi bi-basket2 me-2"></i>Ingredients
-                    <span class="rv-count-badge">@recipe.RecipeIngredients.Count</span>
-                </div>
-
-                @if (!recipe.RecipeIngredients.Any())
-                {
-                    <p class="rv-empty">No ingredients added.</p>
-                }
-                else
-                {
-                    <table class="rv-table">
-                        <thead>
-                            <tr>
-                                <th>#</th>
-                                <th>Ingredient / Sub-Recipe</th>
-                                <th>Quantity</th>
-                                <th>Unit</th>
-                                <th>Prep Note</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var line in recipe.RecipeIngredients.OrderBy(l => l.SortOrder))
+                    @if (!recipe.Steps.Any())
+                    {
+                        <p class="rv-card-empty">No preparation steps provided.</p>
+                    }
+                    else
+                    {
+                        <div class="rv-steps">
+                            @foreach (var step in recipe.Steps.OrderBy(s => s.StepNumber))
                             {
-                                <tr>
-                                    <td class="rv-sort-num">@line.SortOrder</td>
-                                    <td>
-                                        @if (line.SubRecipeId.HasValue)
+                                <div class="rv-step">
+                                    <span class="rv-step-num">@step.StepNumber</span>
+                                    <div class="rv-step-body">
+                                        <p class="rv-step-text">@step.Instructions</p>
+                                        @if (!string.IsNullOrWhiteSpace(step.Duration)
+                                          || !string.IsNullOrWhiteSpace(step.Temperature)
+                                          || !string.IsNullOrWhiteSpace(step.Equipment))
                                         {
-                                            <span class="rv-subrecipe-line">
-                                                <i class="bi bi-diagram-3 me-1"></i>
-                                                @(line.SubRecipe?.Title ?? $"Sub-Recipe #{line.SubRecipeId}")
-                                            </span>
+                                            <div class="rv-step-meta">
+                                                @if (!string.IsNullOrWhiteSpace(step.Duration))
+                                                {
+                                                    <span class="rv-step-chip">
+                                                        <i class="bi bi-clock"></i> @step.Duration
+                                                    </span>
+                                                }
+                                                @if (!string.IsNullOrWhiteSpace(step.Temperature))
+                                                {
+                                                    <span class="rv-step-chip">
+                                                        <i class="bi bi-thermometer-half"></i> @step.Temperature
+                                                    </span>
+                                                }
+                                                @if (!string.IsNullOrWhiteSpace(step.Equipment))
+                                                {
+                                                    <span class="rv-step-chip">
+                                                        <i class="bi bi-tools"></i> @step.Equipment
+                                                    </span>
+                                                }
+                                            </div>
                                         }
-                                        else
-                                        {
-                                            @(line.Ingredient?.Name ?? "—")
-                                        }
-                                    </td>
-                                    <td>@line.Quantity.ToString("G29")</td>
-                                    <td>@(line.Unit?.Abbreviation ?? "—")</td>
-                                    <td class="rv-prepnote">@(line.PrepNote ?? "—")</td>
-                                </tr>
+                                    </div>
+                                </div>
                             }
-                        </tbody>
-                    </table>
-                }
-            </div>
-
-            @* ── Steps ── *@
-            <div class="rv-card">
-                <div class="rv-card-header">
-                    <i class="bi bi-list-ol me-2"></i>Preparation Steps
-                    <span class="rv-count-badge">@recipe.Steps.Count</span>
+                        </div>
+                    }
                 </div>
 
-                @if (!recipe.Steps.Any())
-                {
-                    <p class="rv-empty">No preparation steps added.</p>
-                }
-                else
-                {
-                    <ol class="rv-steps">
-                        @foreach (var step in recipe.Steps.OrderBy(s => s.StepNumber))
-                        {
-                            <li class="rv-step">
-                                <div class="rv-step-body">
-                                    <p class="rv-step-instructions">@step.Instructions</p>
-
-                                    @if (!string.IsNullOrWhiteSpace(step.Duration)
-                                      || !string.IsNullOrWhiteSpace(step.Temperature)
-                                      || !string.IsNullOrWhiteSpace(step.Equipment))
-                                    {
-                                        <div class="rv-step-meta">
-                                            @if (!string.IsNullOrWhiteSpace(step.Duration))
-                                            {
-                                                <span class="rv-step-tag">
-                                                    <i class="bi bi-clock me-1"></i>@step.Duration
-                                                </span>
-                                            }
-                                            @if (!string.IsNullOrWhiteSpace(step.Temperature))
-                                            {
-                                                <span class="rv-step-tag">
-                                                    <i class="bi bi-thermometer-half me-1"></i>@step.Temperature
-                                                </span>
-                                            }
-                                            @if (!string.IsNullOrWhiteSpace(step.Equipment))
-                                            {
-                                                <span class="rv-step-tag">
-                                                    <i class="bi bi-tools me-1"></i>@step.Equipment
-                                                </span>
-                                            }
-                                        </div>
-                                    }
-                                </div>
-                            </li>
-                        }
-                    </ol>
-                }
-            </div>
-
+            </main>
         </div>
-    </div>
-}
+    }
+</div>
 
 @code {
 
@@ -227,7 +277,8 @@ else
     private bool _ready;
     private bool _notFound;
     private bool _priv;
-    private ProduceRecipeDialog? _produceDialog;
+    private string? _sourceRestaurant;
+    private decimal _scaleServings = 1;
 
     protected override async Task OnInitializedAsync()
     {
@@ -252,6 +303,39 @@ else
         _model = await RecipeService.GetByIdAsync(Id, allowedLocationIds);
         _notFound = _model is null;
 
+        if (_model is not null)
+        {
+            _sourceRestaurant = ctx.AccessibleLocations
+                .FirstOrDefault(l => l.Id == _model.LocationId)?.Name;
+
+            // Default scale = original yield
+            _scaleServings = _model.YieldAmount ?? 1;
+        }
+
         _ready = true;
+    }
+
+    // ── Scale helpers ─────────────────────────────────────────────────────────
+
+    private record ScaleOption(decimal Value, string Label);
+
+    private List<ScaleOption> GetScaleOptions(decimal baseYield, string? unit)
+    {
+        var opts = new List<ScaleOption>();
+        decimal[] multipliers = { 0.5m, 1m, 2m, 3m, 4m, 6m, 8m, 10m, 12m };
+        var suffix = string.IsNullOrWhiteSpace(unit) ? "servings" : unit;
+        foreach (var m in multipliers)
+        {
+            var servings = baseYield * m;
+            opts.Add(new ScaleOption(servings, $"{servings.ToString("G29")} {suffix}"));
+        }
+        return opts;
+    }
+
+    private string ScaledQty(decimal originalQty, decimal? baseYield)
+    {
+        if (!baseYield.HasValue || baseYield.Value == 0) return originalQty.ToString("G29");
+        var scaled = originalQty / baseYield.Value * _scaleServings;
+        return scaled.ToString("G29");
     }
 }

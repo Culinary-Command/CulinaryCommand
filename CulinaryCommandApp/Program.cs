@@ -103,6 +103,11 @@ builder.Services
 
       options.TokenValidationParameters.NameClaimType = "cognito:username";
       options.TokenValidationParameters.RoleClaimType = "cognito:groups";
+
+      // Allow correlation/nonce cookies over plain HTTP in development
+      options.CorrelationCookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;
+      options.NonceCookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;
+
       options.Events.OnRedirectToIdentityProvider = ctx =>
         {
             // Forces correct scheme/host behind nginx

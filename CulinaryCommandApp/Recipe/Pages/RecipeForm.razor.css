@@ -1,0 +1,108 @@
+/* ── Recipe image upload card ─────────────────────────────────────────────── */
+
+.rf-image-card {
+    width: 100%;
+    max-width: 280px;
+    border-radius: 12px;
+    border: 2px dashed #d1d5db;
+    overflow: hidden;
+    background: #f9fafb;
+    transition: border-color 0.2s;
+}
+
+.rf-image-card:hover {
+    border-color: #9ca3af;
+}
+
+.rf-image-placeholder {
+    padding: 28px 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    color: #9ca3af;
+    text-align: center;
+}
+
+.rf-image-placeholder i {
+    font-size: 2.2rem;
+}
+
+.rf-image-placeholder p {
+    margin: 0;
+    font-size: 0.88rem;
+    font-weight: 500;
+    color: #6b7280;
+}
+
+.rf-upload-hint {
+    font-size: 0.76rem !important;
+    color: #9ca3af !important;
+}
+
+.rf-image-preview {
+    position: relative;
+}
+
+.rf-preview-img {
+    width: 100%;
+    max-height: 240px;
+    object-fit: cover;
+    display: block;
+}
+
+.rf-remove-img {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: rgba(17, 24, 39, 0.65);
+    color: #ffffff;
+    border: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+    cursor: pointer;
+    transition: background 0.15s;
+}
+
+.rf-remove-img:hover {
+    background: rgba(220, 38, 38, 0.85);
+}
+
+/* ── Dietary tag chip grid ───────────────────────────────────────────────── */
+
+.rf-tag-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.rf-tag-chip {
+    display: inline-flex;
+    align-items: center;
+    padding: 6px 14px;
+    border-radius: 999px;
+    border: 1.5px solid #d1d5db;
+    background: #ffffff;
+    color: #374151;
+    font-size: 0.84rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s;
+    user-select: none;
+}
+
+.rf-tag-chip:hover {
+    border-color: #0a8f3c;
+    color: #0a8f3c;
+}
+
+.rf-tag-chip.checked {
+    background: #dcfce7;
+    border-color: #0a8f3c;
+    color: #166534;
+}

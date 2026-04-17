@@ -39,14 +39,11 @@ else if (_notFound)
 else
 {
     <div class="container py-4" style="max-width: 860px;">
-        <nav aria-label="breadcrumb" class="mb-3">
-            <ol class="breadcrumb">
-                <li class="breadcrumb-item">
-                    <a href="/recipes">Recipes</a>
-                </li>
-                <li class="breadcrumb-item active" aria-current="page">Edit — @_model!.Title</li>
-            </ol>
-        </nav>
+        <div class="re-back-row">
+            <a href="/recipes/view/@Id" class="re-back-btn">
+                <i class="bi bi-arrow-left"></i> Back
+            </a>
+        </div>
 
         <RecipeForm Model="_model!"
                     FormTitle="Edit Recipe"

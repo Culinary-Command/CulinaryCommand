@@ -34,6 +34,7 @@ namespace CulinaryCommandApp.Recipe.Services
             return _db.Recipes
                 .Include(r => r.RecipeIngredients)
                     .ThenInclude(ri => ri.Ingredient)
+                        .ThenInclude(i => i!.Vendor)
                 .Include(r => r.RecipeIngredients)
                     .ThenInclude(ri => ri.Unit)
                 .Include(r => r.RecipeIngredients)
@@ -47,6 +48,7 @@ namespace CulinaryCommandApp.Recipe.Services
             return _db.Recipes
                 .Include(r => r.RecipeIngredients)
                     .ThenInclude(ri => ri.Ingredient)
+                        .ThenInclude(i => i!.Vendor)
                 .Include(r => r.RecipeIngredients)
                     .ThenInclude(ri => ri.Unit)
                 .Include(r => r.RecipeIngredients)
