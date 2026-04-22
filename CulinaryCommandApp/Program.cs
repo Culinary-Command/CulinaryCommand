@@ -104,9 +104,9 @@ builder.Services
       options.TokenValidationParameters.NameClaimType = "cognito:username";
       options.TokenValidationParameters.RoleClaimType = "cognito:groups";
 
-      // Allow correlation/nonce cookies over plain HTTP in development
-      options.CorrelationCookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;
-      options.NonceCookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;
+      // OIDC correlation/nonce cookies use SameSite=None, so browsers require Secure.
+      options.CorrelationCookie.SecurePolicy = CookieSecurePolicy.Always;
+      options.NonceCookie.SecurePolicy = CookieSecurePolicy.Always;
 
       options.Events.OnRedirectToIdentityProvider = ctx =>
         {
@@ -263,10 +263,9 @@ if (!app.Environment.IsDevelopment())
     app.UseExceptionHandler("/Error", createScopeForErrors: true);
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
-    // app.UseHttpsRedirection();
 }
 
-// Temporarily disable HTTPS redirect for development
+app.UseHttpsRedirection();
 
 app.UseStaticFiles();
 app.UseAntiforgery();

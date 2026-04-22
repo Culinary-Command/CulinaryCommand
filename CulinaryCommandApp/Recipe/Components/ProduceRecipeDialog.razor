@@ -62,7 +62,8 @@
                                    class="form-control @(_submitAttempted && _servings <= 0 ? "is-invalid" : "")"
                                    min="1"
                                    step="1"
-                                   @bind="_servings" />
+                                   @bind="_servings"
+                                   @bind:event="oninput" />
                             @if (_submitAttempted && _servings <= 0)
                             {
                                 <div class="invalid-feedback">Servings must be at least 1.</div>
