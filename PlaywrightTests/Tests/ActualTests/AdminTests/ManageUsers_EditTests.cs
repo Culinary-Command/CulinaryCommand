@@ -28,6 +28,7 @@ public class ManageUsers_EditTests : AuthenticatedTestBase
             var inputs = Page.Locator("input.form-control");
             await Expect(inputs).ToHaveCountAsync(2, new() { Timeout = DefaultUiTimeout });
             await inputs.Nth(0).FillAsync(updatedName);
+            await PauseForPhotoAsync("Edit User form with updated name before saving");
 
             var saveButton = Page.GetByRole(AriaRole.Button, new() { Name = "Save" });
             await Expect(saveButton).ToBeEnabledAsync(new() { Timeout = DefaultUiTimeout });
@@ -36,6 +37,7 @@ public class ManageUsers_EditTests : AuthenticatedTestBase
 
             var updatedUserRow = await WaitForUserRow(email, shouldExist: true, timeoutMs: LongUiTimeout);
             await Expect(updatedUserRow).ToContainTextAsync(updatedName, new() { Timeout = DefaultUiTimeout });
+            await PauseForPhotoAsync("Users list showing saved updated user name");
         }
         finally
         {
@@ -60,6 +62,7 @@ public class ManageUsers_EditTests : AuthenticatedTestBase
             var inputs = Page.Locator("input.form-control");
             await Expect(inputs).ToHaveCountAsync(2, new() { Timeout = DefaultUiTimeout });
             await inputs.Nth(0).FillAsync(unsavedName);
+            await PauseForPhotoAsync("Edit User form with unsaved name before canceling");
 
             await Page.GetByRole(AriaRole.Button, new() { Name = "Cancel" }).ClickAsync();
 
@@ -68,6 +71,7 @@ public class ManageUsers_EditTests : AuthenticatedTestBase
             var userRow = await WaitForUserRow(email, shouldExist: true, timeoutMs: LongUiTimeout);
             await Expect(userRow).ToContainTextAsync(originalName, new() { Timeout = DefaultUiTimeout });
             await Expect(userRow).Not.ToContainTextAsync(unsavedName, new() { Timeout = DefaultUiTimeout });
+            await PauseForPhotoAsync("Users list after cancel keeps the original user name");
         }
         finally
         {
@@ -91,6 +95,7 @@ public class ManageUsers_EditTests : AuthenticatedTestBase
 
         await Expect(Page.GetByText("Email is required."))
             .ToBeVisibleAsync(new() { Timeout = DefaultUiTimeout });
+        await PauseForPhotoAsync("Invite User form showing required email validation");
 
         Assert.Contains("/users/create", Page.Url);
     }
@@ -111,6 +116,7 @@ public class ManageUsers_EditTests : AuthenticatedTestBase
 
         await Expect(Page.GetByText("Enter a valid email."))
             .ToBeVisibleAsync(new() { Timeout = DefaultUiTimeout });
+        await PauseForPhotoAsync("Invite User form showing invalid email validation");
 
         Assert.Contains("/users/create", Page.Url);
     }
@@ -131,6 +137,7 @@ public class ManageUsers_EditTests : AuthenticatedTestBase
         var roleSelect = Page.Locator("select.form-select");
         await Expect(roleSelect).ToBeVisibleAsync(new() { Timeout = DefaultUiTimeout });
         await roleSelect.SelectOptionAsync(new SelectOptionValue { Label = "Manager" });
+        await PauseForPhotoAsync("Invite User form filled before sending invite");
 
         var sendInviteButton = Page.GetByRole(AriaRole.Button, new() { Name = "Send Invite" });
         await Expect(sendInviteButton).ToBeEnabledAsync(new() { Timeout = DefaultUiTimeout });
@@ -179,6 +186,7 @@ public class ManageUsers_EditTests : AuthenticatedTestBase
         await editButton.EvaluateAsync("button => button.click()");
 
         await WaitForEditUserPageReady();
+        await PauseForPhotoAsync("Edit User page opened from expanded user row");
     }
 
     private async Task DeleteUserIfExists(string email)

@@ -26,9 +26,11 @@ public class RecipeTests : AuthenticatedTestBase
             await CreateIngredientIfMissing(ingredientName, ingredientSku);
             await CreateRecipe(recipeName, ingredientName);
             await VerifyRecipeExists(recipeName);
+            await PauseForPhotoAsync("recipe created and visible in the recipe list");
 
             await EditRecipeTitle(recipeName, editedRecipeName);
             await VerifyRecipeExists(editedRecipeName);
+            await PauseForPhotoAsync("edited recipe visible in the recipe list");
 
             await OpenRecipeAndVerifyProduceValidation(editedRecipeName);
 
@@ -272,6 +274,7 @@ public class RecipeTests : AuthenticatedTestBase
 
         await Page.WaitForURLAsync(url => url.Contains("/recipes/view/"), new() { Timeout = LongUiTimeout });
         await Page.WaitForLoadStateAsync(LoadState.NetworkIdle);
+        await PauseForPhotoAsync("recipe detail page before opening the Produce modal");
 
         var openProduceButton = Page.GetByRole(AriaRole.Button, new() { Name = "Produce" }).First;
         await Expect(openProduceButton).ToBeVisibleAsync(new() { Timeout = DefaultUiTimeout });
@@ -279,11 +282,13 @@ public class RecipeTests : AuthenticatedTestBase
 
         var modal = await WaitForOpenDialog("Produce Recipe");
         await Expect(modal).ToBeVisibleAsync(new() { Timeout = DefaultUiTimeout });
+        await PauseForPhotoAsync("Produce Recipe modal open");
 
         var servingsInput = modal.Locator("input[type='number']").First;
         await servingsInput.FillAsync("0");
         await servingsInput.PressAsync("Tab");
         await Page.WaitForTimeoutAsync(300);
+        await PauseForPhotoAsync("Produce Recipe modal showing zero-serving validation state");
 
         var isValid = await servingsInput.EvaluateAsync<bool>("input => input.checkValidity()");
         var validationMessage = await servingsInput.EvaluateAsync<string>("input => input.validationMessage");

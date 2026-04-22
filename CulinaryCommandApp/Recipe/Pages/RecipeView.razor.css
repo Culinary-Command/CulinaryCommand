@@ -21,6 +21,9 @@
 /* ── Edit button row (inside left panel, above image) ────────────────────── */
 
 .rv-edit-row {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
     margin-bottom: 10px;
 }
 

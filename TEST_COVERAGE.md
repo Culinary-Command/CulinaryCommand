@@ -66,6 +66,39 @@ Current coverage:
 - Dismiss inventory delete confirmation and verify the item remains
 - Clean up created inventory test data safely
 
+## Location Management
+
+Source: [PlaywrightTests/Tests/ActualTests/AdminTests/LocationManagementTests.cs](/Users/wyatthunter/projects/sdmay26-44/PlaywrightTests/Tests/ActualTests/AdminTests/LocationManagementTests.cs)
+
+Current coverage:
+- Navigate to Settings from the profile dropdown
+- Open the `Locations` settings tab
+- Create a location
+- Verify the created location appears in the location list
+- Open the location `Manage Users` panel
+- Edit the location details
+- Open the location configuration page
+- Verify vendors, measurement units, and storage locations sections are available
+- Delete the created location
+- Clean up created location test data safely
+
+## Task Management
+
+Source: [PlaywrightTests/Tests/ActualTests/AdminTests/TaskManagementTests.cs](/Users/wyatthunter/projects/sdmay26-44/PlaywrightTests/Tests/ActualTests/AdminTests/TaskManagementTests.cs)
+
+Current coverage:
+- Create a manual task from `/assign-tasks`
+- Verify the task appears in the `Pending` task board column
+- Move the task to `In Progress`
+- Mark the task `Completed`
+- Delete the created task
+- Create a reusable task template
+- Search and select the template in the task library
+- Quick-assign selected templates into board tasks
+- Create a task list with a selected template
+- Select a task list and assign it through Quick Assign
+- Archive created templates and task lists during cleanup
+
 ## Shared Test Pattern
 
 Shared setup:

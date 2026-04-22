@@ -16,6 +16,17 @@ public class AuthenticatedTestBase : PageTest
         };
     }
 
+    protected async Task PauseForPhotoAsync(string label, IPage? page = null)
+    {
+        var enabled = Environment.GetEnvironmentVariable("PHOTO_PAUSE");
+        if (!string.Equals(enabled, "1", StringComparison.OrdinalIgnoreCase) &&
+            !string.Equals(enabled, "true", StringComparison.OrdinalIgnoreCase))
+            return;
+
+        Console.WriteLine($"PHOTO_PAUSE: {label}. Resume in the Playwright Inspector when ready.");
+        await (page ?? Page).PauseAsync();
+    }
+
     public override async Task DisposeAsync()
     {
         try
@@ -45,4 +56,3 @@ public class AuthenticatedTestBase : PageTest
         await base.DisposeAsync();
     }
 }
-

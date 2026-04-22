@@ -24,6 +24,7 @@ public class ManageUsersTests : AuthenticatedTestBase
         {
             await CreateUser(firstName, lastName, email);
             await VerifyUserExists(email);
+            //await PauseForPhotoAsync("new invited user visible in the Users list");
 
             var inviteUrl = await GetInviteLink(email);
             await OpenInviteAndVerifySetupPage(inviteUrl);
@@ -54,6 +55,7 @@ public class ManageUsersTests : AuthenticatedTestBase
         var roleSelect = Page.Locator("select.form-select");
         await Expect(roleSelect).ToBeVisibleAsync(new() { Timeout = DefaultUiTimeout });
         await roleSelect.SelectOptionAsync(new SelectOptionValue { Label = "Manager" });
+        await PauseForPhotoAsync("Add User form filled before sending invite");
 
         var sendInviteButton = Page.GetByRole(AriaRole.Button, new() { Name = "Send Invite" });
         await Expect(sendInviteButton).ToBeEnabledAsync(new() { Timeout = DefaultUiTimeout });
@@ -111,6 +113,7 @@ public class ManageUsersTests : AuthenticatedTestBase
 
         var invitePill = userItem.Locator(".invite-pill").First;
         await Expect(invitePill).ToBeVisibleAsync(new() { Timeout = LongUiTimeout });
+        await PauseForPhotoAsync("expanded invited user row showing setup link");
 
         var inviteUrl = (await invitePill.InnerTextAsync())?.Trim();
 
@@ -142,6 +145,7 @@ public class ManageUsersTests : AuthenticatedTestBase
 
         await Expect(passwordInputs.Nth(0)).ToBeVisibleAsync(new() { Timeout = DefaultUiTimeout });
         await Expect(passwordInputs.Nth(1)).ToBeVisibleAsync(new() { Timeout = DefaultUiTimeout });
+        await PauseForPhotoAsync("invited user's Activate Your Account page", invitePage);
 
         await invitePage.CloseAsync();
     }
