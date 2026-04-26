@@ -74,5 +74,11 @@ namespace CulinaryCommand.Data.Entities
         public string Priority { get; set; } = "Normal";
         public string? Notes { get; set; }
 
+        // Smart Task
+        public Guid? SmartTaskRunId { get; set; }
+
+        [MaxLength(32)]
+        public string? GeneratedBy { get; set; }
+
     }
 }

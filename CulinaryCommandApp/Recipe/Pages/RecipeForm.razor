@@ -1,6 +1,7 @@
 @rendermode InteractiveServer
 @implements IDisposable
 
+@using CulinaryCommand.Data.Enums
 @using CulinaryCommand.Services
 @using CulinaryCommand.Services.UserContextSpace
 @using CulinaryCommandApp.Inventory.Entities
@@ -147,6 +148,40 @@ else {
                 </div>
             </div>
 
+            <fieldset class="recipe-section">
+                <legend class="recipe-section__legend">Service Timing</legend>
+
+                <div class="row g-3">
+                    <div class="col-md-4">
+                        <label for="serviceWindow" class="form-label">Service Window</label>
+                        <InputSelect id="serviceWindow"
+                                     class="form-select"
+                                     @bind-Value="EditableRecipe.ServiceWindow">
+                            <option value="">— Not set —</option>
+                            @foreach (var window in Enum.GetValues<CulinaryCommand.Data.Enums.ServiceWindow>())
+                            {
+                                <option value="@window">@window</option>
+                            }
+                        </InputSelect>
+                    </div>
+
+                    <div class="col-md-4">
+                        <label for="serviceTimeOverride" class="form-label">Service Time Override</label>
+                        <InputText id="serviceTimeOverride"
+                                   class="form-control"
+                                   type="time"
+                                   @bind-Value="ServiceTimeOverrideText" />
+                    </div>
+
+                    <div class="col-md-4">
+                        <label for="prepLeadTimeMinutes" class="form-label">Manual Prep Lead Time (min)</label>
+                        <InputNumber id="prepLeadTimeMinutes"
+                                     class="form-control"
+                                     @bind-Value="EditableRecipe.PrepLeadTimeMinutes" />
+                    </div>
+                </div>
+            </fieldset>
+
             @* Toggle sub-recipe*@
             <div class="form-check form-switch mb-4">
                 <input class="form-check-input"
@@ -160,8 +195,6 @@ else {
                     When enabled, this recipe will appear in the sub-recipe picker of other recipes.
                 </div>
             </div>
-
-            <hr />
 
             <hr />
 
@@ -393,6 +426,18 @@ else {
     [Parameter] public Recipe Model { get; set; } = new();
     [Parameter] public EventCallback OnValidSubmit { get; set; }
     [Parameter] public string FormTitle { get; set; } = "Recipe";
+
+    // Alias used by instructions.md snippets
+    private Recipe EditableRecipe => Model;
+
+    // Helpers for UI bindings
+    private string ServiceTimeOverrideText
+    {
+        get => EditableRecipe.ServiceTimeOverride?.ToString("HH:mm") ?? string.Empty;
+        set => EditableRecipe.ServiceTimeOverride = string.IsNullOrWhiteSpace(value)
+            ? null
+            : TimeOnly.Parse(value);
+    }
 
     // UI State
     private bool _ready;

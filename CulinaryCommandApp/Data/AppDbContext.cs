@@ -39,6 +39,7 @@ namespace CulinaryCommand.Data
         public DbSet<V.LocationVendor> LocationVendors => Set<V.LocationVendor>();
         public DbSet<Feedback> Feedbacks { get; set; }
         public DbSet<LocationUnit> LocationUnits => Set<LocationUnit>();
+        public DbSet<SmartTaskRun> SmartTaskRuns => Set<SmartTaskRun>();
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -167,6 +168,23 @@ namespace CulinaryCommand.Data
             modelBuilder.Entity<TaskListItem>()
                 .HasIndex(x => new { x.TaskListId, x.TaskTemplateId })
                 .IsUnique();
+
+            // Smart Task
+            modelBuilder.Entity<Tasks>()
+                .HasIndex(t => t.SmartTaskRunId)
+                .HasDatabaseName("IX_Tasks_SmartTaskRunId");
+
+            modelBuilder.Entity<SmartTaskRun>()
+                .HasOne(r => r.Location)
+                .WithMany()
+                .HasForeignKey(r => r.LocationId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<SmartTaskRun>()
+                .HasOne(r => r.TriggeredByUser)
+                .WithMany()
+                .HasForeignKey(r => r.TriggeredByUserId)
+                .OnDelete(DeleteBehavior.Restrict);
 
             // RecipeIngredient to parent Recipe
             modelBuilder.Entity<CulinaryCommandApp.Recipe.Entities.RecipeIngredient>()

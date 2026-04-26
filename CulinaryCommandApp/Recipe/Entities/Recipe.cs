@@ -1,5 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using CulinaryCommand.Data.Entities;
+using CulinaryCommand.Data.Enums;
+using System;
 
 namespace CulinaryCommandApp.Recipe.Entities
 {
@@ -41,5 +43,12 @@ namespace CulinaryCommandApp.Recipe.Entities
         public ICollection<RecipeStep> Steps { get; set; } = new List<RecipeStep>();
         public ICollection<RecipeSubRecipe> SubRecipeUsages { get; set; } = new List<RecipeSubRecipe>();
         public ICollection<RecipeSubRecipe> UsedInRecipes { get; set; } = new List<RecipeSubRecipe>();
+
+        // Smart Task
+        public ServiceWindow? ServiceWindow { get; set; }
+        public TimeOnly? ServiceTimeOverride { get; set; }
+
+        [Range(0, 1440)]
+        public int? PrepLeadTimeMinutes { get; set; }
     }
 }
