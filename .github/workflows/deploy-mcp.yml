@@ -1,0 +1,47 @@
+name: Deploy SmartTask MCP Lambda
+
+on:
+  push:
+    branches: ["main"]
+    paths:
+      - "CulinaryCommandSmartTaskMcp/**"
+      - ".github/workflows/deploy-mcp.yml"
+
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    env:
+      AWS_REGION: us-east-2
+      AWS_ACCOUNT_NUMBER: ${{ vars.AWS_ACCOUNT_NUMBER }}
+      LAMBDA_FUNCTION_NAME: ${{ vars.LAMBDA_FUNCTION_NAME }}
+      PROJECT_PATH: CulinaryCommandSmartTaskMcp/CulinaryCommandSmartTaskMcp.csproj
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::${{ env.AWS_ACCOUNT_NUMBER }}:role/culinary-command-iac-role
+          aws-region: ${{ env.AWS_REGION }}
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 9.0.x
+      - run: dotnet tool install --global Amazon.Lambda.Tools
+
+      - name: Add .NET tools to PATH
+        run: echo "${HOME}/.dotnet/tools" >> $GITHUB_PATH
+      
+      - name: Package MCP Lambda
+        working-directory: CulinaryCommandSmartTaskMcp
+        run: dotnet lambda package --output-package ../smarttask.zip
+      
+      - name: Update Lambda code
+        run: |
+          aws lambda update-function-code \
+            --function-name "${LAMBDA_FUNCTION_NAME}" \
+            --zip-file fileb://smarttask.zip

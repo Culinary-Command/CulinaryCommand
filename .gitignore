@@ -13,6 +13,13 @@ CulinaryCommandUnitTests/bin/
 CulinaryCommandUnitTests/Obj/
 CulinaryCommandUnitTests/publish/
 
+CulinaryCommandSmartTaskMcp/bin/
+CulinaryCommandSmartTaskMcp/Obj/
+CulinaryCommandSmartTaskMcp/publish/
+
+SmartTaskMcpTests/bin/
+SmartTaskMcpTests/Obj/
+SmartTaskMcpTests/publish/
 
 # ============================
 # Visual Studio / IDE
