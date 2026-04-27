@@ -1,0 +1,11 @@
+{
+  "profile": "",
+  "region": "us-east-2",
+  "configuration": "Release",
+  "function-runtime": "dotnet10",
+  "function-memory-size": 1024,
+  "function-timeout": 30,
+  "function-handler": "CulinaryCommandSmartTaskMcp::CulinaryCommandSmartTaskMcp.Function::Handle",
+  "function-name": "culinary-command-smarttask-lambda",
+  "function-role": "arn:aws:iam::ACCOUNT:role/culinary-command-smarttask-lambda-role"
+}
