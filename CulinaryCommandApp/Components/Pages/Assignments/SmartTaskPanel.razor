@@ -1,0 +1,161 @@
+@using CulinaryCommandApp.SmartTask.Services
+@using CulinaryCommandApp.SmartTask.Services.Interfaces
+@using CulinaryCommandApp.Recipe.Entities
+@inject ISmartTaskService SmartTaskService
+@inject IConfiguration Configuration
+
+<section class="card smarttask-panel">
+    <header class="card-header d-flex justify-content-between align-items-center">
+        <h2 class="h6 mb-0">SmartTask</h2>
+        <span class="badge bg-info">AI-assisted</span>
+    </header>
+
+    <div class="card-body">
+        @if (!IsFeatureEnabled)
+        {
+            <p class="text-muted mb-0">SmartTask is disabled for this environment.</p>
+        }
+        else
+        {
+            <div class="mb-3">
+                <label class="form-label">Service Date</label>
+                <input type="date"
+                       class="form-control"
+                       @bind="serviceDate" />
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Recipes</label>
+                <div class="recipe-checklist">
+                    @foreach (var recipe in AvailableRecipes)
+                    {
+                        <label class="form-check">
+                            <input type="checkbox"
+                                   class="form-check-input"
+                                   checked="@selectedRecipeIds.Contains(recipe.RecipeId)"
+                                   @onchange="@(args => ToggleRecipeSelection(recipe.RecipeId, args))" />
+                            <span class="form-check-label">@recipe.Title</span>
+                        </label>
+                    }
+                </div>
+            </div>
+
+            <button class="btn btn-primary"
+                    disabled="@(isPlanning || selectedRecipeIds.Count == 0)"
+                    @onclick="GeneratePlanAsync">
+                @(isPlanning ? "Planning…" : "Generate Plan")
+            </button>
+
+            @if (currentPlanPreview is not null)
+            {
+                <hr />
+                <h3 class="h6">Preview</h3>
+                var plannedTasks = currentPlanPreview.Plan?.PlannedTasks ?? (IReadOnlyList<PlannedPrepTaskDto>)Array.Empty<PlannedPrepTaskDto>();
+                @if (plannedTasks.Count == 0)
+                {
+                    <p class="text-muted">The planner returned no tasks for the selected recipes.</p>
+                }
+                else
+                {
+                    <ul class="list-group mb-3">
+                        @foreach (var plannedTask in plannedTasks)
+                        {
+                            <li class="list-group-item d-flex justify-content-between">
+                                <span>@plannedTask.DueDateUtc.ToLocalTime().ToString("t") · @plannedTask.RecipeTitle</span>
+                                <span class="text-muted">User #@plannedTask.AssignedUserId · @plannedTask.Priority</span>
+                            </li>
+                        }
+                    </ul>
+                }
+
+                <button class="btn btn-success me-2"
+                        disabled="@isCommitting"
+                        @onclick="CommitPlanAsync">
+                    @(isCommitting ? "Committing…" : "Commit")
+                </button>
+                <button class="btn btn-outline-secondary"
+                        @onclick="DiscardPlan">
+                    Discard
+                </button>
+            }
+
+            @if (!string.IsNullOrEmpty(errorMessage))
+            {
+                <div class="alert alert-danger mt-3">@errorMessage</div>
+            }
+        }
+    </div>
+</section>
+
+@code {
+    [Parameter] public int LocationId { get; set; }
+    [Parameter] public int CurrentUserId { get; set; }
+    [Parameter] public IReadOnlyList<Recipe> AvailableRecipes { get; set; } = Array.Empty<Recipe>();
+    [Parameter] public EventCallback OnPlanCommitted { get; set; }
+
+    private DateOnly serviceDate = DateOnly.FromDateTime(DateTime.Today.AddDays(1));
+    private readonly HashSet<int> selectedRecipeIds = new();
+    private SmartTaskPlanPreview? currentPlanPreview;
+    private bool isPlanning;
+    private bool isCommitting;
+    private string? errorMessage;
+
+    private bool IsFeatureEnabled => Configuration.GetValue("SmartTask:Enabled", false);
+
+    private void ToggleRecipeSelection(int recipeId, ChangeEventArgs args)
+    {
+        if (args.Value is bool isChecked && isChecked) selectedRecipeIds.Add(recipeId);
+        else selectedRecipeIds.Remove(recipeId);
+    }
+
+    private async Task GeneratePlanAsync()
+    {
+        errorMessage = null;
+        isPlanning = true;
+        try
+        {
+            var planRequest = new SmartTaskRequest(
+                LocationId: LocationId,
+                ServiceDate: serviceDate,
+                RecipeIds: selectedRecipeIds.ToList(),
+                TriggeredByUserId: CurrentUserId);
+
+            currentPlanPreview = await SmartTaskService.PreviewAsync(planRequest, CancellationToken.None);
+        }
+        catch (SmartTaskOrchestratorUnavailableException)
+        {
+            errorMessage = "AI planner is offline — please try again or assign manually.";
+        }
+        catch (Exception failure)
+        {
+            errorMessage = failure.Message;
+        }
+        finally
+        {
+            isPlanning = false;
+        }
+    }
+
+    private async Task CommitPlanAsync()
+    {
+        if (currentPlanPreview is null) return;
+        isCommitting = true;
+        try
+        {
+            await SmartTaskService.CommitAsync(currentPlanPreview.PreviewId, CancellationToken.None);
+            currentPlanPreview = null;
+            selectedRecipeIds.Clear();
+            await OnPlanCommitted.InvokeAsync();
+        }
+        catch (Exception failure)
+        {
+            errorMessage = failure.Message;
+        }
+        finally
+        {
+            isCommitting = false;
+        }
+    }
+
+    private void DiscardPlan() => currentPlanPreview = null;
+}

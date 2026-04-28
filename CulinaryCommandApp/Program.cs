@@ -108,11 +108,16 @@ builder.Services
       options.TokenValidationParameters.RoleClaimType = "cognito:groups";
 
       // Secure cookies only work over HTTPS; use SameAsRequest in dev (HTTP).
-      var securePolicy = builder.Environment.IsDevelopment()
-          ? CookieSecurePolicy.SameAsRequest
-          : CookieSecurePolicy.Always;
-      options.CorrelationCookie.SecurePolicy = securePolicy;
-      options.NonceCookie.SecurePolicy = securePolicy;
+    //   var securePolicy = builder.Environment.IsDevelopment()
+    //       ? CookieSecurePolicy.SameAsRequest
+    //       : CookieSecurePolicy.Always;
+    //   options.CorrelationCookie.SecurePolicy = securePolicy;
+    //   options.NonceCookie.SecurePolicy = securePolicy;
+
+    options.CorrelationCookie.SameSite = SameSiteMode.None;
+    options.CorrelationCookie.SecurePolicy = CookieSecurePolicy.Always;
+    options.NonceCookie.SameSite = SameSiteMode.None;
+    options.NonceCookie.SecurePolicy = CookieSecurePolicy.Always;
 
       options.Events.OnRedirectToIdentityProvider = ctx =>
         {
@@ -154,6 +159,18 @@ builder.Services.AddDbContext<AppDbContext>(opt =>
     )
 );
 
+// Register a DbContextFactory so services that may be invoked from Blazor
+// circuits (where the scoped DbContext can be hit concurrently) can spin up
+// their own short-lived DbContexts instead of sharing the circuit-scoped one.
+builder.Services.AddDbContextFactory<AppDbContext>(opt =>
+    opt.UseMySql(
+        conn,
+        new MySqlServerVersion(new Version(8, 0, 36)),
+        mySqlOpts => mySqlOpts.EnableRetryOnFailure()
+    ),
+    lifetime: ServiceLifetime.Scoped
+);
+
 //
 // =====================
 // Application Services
@@ -164,6 +181,7 @@ builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IUserContextService, UserContextService>();
 
+// Register AWS options once (Profile/Region from config if provided)
 builder.Services.AddDefaultAWSOptions(builder.Configuration.GetAWSOptions());
 builder.Services.AddAWSService<IAmazonCognitoIdentityProvider>();
 builder.Services.AddScoped<CognitoProvisioningService>();
@@ -179,6 +197,7 @@ builder.Services.AddScoped<ICompanyService, CompanyService>();
 builder.Services.AddScoped<IUnitService, UnitService>();
 builder.Services.AddScoped<IInventoryTransactionService, InventoryTransactionService>();
 builder.Services.AddScoped<IInventoryManagementService, InventoryManagementService>();
+
 builder.Services.AddOptions();  // Start of Email Setup
 builder.Services.AddHttpClient<ResendClient>();
 builder.Services.Configure<ResendClientOptions>(o =>
@@ -195,27 +214,62 @@ builder.Services.AddScoped<ITaskLibraryService, TaskLibraryService>();
 var smartTaskAwsRegion = Amazon.RegionEndpoint.GetBySystemName(
     builder.Configuration["SmartTask:AwsRegion"] ?? "us-east-2");
 
-var smartTaskLambdaFunctionUrlEndpoint = builder.Configuration["SmartTask:LambdaFunctionUrlEndpoint"]
-    ?? throw new InvalidOperationException("SmartTask:LambdaFunctionUrlEndpoint must be configured.");
+var smartTaskEnabled = builder.Configuration.GetValue("SmartTask:Enabled", false);
 
-builder.Services.AddSingleton(serviceProvider =>
+var smartTaskLambdaFunctionUrlEndpoint = builder.Configuration["SmartTask:LambdaFunctionUrlEndpoint"];
+
+if (smartTaskEnabled)
 {
-    var awsOptions = serviceProvider.GetRequiredService<AWSOptions>();
-    return awsOptions.Credentials
-        ?? throw new InvalidOperationException("AWS credentials are not configured (AWSOptions.Credentials is null).");
-});
-builder.Services.AddTransient(serviceProvider => new SigV4SigningHandler(
-    serviceProvider.GetRequiredService<AWSCredentials>(),
-    smartTaskAwsRegion));
+    if (string.IsNullOrWhiteSpace(smartTaskLambdaFunctionUrlEndpoint))
+        throw new InvalidOperationException("SmartTask is enabled but SmartTask:LambdaFunctionUrlEndpoint is not configured.");
 
-builder.Services
-    .AddHttpClient<ISmartTaskOrchestratorClient, SmartTaskLambdaClient>(httpClient =>
+    // Resolve credentials via a factory so each outbound Lambda request gets
+    // a fresh AWSCredentials instance. For local SSO this means the handler
+    // re-reads the SSO cache (and silently refreshes when the SDK supports it),
+    // avoiding stale-token 403s after `aws sso login`.
+    Func<AWSCredentials> smartTaskCredentialsFactory = () =>
     {
-        httpClient.BaseAddress = new Uri(smartTaskLambdaFunctionUrlEndpoint);
-    })
-    .AddHttpMessageHandler<SigV4SigningHandler>();
+        var profileName = builder.Configuration["AWS:Profile"]
+            ?? Environment.GetEnvironmentVariable("AWS_PROFILE");
 
-builder.Services.AddScoped<ISmartTaskService, SmartTaskService>();
+        if (!string.IsNullOrWhiteSpace(profileName))
+        {
+            var chain = new Amazon.Runtime.CredentialManagement.CredentialProfileStoreChain();
+            if (chain.TryGetAWSCredentials(profileName, out var profileCredentials) && profileCredentials is not null)
+                return profileCredentials;
+
+            throw new InvalidOperationException(
+                $"Could not load AWS credentials for profile '{profileName}'. " +
+                $"If this is an SSO profile, run: aws sso login --profile {profileName}.");
+        }
+
+        // Fall back to the SDK's default chain (env vars, default profile, ECS, EC2 IMDS).
+        var fallback = FallbackCredentialsFactory.GetCredentials();
+        if (fallback is null)
+            throw new InvalidOperationException(
+                "No AWS credentials found. Configure AWS:Profile, AWS_PROFILE, or AWS_ACCESS_KEY_ID/AWS_SECRET_ACCESS_KEY.");
+
+        return fallback;
+    };
+
+    builder.Services.AddTransient(_ => new SigV4SigningHandler(
+        smartTaskCredentialsFactory,
+        smartTaskAwsRegion));
+
+    builder.Services
+        .AddHttpClient<ISmartTaskOrchestratorClient, SmartTaskLambdaClient>(httpClient =>
+        {
+            httpClient.BaseAddress = new Uri(smartTaskLambdaFunctionUrlEndpoint);
+        })
+        .AddHttpMessageHandler<SigV4SigningHandler>();
+
+    builder.Services.AddScoped<ISmartTaskService, SmartTaskService>();
+}
+else
+{
+    // SmartTask disabled; register no-op services so pages can render.
+    builder.Services.AddScoped<ISmartTaskService, DisabledSmartTaskService>();
+}
 
 builder.Services.AddScoped<IPurchaseOrderService, PurchaseOrderService>();
 builder.Services.AddSingleton<EnumService>();

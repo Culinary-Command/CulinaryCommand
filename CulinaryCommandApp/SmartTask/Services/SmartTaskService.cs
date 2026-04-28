@@ -14,18 +14,18 @@ namespace CulinaryCommandApp.SmartTask.Services
     {
         private static readonly ConcurrentDictionary<Guid, SmartTaskPlanPreview> PlanPreviewCache = new();
 
-        private readonly AppDbContext _dbContext;
+        private readonly IDbContextFactory<AppDbContext> _dbContextFactory;
         private readonly ISmartTaskOrchestratorClient _orchestratorClient;
         private readonly ITaskNotificationService _taskNotificationService;
         private readonly IConfiguration _configuration;
 
         public SmartTaskService(
-            AppDbContext dbContext,
+            IDbContextFactory<AppDbContext> dbContextFactory,
             ISmartTaskOrchestratorClient orchestratorClient,
             ITaskNotificationService taskNotificationService,
             IConfiguration configuration)
         {
-            _dbContext = dbContext;
+            _dbContextFactory = dbContextFactory;
             _orchestratorClient = orchestratorClient;
             _taskNotificationService = taskNotificationService;
             _configuration = configuration;
@@ -34,14 +34,16 @@ namespace CulinaryCommandApp.SmartTask.Services
         public async Task<SmartTaskPlanPreview> PreviewAsync(
             SmartTaskRequest request, CancellationToken cancellationToken)
         {
-            var requestedRecipes = await _dbContext.Recipes
+            await using var dbContext = await _dbContextFactory.CreateDbContextAsync(cancellationToken);
+
+            var requestedRecipes = await dbContext.Recipes
                 .AsNoTracking()
                 .Where(r => r.LocationId == request.LocationId && request.RecipeIds.Contains(r.RecipeId))
                 .Include(r => r.Steps)
                 .ToListAsync(cancellationToken);
 
             var eligibleUsers = await BuildEligibleUserPoolAsync(
-                request.LocationId, request.ServiceDate, cancellationToken);
+                dbContext, request.LocationId, request.ServiceDate, cancellationToken);
 
             var planRequestDto = new PlanRequestDto(
                 LocationId: request.LocationId,
@@ -68,33 +70,44 @@ namespace CulinaryCommandApp.SmartTask.Services
             if (!PlanPreviewCache.TryRemove(planPreviewId, out var preview))
                 throw new InvalidOperationException("Plan preview expired or not found. Regenerate the plan.");
 
-            await using var transaction = await _dbContext.Database.BeginTransactionAsync(cancellationToken);
+            await using var dbContext = await _dbContextFactory.CreateDbContextAsync(cancellationToken);
 
-            var smartTaskRun = new SmartTaskRun
+            // EnableRetryOnFailure requires the entire transactional unit to run inside
+            // the execution strategy so it can retry the whole block on transient errors.
+            var executionStrategy = dbContext.Database.CreateExecutionStrategy();
+
+            var (smartTaskRun, createdTasks) = await executionStrategy.ExecuteAsync(async () =>
             {
-                LocationId = preview.OriginalRequest.LocationId,
-                TriggeredByUserId = preview.OriginalRequest.TriggeredByUserId,
-                ServiceDate = preview.OriginalRequest.ServiceDate,
-                RecipeIdsJson = JsonSerializer.Serialize(preview.OriginalRequest.RecipeIds),
-                CreatedTaskIdsJson = "[]",
-                Status = nameof(SmartTaskRunStatus.Planned)
-            };
-            _dbContext.SmartTaskRuns.Add(smartTaskRun);
-            await _dbContext.SaveChangesAsync(cancellationToken);
+                await using var transaction = await dbContext.Database.BeginTransactionAsync(cancellationToken);
 
-            var createdTasks = preview.Plan.PlannedTasks
-                .Select(plannedTask => BuildTaskFromPlan(plannedTask, smartTaskRun, preview.OriginalRequest))
-                .ToList();
+                var run = new SmartTaskRun
+                {
+                    LocationId = preview.OriginalRequest.LocationId,
+                    TriggeredByUserId = preview.OriginalRequest.TriggeredByUserId,
+                    ServiceDate = preview.OriginalRequest.ServiceDate,
+                    RecipeIdsJson = JsonSerializer.Serialize(preview.OriginalRequest.RecipeIds),
+                    CreatedTaskIdsJson = "[]",
+                    Status = nameof(SmartTaskRunStatus.Planned)
+                };
+                dbContext.SmartTaskRuns.Add(run);
+                await dbContext.SaveChangesAsync(cancellationToken);
 
-            _dbContext.Tasks.AddRange(createdTasks);
-            await _dbContext.SaveChangesAsync(cancellationToken);
+                var tasks = preview.Plan.PlannedTasks
+                    .Select(plannedTask => BuildTaskFromPlan(plannedTask, run, preview.OriginalRequest))
+                    .ToList();
 
-            smartTaskRun.CreatedTaskIdsJson = JsonSerializer.Serialize(createdTasks.Select(t => t.Id));
-            smartTaskRun.Status = nameof(SmartTaskRunStatus.Committed);
-            smartTaskRun.UpdatedAt = DateTime.UtcNow;
-            await _dbContext.SaveChangesAsync(cancellationToken);
+                dbContext.Tasks.AddRange(tasks);
+                await dbContext.SaveChangesAsync(cancellationToken);
 
-            await transaction.CommitAsync(cancellationToken);
+                run.CreatedTaskIdsJson = JsonSerializer.Serialize(tasks.Select(t => t.Id));
+                run.Status = nameof(SmartTaskRunStatus.Committed);
+                run.UpdatedAt = DateTime.UtcNow;
+                await dbContext.SaveChangesAsync(cancellationToken);
+
+                await transaction.CommitAsync(cancellationToken);
+
+                return (run, tasks);
+            });
 
             foreach (var createdTask in createdTasks)
             {
@@ -105,7 +118,9 @@ namespace CulinaryCommandApp.SmartTask.Services
 
         public async Task RollbackAsync(Guid runId, CancellationToken cancellationToken)
         {
-            var smartTaskRun = await _dbContext.SmartTaskRuns
+            await using var dbContext = await _dbContextFactory.CreateDbContextAsync(cancellationToken);
+
+            var smartTaskRun = await dbContext.SmartTaskRuns
                 .FirstOrDefaultAsync(r => r.Id == runId, cancellationToken)
                 ?? throw new InvalidOperationException("SmartTask run not found.");
 
@@ -115,7 +130,7 @@ namespace CulinaryCommandApp.SmartTask.Services
             var createdTaskIds = JsonSerializer.Deserialize<List<int>>(smartTaskRun.CreatedTaskIdsJson)
                 ?? new List<int>();
 
-            var tasksFromRun = await _dbContext.Tasks
+            var tasksFromRun = await dbContext.Tasks
                 .Where(t => createdTaskIds.Contains(t.Id))
                 .ToListAsync(cancellationToken);
 
@@ -126,28 +141,33 @@ namespace CulinaryCommandApp.SmartTask.Services
                 throw new InvalidOperationException(
                     "One or more tasks are already in progress or completed; rollback is blocked.");
 
-            _dbContext.Tasks.RemoveRange(tasksFromRun);
+            dbContext.Tasks.RemoveRange(tasksFromRun);
             smartTaskRun.Status = nameof(SmartTaskRunStatus.RolledBack);
             smartTaskRun.UpdatedAt = DateTime.UtcNow;
 
-            await _dbContext.SaveChangesAsync(cancellationToken);
+            await dbContext.SaveChangesAsync(cancellationToken);
         }
 
-        public Task<List<SmartTaskRun>> RecentRunsAsync(int locationId, int take = 10) =>
-            _dbContext.SmartTaskRuns
+        public async Task<List<SmartTaskRun>> RecentRunsAsync(int locationId, int take = 10)
+        {
+            await using var dbContext = await _dbContextFactory.CreateDbContextAsync();
+            return await dbContext.SmartTaskRuns
                 .AsNoTracking()
                 .Where(r => r.LocationId == locationId)
                 .OrderByDescending(r => r.CreatedAt)
                 .Take(take)
                 .ToListAsync();
+        }
 
-        private async Task<List<EligibleUserDto>> BuildEligibleUserPoolAsync(
-            int locationId, DateOnly serviceDate, CancellationToken cancellationToken)
+        private static async Task<List<EligibleUserDto>> BuildEligibleUserPoolAsync(
+            AppDbContext dbContext, int locationId, DateOnly serviceDate, CancellationToken cancellationToken)
         {
             var serviceDayStartUtc = new DateTime(serviceDate, TimeOnly.MinValue, DateTimeKind.Utc);
             var serviceDayEndUtc = serviceDayStartUtc.AddDays(1);
 
-            var eligibleUsersAtLocation = await _dbContext.UserLocations
+            // Employees assigned via UserLocations.
+            var employeesAtLocation = await dbContext.UserLocations
+                .AsNoTracking()
                 .Where(ul => ul.LocationId == locationId
                           && ul.User != null
                           && ul.User.IsActive
@@ -155,7 +175,31 @@ namespace CulinaryCommandApp.SmartTask.Services
                 .Select(ul => ul.User!)
                 .ToListAsync(cancellationToken);
 
-            var openTaskCountByUser = await _dbContext.Tasks
+            // Managers assigned via the separate ManagerLocations join table.
+            var managersAtLocation = await dbContext.ManagerLocations
+                .AsNoTracking()
+                .Where(ml => ml.LocationId == locationId
+                          && ml.User != null
+                          && ml.User.IsActive
+                          && ml.User.Role != Roles.Admin)
+                .Select(ml => ml.User!)
+                .ToListAsync(cancellationToken);
+
+            var eligibleUsersAtLocation = employeesAtLocation
+                .Concat(managersAtLocation)
+                .GroupBy(user => user.Id)
+                .Select(group => group.First())
+                .ToList();
+
+            if (eligibleUsersAtLocation.Count == 0)
+            {
+                throw new InvalidOperationException(
+                    $"No eligible users (Employees or Managers) are assigned to location {locationId}. " +
+                    "Assign at least one non-admin user to this location before generating a plan.");
+            }
+
+            var openTaskCountByUser = await dbContext.Tasks
+                .AsNoTracking()
                 .Where(t => t.LocationId == locationId
                          && t.UserId != null
                          && t.DueDate >= serviceDayStartUtc
