@@ -24,6 +24,8 @@ namespace CulinaryCommand.Tests.SmartTask
             var ct = global::Xunit.TestContext.Current.CancellationToken;
 
             using var dbContext = BuildSeededDbContext();
+            var dbContextFactory = BuildDbContextFactory(dbContext);
+
             var fakeOrchestratorClient = new Mock<ISmartTaskOrchestratorClient>();
             fakeOrchestratorClient
                 .Setup(client => client.RequestPlanAsync(It.IsAny<PlanRequestDto>(), It.IsAny<CancellationToken>()))
@@ -36,7 +38,7 @@ namespace CulinaryCommand.Tests.SmartTask
             var configuration = new ConfigurationBuilder().Build();
 
             var smartTaskService = new SmartTaskService(
-                dbContext, fakeOrchestratorClient.Object, notifier.Object, configuration);
+                dbContextFactory, fakeOrchestratorClient.Object, notifier.Object, configuration);
 
             var preview = await smartTaskService.PreviewAsync(
                 new SmartTaskRequest(1, new DateOnly(2026, 5, 1), new[] { 1 }, 9),
@@ -56,6 +58,8 @@ namespace CulinaryCommand.Tests.SmartTask
             var ct = global::Xunit.TestContext.Current.CancellationToken;
 
             using var dbContext = BuildSeededDbContext();
+            var dbContextFactory = BuildDbContextFactory(dbContext);
+
             var fakeOrchestratorClient = new Mock<ISmartTaskOrchestratorClient>();
             fakeOrchestratorClient
                 .Setup(client => client.RequestPlanAsync(It.IsAny<PlanRequestDto>(), It.IsAny<CancellationToken>()))
@@ -65,7 +69,7 @@ namespace CulinaryCommand.Tests.SmartTask
                 }));
 
             var smartTaskService = new SmartTaskService(
-                dbContext, fakeOrchestratorClient.Object,
+                dbContextFactory, fakeOrchestratorClient.Object,
                 new Mock<ITaskNotificationService>().Object,
                 new ConfigurationBuilder().Build());
 
@@ -87,6 +91,8 @@ namespace CulinaryCommand.Tests.SmartTask
             var ct = global::Xunit.TestContext.Current.CancellationToken;
 
             using var dbContext = BuildSeededDbContext();
+            var dbContextFactory = BuildDbContextFactory(dbContext);
+
             var fakeOrchestratorClient = new Mock<ISmartTaskOrchestratorClient>();
             fakeOrchestratorClient
                 .Setup(client => client.RequestPlanAsync(It.IsAny<PlanRequestDto>(), It.IsAny<CancellationToken>()))
@@ -96,7 +102,7 @@ namespace CulinaryCommand.Tests.SmartTask
                 }));
 
             var smartTaskService = new SmartTaskService(
-                dbContext, fakeOrchestratorClient.Object,
+                dbContextFactory, fakeOrchestratorClient.Object,
                 new Mock<ITaskNotificationService>().Object,
                 new ConfigurationBuilder().Build());
 
@@ -111,6 +117,15 @@ namespace CulinaryCommand.Tests.SmartTask
 
             await Assert.ThrowsAsync<InvalidOperationException>(
                 () => smartTaskService.RollbackAsync(committedRun.Id, ct));
+        }
+
+        private static IDbContextFactory<AppDbContext> BuildDbContextFactory(AppDbContext dbContext)
+        {
+            var factory = new Mock<IDbContextFactory<AppDbContext>>();
+            factory
+                .Setup(f => f.CreateDbContextAsync(It.IsAny<CancellationToken>()))
+                .ReturnsAsync(dbContext);
+            return factory.Object;
         }
 
         private static AppDbContext BuildSeededDbContext()
