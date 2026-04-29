@@ -149,6 +149,11 @@ else
                         OnBumpTask="BumpTask"
                         OnDeleteTask="DeleteTask"
                         OnStartAllPending="StartAllPending" />
+                    
+                    <SmartTaskPanel LocationId="@(selectedLocationId ?? 0)"
+                        CurrentUserId="@(_ctx?.User?.Id ?? 0)"
+                        AvailableRecipes="recipes"
+                        OnPlanCommitted="LoadAssignmentsAsync" />
                 </div>
             </div>
         </div>

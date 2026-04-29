@@ -94,6 +94,42 @@ RESEND_API_TOKEN=$(aws ssm get-parameter \
     --query "Parameter.Value" \
     --output text)
 
+# SmartTask config
+SMARTTASK_LAMBDA_FUNCTION_URL_ENDPOINT=$(aws ssm get-parameter \
+    --name "/culinarycommand/prod/SmartTask__LambdaFunctionUrlEndpoint" \
+    --with-decryption \
+    --region us-east-2 \
+    --query "Parameter.Value" \
+    --output text)
+
+SMARTTASK_AWS_REGION=$(aws ssm get-parameter \
+    --name "/culinarycommand/prod/SmartTask__AwsRegion" \
+    --with-decryption \
+    --region us-east-2 \
+    --query "Parameter.Value" \
+    --output text)
+
+SMARTTASK_DEFAULT_PREP_BUFFER_MINUTES=$(aws ssm get-parameter \
+    --name "/culinarycommand/prod/SmartTask__DefaultPrepBufferMinutes" \
+    --with-decryption \
+    --region us-east-2 \
+    --query "Parameter.Value" \
+    --output text)
+
+SMARTTASK_DEFAULT_LEAD_TIME_WHEN_UNKNOWN=$(aws ssm get-parameter \
+    --name "/culinarycommand/prod/SmartTask__DefaultLeadTimeWhenUnknown" \
+    --with-decryption \
+    --region us-east-2 \
+    --query "Parameter.Value" \
+    --output text)
+
+SMARTTASK_ENABLED=$(aws ssm get-parameter \
+    --name "/culinarycommand/prod/SmartTask__Enabled" \
+    --with-decryption \
+    --region us-east-2 \
+    --query "Parameter.Value" \
+    --output text)
+
 # Write environment variables to file
 echo "[6/8] Writing environment file..."
 cat > /etc/culinarycommand.env << EOF
@@ -112,6 +148,13 @@ GOOGLE_API_KEY=${GOOGLE_API_KEY}
 LogoDev__PublishableKey=${LOGODEV_PUBLISHABLE_KEY}
 LogoDev__SecretKey=${LOGODEV_SECRET_KEY}
 Email__ResendApiToken=${RESEND_API_TOKEN}
+
+# SmartTask
+SmartTask__LambdaFunctionUrlEndpoint=${SMARTTASK_LAMBDA_FUNCTION_URL_ENDPOINT}
+SmartTask__AwsRegion=${SMARTTASK_AWS_REGION}
+SmartTask__DefaultPrepBufferMinutes=${SMARTTASK_DEFAULT_PREP_BUFFER_MINUTES}
+SmartTask__DefaultLeadTimeWhenUnknown=${SMARTTASK_DEFAULT_LEAD_TIME_WHEN_UNKNOWN}
+SmartTask__Enabled=${SMARTTASK_ENABLED}
 EOF
 chmod 600 /etc/culinarycommand.env
 

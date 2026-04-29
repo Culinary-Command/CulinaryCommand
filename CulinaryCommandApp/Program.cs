@@ -25,6 +25,9 @@ using CulinaryCommand.Vendor.Services;
 using System.IO;
 using Resend;
 using CulinaryCommandApp.Inventory.Entities;
+using Amazon.Runtime;
+using CulinaryCommandApp.SmartTask.Services;
+using CulinaryCommandApp.SmartTask.Services.Interfaces;
 
 
 
@@ -122,7 +125,6 @@ builder.Services
 
 builder.Services.AddAuthorization();
 
-
 //
 // =====================
 // AI Services
@@ -152,6 +154,18 @@ builder.Services.AddDbContext<AppDbContext>(opt =>
     )
 );
 
+// Register a DbContextFactory so services that may be invoked from Blazor
+// circuits (where the scoped DbContext can be hit concurrently) can spin up
+// their own short-lived DbContexts instead of sharing the circuit-scoped one.
+builder.Services.AddDbContextFactory<AppDbContext>(opt =>
+    opt.UseMySql(
+        conn,
+        new MySqlServerVersion(new Version(8, 0, 36)),
+        mySqlOpts => mySqlOpts.EnableRetryOnFailure()
+    ),
+    lifetime: ServiceLifetime.Scoped
+);
+
 //
 // =====================
 // Application Services
@@ -162,6 +176,7 @@ builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IUserContextService, UserContextService>();
 
+// Register AWS options once (Profile/Region from config if provided)
 builder.Services.AddDefaultAWSOptions(builder.Configuration.GetAWSOptions());
 builder.Services.AddAWSService<IAmazonCognitoIdentityProvider>();
 builder.Services.AddScoped<CognitoProvisioningService>();
@@ -177,6 +192,7 @@ builder.Services.AddScoped<ICompanyService, CompanyService>();
 builder.Services.AddScoped<IUnitService, UnitService>();
 builder.Services.AddScoped<IInventoryTransactionService, InventoryTransactionService>();
 builder.Services.AddScoped<IInventoryManagementService, InventoryManagementService>();
+
 builder.Services.AddOptions();  // Start of Email Setup
 builder.Services.AddHttpClient<ResendClient>();
 builder.Services.Configure<ResendClientOptions>(o =>
@@ -188,6 +204,68 @@ builder.Services.AddTransient<IResend, ResendClient>();
 builder.Services.AddScoped<IEmailSender, EmailSender>();    // End of Email Setup
 builder.Services.AddScoped<ITaskAssignmentService, TaskAssignmentService>();
 builder.Services.AddScoped<ITaskLibraryService, TaskLibraryService>();
+
+// SmartTask (Lambda orchestrator integration)
+var smartTaskAwsRegion = Amazon.RegionEndpoint.GetBySystemName(
+    builder.Configuration["SmartTask:AwsRegion"] ?? "us-east-2");
+
+var smartTaskEnabled = builder.Configuration.GetValue("SmartTask:Enabled", false);
+
+var smartTaskLambdaFunctionUrlEndpoint = builder.Configuration["SmartTask:LambdaFunctionUrlEndpoint"];
+
+if (smartTaskEnabled)
+{
+    if (string.IsNullOrWhiteSpace(smartTaskLambdaFunctionUrlEndpoint))
+        throw new InvalidOperationException("SmartTask is enabled but SmartTask:LambdaFunctionUrlEndpoint is not configured.");
+
+    // Resolve credentials via a factory so each outbound Lambda request gets
+    // a fresh AWSCredentials instance. For local SSO this means the handler
+    // re-reads the SSO cache (and silently refreshes when the SDK supports it),
+    // avoiding stale-token 403s after `aws sso login`.
+    Func<AWSCredentials> smartTaskCredentialsFactory = () =>
+    {
+        var profileName = builder.Configuration["AWS:Profile"]
+            ?? Environment.GetEnvironmentVariable("AWS_PROFILE");
+
+        if (!string.IsNullOrWhiteSpace(profileName))
+        {
+            var chain = new Amazon.Runtime.CredentialManagement.CredentialProfileStoreChain();
+            if (chain.TryGetAWSCredentials(profileName, out var profileCredentials) && profileCredentials is not null)
+                return profileCredentials;
+
+            throw new InvalidOperationException(
+                $"Could not load AWS credentials for profile '{profileName}'. " +
+                $"If this is an SSO profile, run: aws sso login --profile {profileName}.");
+        }
+
+        // Fall back to the SDK's default chain (env vars, default profile, ECS, EC2 IMDS).
+        var fallback = FallbackCredentialsFactory.GetCredentials();
+        if (fallback is null)
+            throw new InvalidOperationException(
+                "No AWS credentials found. Configure AWS:Profile, AWS_PROFILE, or AWS_ACCESS_KEY_ID/AWS_SECRET_ACCESS_KEY.");
+
+        return fallback;
+    };
+
+    builder.Services.AddTransient(_ => new SigV4SigningHandler(
+        smartTaskCredentialsFactory,
+        smartTaskAwsRegion));
+
+    builder.Services
+        .AddHttpClient<ISmartTaskOrchestratorClient, SmartTaskLambdaClient>(httpClient =>
+        {
+            httpClient.BaseAddress = new Uri(smartTaskLambdaFunctionUrlEndpoint);
+        })
+        .AddHttpMessageHandler<SigV4SigningHandler>();
+
+    builder.Services.AddScoped<ISmartTaskService, SmartTaskService>();
+}
+else
+{
+    // SmartTask disabled; register no-op services so pages can render.
+    builder.Services.AddScoped<ISmartTaskService, DisabledSmartTaskService>();
+}
+
 builder.Services.AddScoped<IPurchaseOrderService, PurchaseOrderService>();
 builder.Services.AddSingleton<EnumService>();
 builder.Services.AddScoped<IVendorService, VendorService>();
