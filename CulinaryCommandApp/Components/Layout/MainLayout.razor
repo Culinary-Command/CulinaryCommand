@@ -1,6 +1,8 @@
 @inherits LayoutComponentBase
 @using Microsoft.AspNetCore.Components.Authorization
 
+<link href="/css/footer.css" rel="stylesheet" />
+
 <AuthorizeView>
     <Authorized>
         <div class="page">
@@ -8,7 +10,7 @@
                 <NavMenu />
             </div>
 
-            <main>
+            <main class="main-content">
                 <div class="top-row px-4 d-flex justify-content-end align-items-center">
                     <LocationSelector />
                     <ProfileDropdown />
@@ -17,10 +19,28 @@
                 <article class="content px-4">
                     @Body
                 </article>
+                <footer class="footer">
+                    <img src="/images/logos/mascot-logo.png" alt="Culinary Command Logo" class="footer-logo" />
+                    
+                    <span class="footer-text">
+                        &copy; @DateTime.Now.Year Culinary Command. All rights reserved.
+                    </span>
+
+                    <div class="footer-links">
+                        <a href="https://github.com/Culinary-Command/CulinaryCommand" target="_blank" rel="noopener">
+                            GitHub
+                        </a>
+
+                        <a href="mailto:culinarycommand44@gmail.com">
+                            Contact
+                        </a>
+
+                        <a href="https://sdmay26-44.sd.ece.iastate.edu/#teammembers" target="_blank" rel="noopener">
+                            Meet the Team
+                        </a>
+                    </div>
+                </footer>
             </main>
-            <div class="feedback-fixed">
-                <FeedbackButton />
-            </div>
         </div>
     </Authorized>
 

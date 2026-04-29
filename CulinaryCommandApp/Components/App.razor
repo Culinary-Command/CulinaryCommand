@@ -13,7 +13,7 @@
     <link rel="stylesheet" href="css/app.css" />
     <link rel="stylesheet" href="css/landing.css" />
     <link rel="stylesheet" href="CulinaryCommand.styles.css" />
-    <link rel="icon" type="image/png" href="images/cc_favicon_green_clear2.png" />
+    <link rel="icon" type="image/png" href="images/cc_fav_green.png" />
     @* <link rel="icon" type="image/png" href="images/cc_favicon_black2.png" /> *@
     <HeadOutlet />
 </head>
@@ -22,12 +22,14 @@
 <body>
     @* <Routes @rendermode=RenderMode.InteractiveServer /> *@
 
-   <CascadingAuthenticationState>
-        <Routes @rendermode="InteractiveServer"/>
+    <CascadingAuthenticationState>
+        <Routes @rendermode="InteractiveServer" />
     </CascadingAuthenticationState>
 
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js" integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q"
+            crossorigin="anonymous"></script>
 
     <script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
     <script src="_content/Plotly.Blazor/plotly-interop.js"></script>

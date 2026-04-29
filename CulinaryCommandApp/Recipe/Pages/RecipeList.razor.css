@@ -1,9 +1,8 @@
 /* ── Layout ──────────────────────────────────────────────────────────────── */
 
 .recipes-container {
-    padding: 24px 0 40px;
+    padding: 24px 0 0px;
     background: var(--cc-bg);
-    min-height: 100vh;
     font-family: "Source Sans 3", "Segoe UI", sans-serif;
     color: var(--cc-ink);
 }
