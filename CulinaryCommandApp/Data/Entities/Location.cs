@@ -29,6 +29,8 @@ namespace CulinaryCommand.Data.Entities
                 // marginEdgeKey should be nullable, not every location will have one
                 public string? MarginEdgeKey { get; set; }
 
+                public bool SmartTaskEnabled { get; set; } = false;
+
                 // keep company nullable until we add a way to create companies
                 public int CompanyId { get; set; }
                 public Company Company { get; set; }

@@ -120,5 +120,15 @@ namespace CulinaryCommandApp.AIDashboard.Services.Reporting
             return AIAnalysisResponse ?? "(no analysis returned)";
         }
 
+        /// Counts SmartTask runs created on the given UTC day. Used by the AI dashboard
+        /// observability tile so operators can see how many planning sessions ran today.
+        public async Task<int> CountRunsForDateAsync(DateOnly day, CulinaryCommand.Data.AppDbContext dbContext)
+        {
+            var dayStartUtc = new DateTime(day, TimeOnly.MinValue, DateTimeKind.Utc);
+            var dayEndUtc = dayStartUtc.AddDays(1);
+            return await Microsoft.EntityFrameworkCore.EntityFrameworkQueryableExtensions.CountAsync(
+                dbContext.SmartTaskRuns,
+                run => run.CreatedAt >= dayStartUtc && run.CreatedAt < dayEndUtc);
+        }
     }
 }

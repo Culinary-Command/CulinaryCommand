@@ -162,6 +162,7 @@ namespace CulinaryCommandApp.SmartTask.Services
         private static async Task<List<EligibleUserDto>> BuildEligibleUserPoolAsync(
             AppDbContext dbContext, int locationId, DateOnly serviceDate, CancellationToken cancellationToken)
         {
+            var serviceDayOfWeek = serviceDate.DayOfWeek;
             var serviceDayStartUtc = new DateTime(serviceDate, TimeOnly.MinValue, DateTimeKind.Utc);
             var serviceDayEndUtc = serviceDayStartUtc.AddDays(1);
 
@@ -198,6 +199,26 @@ namespace CulinaryCommandApp.SmartTask.Services
                     "Assign at least one non-admin user to this location before generating a plan.");
             }
 
+            // Availability filter: prefer users with an availability row for the service day-of-week.
+            // If nobody has availability set for that day, fall back to the full eligible pool.
+            var availableUserIdsForServiceDay = await dbContext.UserAvailabilities
+                .AsNoTracking()
+                .Where(availability => availability.LocationId == locationId
+                                    && availability.DayOfWeek == serviceDayOfWeek)
+                .Select(availability => availability.UserId)
+                .Distinct()
+                .ToListAsync(cancellationToken);
+
+            var availableUserIdSet = availableUserIdsForServiceDay.ToHashSet();
+
+            var usersWithAvailabilityOnServiceDay = eligibleUsersAtLocation
+                .Where(user => availableUserIdSet.Contains(user.Id))
+                .ToList();
+
+            var usersToAssign = usersWithAvailabilityOnServiceDay.Count > 0
+                ? usersWithAvailabilityOnServiceDay
+                : eligibleUsersAtLocation;
+
             var openTaskCountByUser = await dbContext.Tasks
                 .AsNoTracking()
                 .Where(t => t.LocationId == locationId
@@ -208,7 +229,7 @@ namespace CulinaryCommandApp.SmartTask.Services
                 .Select(g => new { UserId = g.Key, OpenCount = g.Count() })
                 .ToDictionaryAsync(x => x.UserId, x => x.OpenCount, cancellationToken);
 
-            return eligibleUsersAtLocation
+            return usersToAssign
                 .Select(user => new EligibleUserDto(
                     UserId: user.Id,
                     DisplayName: user.Name ?? user.Email ?? $"User {user.Id}",

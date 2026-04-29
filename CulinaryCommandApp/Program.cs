@@ -266,6 +266,10 @@ else
     builder.Services.AddScoped<ISmartTaskService, DisabledSmartTaskService>();
 }
 
+// Availability service is always available regardless of SmartTask flag — managers
+// may want to capture shifts even before SmartTask is turned on.
+builder.Services.AddScoped<IUserAvailabilityService, UserAvailabilityService>();
+
 builder.Services.AddScoped<IPurchaseOrderService, PurchaseOrderService>();
 builder.Services.AddSingleton<EnumService>();
 builder.Services.AddScoped<IVendorService, VendorService>();

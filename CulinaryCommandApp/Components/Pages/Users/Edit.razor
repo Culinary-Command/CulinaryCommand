@@ -23,6 +23,23 @@ else if (!_allowed)
 else
 {
     <UserForm Model="model" FormTitle="Edit User" OnValidSubmit="Save" />
+
+    @if (model.UserLocations is not null && model.UserLocations.Any())
+    {
+        <div class="mt-4">
+            <h4>SmartTask Availability</h4>
+            <p class="text-muted small">
+                Set the user's weekly shift windows for each location they work at.
+                SmartTask uses this to decide who is eligible for prep tasks on a given service date.
+            </p>
+            @foreach (var ul in model.UserLocations)
+            {
+                <UserAvailabilityEditor UserId="model.Id"
+                                        LocationId="ul.LocationId"
+                                        LocationName="@(ul.Location?.Name)" />
+            }
+        </div>
+    }
 }
 
 @code {

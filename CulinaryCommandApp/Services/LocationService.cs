@@ -94,6 +94,7 @@ namespace CulinaryCommand.Services
             existing.ZipCode = location.ZipCode;
             existing.MarginEdgeKey = location.MarginEdgeKey;
             existing.CompanyId = location.CompanyId;
+            existing.SmartTaskEnabled = location.SmartTaskEnabled;
 
             await db.SaveChangesAsync();
             return true;

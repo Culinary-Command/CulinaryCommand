@@ -40,6 +40,7 @@ namespace CulinaryCommand.Data
         public DbSet<Feedback> Feedbacks { get; set; }
         public DbSet<LocationUnit> LocationUnits => Set<LocationUnit>();
         public DbSet<SmartTaskRun> SmartTaskRuns => Set<SmartTaskRun>();
+        public DbSet<UserAvailability> UserAvailabilities => Set<UserAvailability>();
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -241,7 +242,25 @@ namespace CulinaryCommand.Data
                 .HasForeignKey(rs => rs.ChildRecipeId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            ConfigureLocationUnit(modelBuilder);    
+            ConfigureLocationUnit(modelBuilder);
+
+            // UserAvailability: belongs to a User and a Location, indexed by (UserId, LocationId, DayOfWeek)
+            modelBuilder.Entity<UserAvailability>()
+                .HasOne(ua => ua.User)
+                .WithMany()
+                .HasForeignKey(ua => ua.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<UserAvailability>()
+                .HasOne(ua => ua.Location)
+                .WithMany()
+                .HasForeignKey(ua => ua.LocationId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<UserAvailability>()
+                .HasIndex(ua => new { ua.UserId, ua.LocationId, ua.DayOfWeek })
+                .IsUnique()
+                .HasDatabaseName("IX_UserAvailability_User_Location_Day");
         }
 
         private void ConfigureLocationUnit(ModelBuilder modelBuilder)

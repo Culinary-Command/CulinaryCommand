@@ -153,7 +153,15 @@ else
                     <SmartTaskPanel LocationId="@(selectedLocationId ?? 0)"
                         CurrentUserId="@(_ctx?.User?.Id ?? 0)"
                         AvailableRecipes="recipes"
-                        OnPlanCommitted="LoadAssignmentsAsync" />
+                        LocationSmartTaskEnabled="@(LocationState.CurrentLocation?.SmartTaskEnabled ?? false)"
+                        OnPlanCommitted="OnSmartTaskPlanCommittedAsync" />
+
+                    @if (LocationState.CurrentLocation?.SmartTaskEnabled == true)
+                    {
+                        <SmartTaskRunsHistory @ref="smartTaskRunsHistory"
+                            LocationId="@(selectedLocationId ?? 0)"
+                            OnRunRolledBack="LoadAssignmentsAsync" />
+                    }
                 </div>
             </div>
         </div>
@@ -223,6 +231,16 @@ else
     private bool showEditTaskListModal;
     private bool showManageTaskListTemplatesModal;
     private TaskList? editingTaskList;
+    private SmartTaskRunsHistory? smartTaskRunsHistory;
+
+    private async Task OnSmartTaskPlanCommittedAsync()
+    {
+        await LoadAssignmentsAsync();
+        if (smartTaskRunsHistory is not null)
+        {
+            await smartTaskRunsHistory.ReloadRecentRunsAsync();
+        }
+    }
     private TaskList? managingTaskList;
     private List<TaskTemplate> selectedTaskListTemplates = new();
     private string? pageError;

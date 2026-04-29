@@ -1,0 +1,129 @@
+@using CulinaryCommandApp.SmartTask.Services.Interfaces
+@using CulinaryCommand.Data.Entities
+@inject ISmartTaskService SmartTaskService
+
+<section class="card mt-3 smarttask-history">
+    <header class="card-header d-flex justify-content-between align-items-center">
+        <h3 class="h6 mb-0">Recent SmartTask Runs</h3>
+        <button type="button" class="btn btn-sm btn-outline-secondary" @onclick="ReloadRecentRunsAsync">
+            Refresh
+        </button>
+    </header>
+    <div class="card-body">
+        @if (loading)
+        {
+            <p class="text-muted mb-0">Loading…</p>
+        }
+        else if (recentRuns.Count == 0)
+        {
+            <p class="text-muted mb-0">No recent runs.</p>
+        }
+        else
+        {
+            <div class="table-responsive">
+                <table class="table table-sm align-middle mb-0">
+                    <thead>
+                        <tr>
+                            <th>When</th>
+                            <th>Service Date</th>
+                            <th>Status</th>
+                            <th class="text-end">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var run in recentRuns)
+                        {
+                            <tr>
+                                <td>@run.CreatedAt.ToLocalTime().ToString("g")</td>
+                                <td>@run.ServiceDate.ToString("yyyy-MM-dd")</td>
+                                <td>
+                                    <span class="badge @StatusBadgeClass(run.Status)">@run.Status</span>
+                                </td>
+                                <td class="text-end">
+                                    @if (run.Status == nameof(SmartTaskRunStatus.Committed))
+                                    {
+                                        <button type="button"
+                                                class="btn btn-sm btn-outline-danger"
+                                                disabled="@(rollbackInProgressForRunId == run.Id)"
+                                                @onclick="@(() => RollbackAsync(run.Id))">
+                                            @(rollbackInProgressForRunId == run.Id ? "Rolling back…" : "Rollback")
+                                        </button>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+
+        @if (!string.IsNullOrEmpty(rollbackError))
+        {
+            <div class="alert alert-warning mt-3 mb-0">@rollbackError</div>
+        }
+    </div>
+</section>
+
+@code {
+    [Parameter] public int LocationId { get; set; }
+    [Parameter] public EventCallback OnRunRolledBack { get; set; }
+
+    private List<SmartTaskRun> recentRuns = new();
+    private bool loading;
+    private string? rollbackError;
+    private Guid? rollbackInProgressForRunId;
+
+    protected override async Task OnParametersSetAsync() => await ReloadRecentRunsAsync();
+
+    public async Task ReloadRecentRunsAsync()
+    {
+        if (LocationId <= 0)
+        {
+            recentRuns = new List<SmartTaskRun>();
+            return;
+        }
+
+        try
+        {
+            loading = true;
+            recentRuns = await SmartTaskService.RecentRunsAsync(LocationId);
+        }
+        finally
+        {
+            loading = false;
+        }
+    }
+
+    private async Task RollbackAsync(Guid runId)
+    {
+        rollbackError = null;
+        rollbackInProgressForRunId = runId;
+        try
+        {
+            await SmartTaskService.RollbackAsync(runId, CancellationToken.None);
+            await ReloadRecentRunsAsync();
+            await OnRunRolledBack.InvokeAsync();
+        }
+        catch (InvalidOperationException failure)
+        {
+            rollbackError = failure.Message;
+        }
+        catch (Exception failure)
+        {
+            rollbackError = $"Rollback failed: {failure.Message}";
+        }
+        finally
+        {
+            rollbackInProgressForRunId = null;
+        }
+    }
+
+    private static string StatusBadgeClass(string status) => status switch
+    {
+        nameof(SmartTaskRunStatus.Committed) => "bg-success",
+        nameof(SmartTaskRunStatus.Planned) => "bg-info",
+        nameof(SmartTaskRunStatus.RolledBack) => "bg-secondary",
+        nameof(SmartTaskRunStatus.Failed) => "bg-danger",
+        _ => "bg-light text-dark"
+    };
+}

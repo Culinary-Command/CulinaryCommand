@@ -1,19 +1,31 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
+    <OutputType>Exe</OutputType>
     <TargetFramework>net10.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <GenerateRuntimeConfigurationFiles>true</GenerateRuntimeConfigurationFiles>
     <AWSProjectType>Lambda</AWSProjectType>
-    <!-- This property makes the build directory similar to a publish directory and helps the AWS .NET Lambda Mock Test Tool find project dependencies. -->
+    <!-- Make the build directory similar to a publish directory so the AWS .NET Lambda Mock Test Tool can find dependencies. -->
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
-    <!-- Generate ready to run images during publishing to improve cold start time. -->
+    <!-- Generate ready-to-run images during publishing to improve cold-start time. -->
     <PublishReadyToRun>true</PublishReadyToRun>
+    <RootNamespace>CulinaryCommandSmartTaskMcp</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <!-- AWS Lambda runtime (used when deployed). The class-style handler in Function.cs
+         is wired via aws-lambda-tools-defaults.json; Main never runs in Lambda. -->
     <PackageReference Include="Amazon.Lambda.APIGatewayEvents" Version="2.7.3" />
     <PackageReference Include="Amazon.Lambda.Core" Version="2.8.1" />
     <PackageReference Include="Amazon.Lambda.Serialization.SystemTextJson" Version="2.4.5" />
+    <PackageReference Include="AWSSDK.SimpleSystemsManagement" Version="4.0.0" />
+
+    <!-- Gemini fallback (used both by the deployed Lambda and the local MCP server). -->
+    <PackageReference Include="Google.GenAI" Version="0.13.1" />
+
+    <!-- Local MCP server. ModelContextProtocol provides the [McpServerTool] surface;
+         Microsoft.Extensions.Hosting boots the stdio MCP server when run locally. -->
     <PackageReference Include="ModelContextProtocol" Version="1.2.0" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="9.0.0" />
   </ItemGroup>
 </Project>

@@ -11,7 +11,7 @@ namespace CulinaryCommandSmartTaskMcp.Tests
         private readonly Function _function = new();
 
         [Fact]
-        public void ReturnsPlannedTasksForValidRequest()
+        public async Task ReturnsPlannedTasksForValidRequest()
         {
             var planRequest = new PlanRequest(
                 LocationId: 1,
@@ -31,7 +31,7 @@ namespace CulinaryCommandSmartTaskMcp.Tests
                 Body = JsonSerializer.Serialize(planRequest)
             };
 
-            var response = _function.Handle(httpRequest, new TestLambdaContext());
+            var response = await _function.Handle(httpRequest, new TestLambdaContext());
 
             Assert.Equal(200, response.StatusCode);
             var planResponse = JsonSerializer.Deserialize<PlanResponse>(response.Body,
@@ -42,10 +42,10 @@ namespace CulinaryCommandSmartTaskMcp.Tests
         }
 
         [Fact]
-        public void Returns400WhenBodyIsEmpty()
+        public async Task Returns400WhenBodyIsEmpty()
         {
             var httpRequest = new APIGatewayHttpApiV2ProxyRequest { Body = null };
-            var response = _function.Handle(httpRequest, new TestLambdaContext());
+            var response = await _function.Handle(httpRequest, new TestLambdaContext());
             Assert.Equal(400, response.StatusCode);
         }
     }

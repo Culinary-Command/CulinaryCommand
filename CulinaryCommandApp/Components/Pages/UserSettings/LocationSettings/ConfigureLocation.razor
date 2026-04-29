@@ -22,6 +22,7 @@
 @inject IConfiguration Config
 @inject IHttpClientFactory HttpFactory
 @inject LogoDevService LogoDev
+@inject LocationState LocationState
 
 <PageTitle>Configure Location – Culinary Command</PageTitle>
 
@@ -51,6 +52,35 @@
                 <h3 class="mb-0">Configure Location</h3>
                 <span class="text-muted fs-6">@_location.Name · @_location.City, @_location.State</span>
             </div>
+        </div>
+
+        <!-- SmartTask toggle -->
+        <div class="card shadow-sm mb-3">
+            <div class="card-body d-flex align-items-center justify-content-between">
+                <div>
+                    <h6 class="mb-1"><i class="bi bi-robot me-2"></i>SmartTask AI Planning</h6>
+                    <small class="text-muted">
+                        Lets managers at this location generate prep tasks via the SmartTask Lambda planner.
+                    </small>
+                </div>
+                <div class="form-check form-switch m-0">
+                    <input class="form-check-input"
+                           type="checkbox"
+                           role="switch"
+                           id="smartTaskEnabledToggle"
+                           checked="@_location.SmartTaskEnabled"
+                           @onchange="ToggleSmartTaskEnabledAsync" />
+                    <label class="form-check-label" for="smartTaskEnabledToggle">
+                        @(_location.SmartTaskEnabled ? "Enabled" : "Disabled")
+                    </label>
+                </div>
+            </div>
+            @if (!string.IsNullOrEmpty(_smartTaskToggleMessage))
+            {
+                <div class="card-footer py-2 small @(_smartTaskToggleIsError ? "text-danger" : "text-success")">
+                    @_smartTaskToggleMessage
+                </div>
+            }
         </div>
 
         <!-- Vendors Section -->
@@ -513,6 +543,10 @@
     private bool _showAddUnitModal;
     private bool _addingUnit;
     
+    // SmartTask toggle
+    private string? _smartTaskToggleMessage;
+    private bool _smartTaskToggleIsError;
+
     // Storage Locations
     private bool _showAddStorageLocationModal;
     private bool _addingStorageLocation;
@@ -573,6 +607,42 @@
     }
 
     private void ToggleVendor(int vendorId) { }
+
+    private async Task ToggleSmartTaskEnabledAsync(ChangeEventArgs args)
+    {
+        if (_location is null) return;
+
+        _smartTaskToggleMessage = null;
+        _smartTaskToggleIsError = false;
+
+        var nextValue = args.Value is bool b ? b : !_location.SmartTaskEnabled;
+        var previousValue = _location.SmartTaskEnabled;
+        _location.SmartTaskEnabled = nextValue;
+
+        try
+        {
+            var ok = await LocationService.UpdateLocationAsync(_location);
+            if (!ok)
+            {
+                _location.SmartTaskEnabled = previousValue;
+                _smartTaskToggleIsError = true;
+                _smartTaskToggleMessage = "Could not save SmartTask toggle. Try again.";
+                return;
+            }
+            _smartTaskToggleMessage = nextValue
+                ? "SmartTask is now enabled for this location."
+                : "SmartTask is now disabled for this location.";
+
+            if (LocationState.CurrentLocation?.Id == _location.Id)
+                await LocationState.SetCurrentLocationAsync(_location);
+        }
+        catch (Exception ex)
+        {
+            _location.SmartTaskEnabled = previousValue;
+            _smartTaskToggleIsError = true;
+            _smartTaskToggleMessage = $"Save failed: {ex.Message}";
+        }
+    }
 
     private async Task SaveVendors()
     {

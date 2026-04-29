@@ -11,9 +11,13 @@
     </header>
 
     <div class="card-body">
-        @if (!IsFeatureEnabled)
+        @if (!IsGloballyEnabled)
         {
             <p class="text-muted mb-0">SmartTask is disabled for this environment.</p>
+        }
+        else if (!LocationSmartTaskEnabled)
+        {
+            <p class="text-muted mb-0">SmartTask is not enabled for this location. Turn it on in <strong>Settings → Locations → Configure</strong>.</p>
         }
         else
         {
@@ -92,6 +96,7 @@
     [Parameter] public int CurrentUserId { get; set; }
     [Parameter] public IReadOnlyList<Recipe> AvailableRecipes { get; set; } = Array.Empty<Recipe>();
     [Parameter] public EventCallback OnPlanCommitted { get; set; }
+    [Parameter] public bool LocationSmartTaskEnabled { get; set; } = false;
 
     private DateOnly serviceDate = DateOnly.FromDateTime(DateTime.Today.AddDays(1));
     private readonly HashSet<int> selectedRecipeIds = new();
@@ -100,7 +105,7 @@
     private bool isCommitting;
     private string? errorMessage;
 
-    private bool IsFeatureEnabled => Configuration.GetValue("SmartTask:Enabled", false);
+    private bool IsGloballyEnabled => Configuration.GetValue("SmartTask:Enabled", false);
 
     private void ToggleRecipeSelection(int recipeId, ChangeEventArgs args)
     {

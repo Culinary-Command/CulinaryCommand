@@ -1,0 +1,171 @@
+@using CulinaryCommand.Data.Entities
+@using CulinaryCommandApp.SmartTask.Services
+@inject IUserAvailabilityService AvailabilityService
+
+<section class="card mt-3">
+    <header class="card-header d-flex justify-content-between align-items-center">
+        <h5 class="mb-0">Weekly Availability</h5>
+        @if (LocationName is not null)
+        {
+            <span class="badge bg-secondary">@LocationName</span>
+        }
+    </header>
+    <div class="card-body">
+        @if (!string.IsNullOrEmpty(errorMessage))
+        {
+            <div class="alert alert-danger">@errorMessage</div>
+        }
+
+        <p class="text-muted small">
+            SmartTask uses these shifts to decide who can be assigned a prep task on a given service date.
+            Leave a day blank if the user is not available that day.
+        </p>
+
+        <table class="table table-sm align-middle">
+            <thead>
+                <tr>
+                    <th>Day</th>
+                    <th>Shift Start</th>
+                    <th>Shift End</th>
+                    <th class="text-end">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var row in editableRows)
+                {
+                    <tr>
+                        <td>@row.DayOfWeek</td>
+                        <td>
+                            <input type="time"
+                                   class="form-control form-control-sm"
+                                   value="@row.ShiftStartText"
+                                   @onchange="@(args => row.ShiftStartText = args.Value?.ToString() ?? string.Empty)" />
+                        </td>
+                        <td>
+                            <input type="time"
+                                   class="form-control form-control-sm"
+                                   value="@row.ShiftEndText"
+                                   @onchange="@(args => row.ShiftEndText = args.Value?.ToString() ?? string.Empty)" />
+                        </td>
+                        <td class="text-end">
+                            <button type="button"
+                                    class="btn btn-sm btn-outline-primary me-1"
+                                    @onclick="@(() => SaveDayAsync(row))"
+                                    disabled="@row.IsBusy">
+                                @(row.IsBusy ? "Saving…" : "Save")
+                            </button>
+                            <button type="button"
+                                    class="btn btn-sm btn-outline-danger"
+                                    @onclick="@(() => ClearDayAsync(row))"
+                                    disabled="@row.IsBusy">
+                                Clear
+                            </button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</section>
+
+@code {
+    [Parameter, EditorRequired] public int UserId { get; set; }
+    [Parameter, EditorRequired] public int LocationId { get; set; }
+    [Parameter] public string? LocationName { get; set; }
+
+    private readonly List<DayRow> editableRows = new();
+    private string? errorMessage;
+
+    protected override async Task OnParametersSetAsync()
+    {
+        await ReloadAsync();
+    }
+
+    private async Task ReloadAsync()
+    {
+        errorMessage = null;
+        editableRows.Clear();
+
+        var saved = UserId > 0 && LocationId > 0
+            ? await AvailabilityService.GetForUserAsync(UserId, LocationId)
+            : new List<UserAvailability>();
+
+        var byDay = saved.ToDictionary(a => a.DayOfWeek);
+
+        foreach (DayOfWeek day in Enum.GetValues(typeof(DayOfWeek)))
+        {
+            if (byDay.TryGetValue(day, out var existing))
+            {
+                editableRows.Add(new DayRow
+                {
+                    DayOfWeek = day,
+                    ShiftStartText = existing.ShiftStart.ToString("HH:mm"),
+                    ShiftEndText = existing.ShiftEnd.ToString("HH:mm")
+                });
+            }
+            else
+            {
+                editableRows.Add(new DayRow { DayOfWeek = day });
+            }
+        }
+    }
+
+    private async Task SaveDayAsync(DayRow row)
+    {
+        errorMessage = null;
+        if (string.IsNullOrWhiteSpace(row.ShiftStartText) || string.IsNullOrWhiteSpace(row.ShiftEndText))
+        {
+            errorMessage = $"Both start and end times are required to save {row.DayOfWeek}.";
+            return;
+        }
+
+        if (!TimeOnly.TryParse(row.ShiftStartText, out var shiftStart) ||
+            !TimeOnly.TryParse(row.ShiftEndText, out var shiftEnd))
+        {
+            errorMessage = $"Invalid time format for {row.DayOfWeek}. Use HH:mm.";
+            return;
+        }
+
+        try
+        {
+            row.IsBusy = true;
+            await AvailabilityService.UpsertAsync(UserId, LocationId, row.DayOfWeek, shiftStart, shiftEnd);
+        }
+        catch (Exception ex)
+        {
+            errorMessage = ex.Message;
+        }
+        finally
+        {
+            row.IsBusy = false;
+        }
+    }
+
+    private async Task ClearDayAsync(DayRow row)
+    {
+        errorMessage = null;
+        try
+        {
+            row.IsBusy = true;
+            await AvailabilityService.DeleteAsync(UserId, LocationId, row.DayOfWeek);
+            row.ShiftStartText = string.Empty;
+            row.ShiftEndText = string.Empty;
+        }
+        catch (Exception ex)
+        {
+            errorMessage = ex.Message;
+        }
+        finally
+        {
+            row.IsBusy = false;
+        }
+    }
+
+    private sealed class DayRow
+    {
+        public DayOfWeek DayOfWeek { get; set; }
+        public string ShiftStartText { get; set; } = string.Empty;
+        public string ShiftEndText { get; set; } = string.Empty;
+        public bool IsBusy { get; set; }
+    }
+}
