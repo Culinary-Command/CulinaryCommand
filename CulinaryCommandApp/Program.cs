@@ -26,6 +26,7 @@ using System.IO;
 using Resend;
 using CulinaryCommandApp.Inventory.Entities;
 using Amazon.Runtime;
+using Amazon.Runtime.CredentialManagement;
 using CulinaryCommandApp.SmartTask.Services;
 using CulinaryCommandApp.SmartTask.Services.Interfaces;
 
@@ -219,9 +220,7 @@ if (smartTaskEnabled)
         throw new InvalidOperationException("SmartTask is enabled but SmartTask:LambdaFunctionUrlEndpoint is not configured.");
 
     // Resolve credentials via a factory so each outbound Lambda request gets
-    // a fresh AWSCredentials instance. For local SSO this means the handler
-    // re-reads the SSO cache (and silently refreshes when the SDK supports it),
-    // avoiding stale-token 403s after `aws sso login`.
+    // a fresh AWSCredentials instance.
     Func<AWSCredentials> smartTaskCredentialsFactory = () =>
     {
         var profileName = builder.Configuration["AWS:Profile"]
@@ -229,7 +228,7 @@ if (smartTaskEnabled)
 
         if (!string.IsNullOrWhiteSpace(profileName))
         {
-            var chain = new Amazon.Runtime.CredentialManagement.CredentialProfileStoreChain();
+            var chain = new CredentialProfileStoreChain();
             if (chain.TryGetAWSCredentials(profileName, out var profileCredentials) && profileCredentials is not null)
                 return profileCredentials;
 
@@ -238,18 +237,24 @@ if (smartTaskEnabled)
                 $"If this is an SSO profile, run: aws sso login --profile {profileName}.");
         }
 
-        // Fall back to the SDK's default chain (env vars, default profile, ECS, EC2 IMDS).
+        // Default AWS credential chain (env vars, default profile, ECS, EC2 IMDS).
+        // NOTE: FallbackCredentialsFactory is marked obsolete in some SDK versions; if that warning is treated as error,
+        // prefer setting AWS:Profile/AWS_PROFILE explicitly in CI or production instances.
+#pragma warning disable CS0618
         var fallback = FallbackCredentialsFactory.GetCredentials();
+#pragma warning restore CS0618
+
         if (fallback is null)
             throw new InvalidOperationException(
-                "No AWS credentials found. Configure AWS:Profile, AWS_PROFILE, or AWS_ACCESS_KEY_ID/AWS_SECRET_ACCESS_KEY.");
+                "No AWS credentials found. Configure AWS:Profile/AWS_PROFILE, or AWS_ACCESS_KEY_ID/AWS_SECRET_ACCESS_KEY, or attach an instance profile role.");
 
         return fallback;
     };
 
-    builder.Services.AddTransient(_ => new SigV4SigningHandler(
+    builder.Services.AddTransient(sp => new SigV4SigningHandler(
         smartTaskCredentialsFactory,
-        smartTaskAwsRegion));
+        smartTaskAwsRegion,
+        sp.GetRequiredService<ILogger<SigV4SigningHandler>>()));
 
     builder.Services
         .AddHttpClient<ISmartTaskOrchestratorClient, SmartTaskLambdaClient>(httpClient =>
