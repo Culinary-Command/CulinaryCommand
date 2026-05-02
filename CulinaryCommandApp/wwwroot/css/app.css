@@ -231,3 +231,6 @@ h1:focus {
     padding-left: 1rem;
 }
 
+.rounded-extra {
+    border-radius: 1.5rem; /* or 2rem for even more */
+}

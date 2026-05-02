@@ -71,7 +71,7 @@ else
         <!-- ═══════════════════════════════════════════════════════════
              AI WEEKLY ANALYSIS
              ═══════════════════════════════════════════════════════════ -->
-        <div class="card mt-4 shadow-sm rounded-4">
+        <div class="card mt-4 shadow-sm rounded-extra">
             <div class="card-header fw-semibold d-flex justify-content-between align-items-center">
                 <span><i class="bi bi-robot me-1 text-primary"></i>Weekly Report Analysis</span>
                 @if (_aiAnalysisObj != null)
@@ -118,7 +118,7 @@ else
                             @foreach (var m in _aiAnalysisObj.Metrics)
                             {
                                 <div class="col-sm-6 col-lg-3">
-                                    <div class="card h-100 border-0 bg-light rounded-4">
+                                    <div class="card h-100 border-0 bg-light rounded">
                                         <div class="card-body py-2">
                                             <div class="small text-muted fw-semibold">@m.Label</div>
                                             <div class="fs-5 fw-bold">@m.Value @(!string.IsNullOrWhiteSpace(m.Unit) ? $" {m.Unit}" : "")</div>
@@ -136,7 +136,7 @@ else
                             @foreach (var s in _aiAnalysisObj.Sections)
                             {
                                 <div class="col-md-6">
-                                    <div class="card h-100 shadow-sm rounded-4">
+                                    <div class="card h-100 shadow-sm">
                                         <div class="card-body">
                                             <h6 class="fw-semibold mb-1">@s.Heading</h6>
                                             <p class="card-text text-muted mb-0">@s.Body</p>
