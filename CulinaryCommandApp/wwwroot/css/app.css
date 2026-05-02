@@ -232,5 +232,13 @@ h1:focus {
 }
 
 .rounded-extra {
-    border-radius: 1.5rem; /* or 2rem for even more */
+    border-radius: 1.5rem;
+}
+
+.cc-dashboard-card-header {
+  padding: 0.5rem 1rem;
+  margin-bottom: 0; 
+  background-color: rgba(68, 152, 71, 1);  
+  border-bottom: 1px solid rgba(0, 0, 0, 0.125);
+  border-radius: 1.5rem 1.5rem 0 0; /* Top-left, top-right, bottom-right, bottom-left */
 }
