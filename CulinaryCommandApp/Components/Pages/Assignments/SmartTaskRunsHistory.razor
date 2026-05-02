@@ -34,16 +34,15 @@
                         @foreach (var run in recentRuns)
                         {
                             <tr>
-                                <td>@run.CreatedAt.ToLocalTime().ToString("g")</td>
-                                <td>@run.ServiceDate.ToString("yyyy-MM-dd")</td>
+                                <td>@run.CreatedAt.ToLocalTime().ToString("MMM d, yyyy h:mm tt")</td>
+                                <td>@run.ServiceDate.ToString("MMM d, yyyy")</td>
                                 <td>
                                     <span class="badge @StatusBadgeClass(run.Status)">@run.Status</span>
                                 </td>
                                 <td class="text-end">
                                     @if (run.Status == nameof(SmartTaskRunStatus.Committed))
                                     {
-                                        <button type="button"
-                                                class="btn btn-sm btn-outline-danger"
+                                        <button type="button" class="btn btn-sm btn-outline-danger"
                                                 disabled="@(rollbackInProgressForRunId == run.Id)"
                                                 @onclick="@(() => RollbackAsync(run.Id))">
                                             @(rollbackInProgressForRunId == run.Id ? "Rolling back…" : "Rollback")
