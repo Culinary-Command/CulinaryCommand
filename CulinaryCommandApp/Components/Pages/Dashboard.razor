@@ -29,7 +29,7 @@ else
 {
     <div class="container-fluid px-3 px-lg-4 mt-4">
         <div class="d-flex flex-column flex-lg-row justify-content-between align-items-lg-center gap-3 mb-4">
-            <div>
+            <div class="page-heading">
                 <div class="text-uppercase text-muted small fw-semibold mb-1">Kitchen Operations</div>
                 <h1 class="fw-bold mb-1">Dashboard</h1>
                 <p class="text-muted mb-0">Overview of your kitchen operations, tasks, and inventory at a glance.</p>
@@ -71,9 +71,9 @@ else
         <!-- ═══════════════════════════════════════════════════════════
              AI WEEKLY ANALYSIS
              ═══════════════════════════════════════════════════════════ -->
-        <div class="card mt-4 shadow-sm">
-            <div class="card-header fw-semibold d-flex justify-content-between align-items-center">
-                <span><i class="bi bi-robot me-1 text-primary"></i>Weekly Report Analysis</span>
+        <div class="card mt-4 shadow-sm rounded-extra">
+            <div class="cc-dashboard-card-header fw-semibold d-flex justify-content-between align-items-center text-white">
+                <span><i class="bi bi-robot me-1 text-white"></i>Weekly Report Analysis</span>
                 @if (_aiAnalysisObj != null)
                 {
                     <small class="text-muted">Generated: @_aiAnalysisObj.GeneratedAt?.ToLocalTime().ToString("g")</small>
@@ -118,7 +118,7 @@ else
                             @foreach (var m in _aiAnalysisObj.Metrics)
                             {
                                 <div class="col-sm-6 col-lg-3">
-                                    <div class="card h-100 border-0 bg-light">
+                                    <div class="card h-100 border-0 bg-light rounded">
                                         <div class="card-body py-2">
                                             <div class="small text-muted fw-semibold">@m.Label</div>
                                             <div class="fs-5 fw-bold">@m.Value @(!string.IsNullOrWhiteSpace(m.Unit) ? $" {m.Unit}" : "")</div>
