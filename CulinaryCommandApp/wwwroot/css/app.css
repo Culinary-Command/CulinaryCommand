@@ -226,3 +226,8 @@ h1:focus {
   border-color: #929292;
 }
 
+.page-heading {
+    border-left: 4px solid #2ca259;
+    padding-left: 1rem;
+}
+
