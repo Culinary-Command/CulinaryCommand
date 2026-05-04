@@ -6,6 +6,7 @@
 @using CulinaryCommand.Data.Enums
 @using CulinaryCommand.Services
 @using CulinaryCommand.Services.UserContextSpace
+@using WorkTaskStatus = CulinaryCommand.Data.Enums.TaskStatus
 
 @inject IUserContextService UserCtx
 @inject ITaskAssignmentService TaskService
@@ -42,7 +43,13 @@ else
                 <p class="text-muted mb-0">Track your assigned work, review recipe prep, and close out tasks quickly.</p>
             </div>
 
-            <div class="d-flex align-items-center gap-3">
+            <div class="d-flex flex-column flex-sm-row align-items-sm-center gap-3">
+                <button type="button"
+                        class="btn btn-outline-secondary show-completed-toggle @(showCompleted ? "active" : null)"
+                        @onclick="ToggleShowCompleted">
+                    @(showCompleted ? "Hide Completed" : "Show Completed")
+                </button>
+
                 <div class="text-end">
                     <div class="small text-muted fw-semibold">Location</div>
                     <div class="fw-semibold">@SelectedLocationName</div>
@@ -63,7 +70,7 @@ else
             </div>
         </div>
 
-        @if (prepTasks is null || prepTasks.Count == 0)
+        @if (activeTasks.Count == 0 && (!showCompleted || completedTasks.Count == 0))
         {
             <div class="card shadow-sm border-0">
                 <div class="card-body p-4">
@@ -75,7 +82,25 @@ else
         }
         else
         {
-            <PrepTasksPanel Tasks="@prepTasks" OnMarkDone="HandleMarkDone" />
+            @if (activeTasks.Count > 0)
+            {
+                <PrepTasksPanel Tasks="@activeTasks"
+                                Title="Today’s Task List"
+                                EmptyMessage="No active tasks for today."
+                                OnStatusChange="HandleStatusChange" />
+            }
+
+            @if (showCompleted && completedTasks.Count > 0)
+            {
+                <section class="completed-section mt-4">
+                    <div class="completed-section-heading">Completed</div>
+                    <PrepTasksPanel Tasks="@completedTasks"
+                                    Title="Completed Tasks"
+                                    EmptyMessage="No completed tasks."
+                                    IsCompletedSection="true"
+                                    OnStatusChange="HandleStatusChange" />
+                </section>
+            }
         }
     </div>
 }
@@ -87,10 +112,12 @@ else
     private string username = "Cook";
 
     private List<Tasks> allTasks = new();
-    private List<Tasks> prepTasks = new();
+    private List<Tasks> activeTasks = new();
+    private List<Tasks> completedTasks = new();
     private int? selectedLocationId;
 
     private bool _isLoadingTasks = false;
+    private bool showCompleted;
 
     protected override async Task OnInitializedAsync()
     {
@@ -153,17 +180,13 @@ else
             if (userId is null)
             {
                 allTasks = new();
-                prepTasks = new();
+                activeTasks = new();
+                completedTasks = new();
                 return;
             }
 
             allTasks = await TaskService.GetForUserAsync(userId.Value, selectedLocationId);
-
-            prepTasks = allTasks
-                @* .Where(t => t.Kind == WorkTaskKind.PrepFromRecipe) *@
-                .Where(t => !string.Equals(t.Status, "Completed", StringComparison.OrdinalIgnoreCase))
-                .OrderBy(t => t.DueDate)
-                .ToList();
+            UpdateVisibleTasks();
 
         }
         finally
@@ -172,21 +195,49 @@ else
         }
     }
 
-    private async Task HandleMarkDone(Tasks t)
+    private async Task HandleStatusChange((Tasks Task, string Status) update)
     {
-        await TaskService.UpdateStatusAsync(t.Id, "Completed");
+        await TaskService.UpdateStatusAsync(update.Task.Id, update.Status);
 
-        var match = allTasks.FirstOrDefault(x => x.Id == t.Id);
+        var match = allTasks.FirstOrDefault(x => x.Id == update.Task.Id);
         if (match is not null)
         {
-            match.Status = "Completed";
+            match.Status = update.Status;
             match.UpdatedAt = DateTime.UtcNow;
         }
 
-        prepTasks.RemoveAll(x => x.Id == t.Id);
+        UpdateVisibleTasks();
 
         await InvokeAsync(StateHasChanged);
     }
+
+    private void ToggleShowCompleted()
+    {
+        showCompleted = !showCompleted;
+        UpdateVisibleTasks();
+    }
+
+    private void UpdateVisibleTasks()
+    {
+        activeTasks = allTasks
+            @* .Where(t => t.Kind == WorkTaskKind.PrepFromRecipe) *@
+            .Where(t => !string.Equals(t.Status, WorkTaskStatus.Completed, StringComparison.OrdinalIgnoreCase))
+            .OrderBy(t => t.DueDate)
+            .ToList();
+
+        completedTasks = showCompleted
+            ? allTasks
+                .Where(t => string.Equals(t.Status, WorkTaskStatus.Completed, StringComparison.OrdinalIgnoreCase))
+                .OrderByDescending(t => t.UpdatedAt)
+                .ThenBy(t => t.DueDate)
+                .ToList()
+            : new List<Tasks>();
+    }
+
+    private int OpenTaskCount => activeTasks.Count;
+
+    private int PrepTaskCount => activeTasks
+        .Count(t => t.Kind == WorkTaskKind.PrepFromRecipe);
 
     private void HandleLocationStateChanged()
     {
@@ -200,10 +251,6 @@ else
 
     private string SelectedLocationName =>
         LocationState.CurrentLocation?.Name ?? "No location selected";
-
-    private int OpenTaskCount => prepTasks.Count;
-
-    private int PrepTaskCount => prepTasks.Count(t => t.Kind == WorkTaskKind.PrepFromRecipe);
 
     public void Dispose()
     {

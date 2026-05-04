@@ -19,3 +19,24 @@
 .my-tasks-page :deep(.card-body) {
     padding: 1.5rem;
 }
+
+.show-completed-toggle {
+    min-width: 10.5rem;
+    border-radius: 999px;
+    font-weight: 600;
+}
+
+.show-completed-toggle.active {
+    background-color: var(--mytasks-green);
+    border-color: var(--mytasks-green);
+    color: #ffffff;
+}
+
+.completed-section-heading {
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #6b7280;
+    margin-bottom: 0.75rem;
+}
