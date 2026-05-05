@@ -1,6 +1,7 @@
 @namespace CulinaryCommand.Components.Custom
 @using CulinaryCommand.Data.Entities
 @using CulinaryCommand.Data.Enums
+@using WorkTaskStatus = CulinaryCommand.Data.Enums.TaskStatus
 @using Microsoft.AspNetCore.Components
 @inject NavigationManager Nav
 
@@ -8,7 +9,7 @@
     <div class="cc-card-header">
         <div>
             <div class="cc-section-label">Assigned Tasks</div>
-            <h3>Today’s Task List</h3>
+            <h3>@Title</h3>
             <p>Review assigned work, expand general task notes, and complete prep with recipe context where needed.</p>
         </div>
         <span class="cc-count-pill">@Tasks.Count</span>
@@ -16,18 +17,18 @@
 
     @if (Tasks is null || Tasks.Count == 0)
     {
-        <div class="cc-empty">No prep tasks for today.</div>
+        <div class="cc-empty">@EmptyMessage</div>
     }
     else
     {
         <ul class="cc-task-list">
             @foreach (var t in Tasks)
             {
-                var isDone = string.Equals(t.Status, "Completed", StringComparison.OrdinalIgnoreCase);
+                var isDone = string.Equals(t.Status, WorkTaskStatus.Completed, StringComparison.OrdinalIgnoreCase);
 
                 <li class="cc-task @(isDone ? "cc-task-done" : null)">
                     <button class="cc-check"
-                            @onclick="() => OnMarkDoneClicked(t)"
+                            @onclick="() => OnStatusChangeClicked(t, isDone ? WorkTaskStatus.Pending : WorkTaskStatus.Completed)"
                             aria-label="toggle complete">
                         <span class="cc-check-circle @(isDone ? "checked" : "")"></span>
                     </button>
@@ -40,6 +41,10 @@
                             <span class="cc-kind-badge @(IsPrepTask(t) ? "cc-kind-prep" : "cc-kind-general")">
                                 @(IsPrepTask(t) ? "Recipe Prep" : "General")
                             </span>
+                            @if (isDone)
+                            {
+                                <span class="cc-status-badge">Completed</span>
+                            }
                         </div>
 
                         @if (IsPrepTask(t))
@@ -83,11 +88,20 @@
                         <div class="cc-duration">
                             @FormatAssignedDate(t)
                         </div>
-                        <button class="cc-mark"
-                                @onclick="() => OnMarkDoneClicked(t)"
-                                disabled="@(isDone)">
-                            Mark Done
-                        </button>
+                        @if (isDone)
+                        {
+                            <button class="cc-mark cc-mark-secondary"
+                                    @onclick="() => OnStatusChangeClicked(t, WorkTaskStatus.Pending)">
+                                Reopen
+                            </button>
+                        }
+                        else
+                        {
+                            <button class="cc-mark"
+                                    @onclick="() => OnStatusChangeClicked(t, WorkTaskStatus.Completed)">
+                                Mark Done
+                            </button>
+                        }
                     </div>
                 </li>
             }
@@ -183,7 +197,10 @@
 
 @code {
     [Parameter] public List<Tasks> Tasks { get; set; } = new();
-    [Parameter] public EventCallback<Tasks> OnMarkDone { get; set; }
+    [Parameter] public string Title { get; set; } = "Today’s Task List";
+    [Parameter] public string EmptyMessage { get; set; } = "No prep tasks for today.";
+    [Parameter] public bool IsCompletedSection { get; set; }
+    [Parameter] public EventCallback<(Tasks Task, string Status)> OnStatusChange { get; set; }
 
     private bool showRecipe;
     private Tasks? selectedTask;
@@ -197,14 +214,22 @@
         return t.Name ?? "Untitled Task";
     }
 
-    private async Task OnMarkDoneClicked(Tasks t)
+    private async Task OnStatusChangeClicked(Tasks t, string status)
     {
-        if (OnMarkDone.HasDelegate)
+        if (string.Equals(t.Status, status, StringComparison.OrdinalIgnoreCase))
         {
-            await OnMarkDone.InvokeAsync(t);
+            return;
         }
 
-        expandedTaskIds.Remove(t.Id);
+        if (OnStatusChange.HasDelegate)
+        {
+            await OnStatusChange.InvokeAsync((t, status));
+        }
+
+        if (string.Equals(status, WorkTaskStatus.Completed, StringComparison.OrdinalIgnoreCase))
+        {
+            expandedTaskIds.Remove(t.Id);
+        }
     }
 
     private void OpenRecipe(Tasks t)

@@ -79,6 +79,22 @@
     text-decoration: line-through;
 }
 
+.cc-task-done {
+    background: #f8faf9;
+    opacity: 0.88;
+}
+
+.cc-task-done .cc-metrics,
+.cc-task-done .cc-duration,
+.cc-task-done .cc-card-header p,
+.cc-task-done .cc-details {
+    color: #6b7280;
+}
+
+.cc-task-done .cc-kind-badge {
+    opacity: 0.82;
+}
+
 .cc-check {
     border: 0;
     background: transparent;
@@ -138,6 +154,17 @@
     color: #374151;
 }
 
+.cc-status-badge {
+    display: inline-flex;
+    align-items: center;
+    border-radius: 999px;
+    padding: 0.2rem 0.65rem;
+    font-size: 0.74rem;
+    font-weight: 700;
+    background: #e5e7eb;
+    color: #4b5563;
+}
+
 .cc-metrics {
     display: flex;
     gap: 16px;
@@ -179,6 +206,7 @@
     align-items: flex-end;
     gap: 10px;
     margin-left: 12px;
+    min-width: 0;
 }
 
 .cc-duration {
@@ -199,6 +227,16 @@
 
 .cc-mark:hover {
     background: #f3f4f6;
+}
+
+.cc-mark-secondary {
+    background: #eef2f7;
+    border-color: #d1d5db;
+    color: #374151;
+}
+
+.cc-mark-secondary:hover {
+    background: #e5e7eb;
 }
 
 .cc-mark:disabled {
@@ -226,6 +264,11 @@
         width: 100%;
         margin-left: 34px;
         align-items: flex-start;
+    }
+
+    .cc-mark {
+        width: 100%;
+        max-width: 100%;
     }
 }
     
