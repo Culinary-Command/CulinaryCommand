@@ -242,3 +242,39 @@ h1:focus {
   border-bottom: 1px solid rgba(0, 0, 0, 0.125);
   border-radius: 1.5rem 1.5rem 0 0; /* Top-left, top-right, bottom-right, bottom-left */
 }
+
+img,
+svg,
+canvas {
+  max-width: 100%;
+}
+
+.table-responsive {
+  max-width: 100%;
+}
+
+@media (max-width: 992px) {
+  .d-flex.align-items-center.gap-3 {
+    flex-wrap: wrap;
+  }
+}
+
+@media (max-width: 768px) {
+  .page-heading {
+    width: 100%;
+  }
+
+  .btn,
+  .form-control,
+  .form-select,
+  .input-group {
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 576px) {
+  .table-responsive {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+}

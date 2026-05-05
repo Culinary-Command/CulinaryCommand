@@ -3,17 +3,32 @@
   cursor: pointer;
   width: 3.5rem;
   height: 2.5rem;
-  color: white;
+  color: #ffffff;
   position: absolute;
   top: 0.5rem;
   right: 1rem;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid #009A3B;
+  border-radius: 0.9rem;
+  box-shadow: 0 8px 18px rgba(0, 154, 59, 0.18);
   background: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28255, 255, 255, 0.55%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e")
-    no-repeat center/1.75rem rgba(255, 255, 255, 0.1);
+    no-repeat center/1.75rem #009A3B;
 }
 
 .navbar-toggler:checked {
-  background-color: rgba(255, 255, 255, 0.5);
+  border-color: #007a2f;
+  box-shadow: 0 10px 22px rgba(0, 122, 47, 0.24);
+  background: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28255, 255, 255, 0.92%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2.2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e")
+    no-repeat center/1.75rem #007a2f;
+}
+
+.navbar-toggler:hover {
+  border-color: #007a2f;
+  background-color: #007a2f;
+}
+
+.navbar-toggler:focus-visible {
+  outline: 3px solid rgba(0, 154, 59, 0.22);
+  outline-offset: 2px;
 }
 
 .top-row {
@@ -105,10 +120,59 @@
 .nav-scrollable {
   display: none;
   border-right: 2px solid #d6d5d5;
+  max-width: 100%;
 }
 
 .navbar-toggler:checked ~ .nav-scrollable {
   display: block;
+}
+
+@media (max-width: 992px) {
+  .nav-scrollable {
+    background: #ffffff;
+    border-right: 2px solid #d6d5d5;
+  }
+
+  .nav-item {
+    padding-bottom: 0.5rem;
+  }
+
+  .nav-item:first-of-type {
+    padding-top: 1rem;
+  }
+
+  .nav-item:last-of-type {
+    padding-bottom: 1rem;
+  }
+
+  .nav-item ::deep .nav-link {
+    color: #4b5563;
+  }
+
+  .nav-item ::deep a.active {
+    background-color: #eeeeee;
+    color: #0f2937;
+  }
+
+  .nav-item ::deep .nav-link:hover,
+  .nav-item ::deep a.active:hover {
+    background-color: #eeeeee;
+    color: #011827;
+  }
+}
+
+@media (max-width: 768px) {
+  .nav-item {
+    padding-bottom: 0.35rem;
+  }
+
+  .nav-item ::deep .nav-link {
+    height: auto;
+    min-height: 3rem;
+    line-height: 1.35;
+    padding-top: 0.75rem;
+    padding-bottom: 0.75rem;
+  }
 }
 
 @media (min-width: 641px) {

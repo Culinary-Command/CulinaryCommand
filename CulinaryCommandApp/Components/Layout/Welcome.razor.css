@@ -3,6 +3,7 @@
     background: #ffffff;
     color: #1f2937;
     min-height: 100vh;
+    overflow-x: clip;
 }
 
 .welcome-nav {
@@ -20,6 +21,7 @@
     position: sticky;
     top: 0;
     z-index: 1000;
+    max-width: calc(100% + 48px);
 }
 
 .nav-brand {
@@ -34,6 +36,7 @@
     padding: 6px 8px;
     border-radius: 999px;
     background: linear-gradient(135deg, #009A3B, #009A3B);
+    max-width: 100%;
 }
 
 .nav-pill a {
@@ -988,10 +991,13 @@
     .welcome-nav {
         flex-direction: column;
         align-items: flex-start;
+        padding-bottom: 16px;
     }
 
     .nav-pill {
         flex-wrap: wrap;
+        width: 100%;
+        border-radius: 1.25rem;
     }
 
     .hero-content {
@@ -1270,5 +1276,57 @@
     .footer-legal {
         flex-direction: column;
         gap: 8px;
+    }
+
+    .welcome-nav {
+        gap: 14px;
+    }
+
+    .nav-brand,
+    .nav-pill,
+    .btn-cta {
+        width: 100%;
+    }
+
+    .nav-pill {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px;
+        padding: 10px;
+        border-radius: 1.25rem;
+    }
+
+    .nav-pill a {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 2.75rem;
+        text-align: center;
+        padding: 0.75rem 0.9rem;
+    }
+
+    .btn-cta {
+        justify-content: center;
+    }
+}
+
+@media (max-width: 576px) {
+    .welcome-nav {
+        margin-left: -20px;
+        margin-right: -20px;
+        max-width: calc(100% + 40px);
+    }
+
+    .nav-pill {
+        grid-template-columns: 1fr;
+    }
+
+    .nav-pill a {
+        width: 100%;
+    }
+
+    .btn-cta {
+        width: 100%;
+        justify-content: center;
     }
 }

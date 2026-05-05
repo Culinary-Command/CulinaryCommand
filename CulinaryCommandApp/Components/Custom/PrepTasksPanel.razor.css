@@ -206,6 +206,7 @@
     align-items: flex-end;
     gap: 10px;
     margin-left: 12px;
+    min-width: 0;
 }
 
 .cc-duration {
@@ -263,6 +264,11 @@
         width: 100%;
         margin-left: 34px;
         align-items: flex-start;
+    }
+
+    .cc-mark {
+        width: 100%;
+        max-width: 100%;
     }
 }
     

@@ -113,3 +113,48 @@ h1 { margin: 0 0 4px; }
     font-weight: 800;
     line-height: 1.6;
 }
+
+.invite-wrap {
+    max-width: 520px;
+    width: 100%;
+}
+
+@media (max-width: 992px) {
+    .users-row {
+        flex-wrap: wrap;
+    }
+}
+
+@media (max-width: 768px) {
+    .users-email {
+        max-width: 100%;
+        white-space: normal;
+        overflow-wrap: anywhere;
+    }
+
+    .users-detail {
+        grid-template-columns: 1fr;
+        gap: 6px;
+    }
+
+    .users-label {
+        padding-top: 0;
+    }
+
+    .users-actions {
+        justify-content: stretch;
+        flex-wrap: wrap;
+    }
+
+    .users-actions .btn {
+        width: 100%;
+    }
+}
+
+@media (max-width: 576px) {
+    .users-meta {
+        width: 100%;
+        justify-content: flex-start;
+        flex-wrap: wrap;
+    }
+}
