@@ -30,6 +30,18 @@
     padding-left: 8px;
 }
 
+.nav-brand button {
+    display: inline-flex;
+    align-items: center;
+}
+
+.welcome-logo {
+    display: block;
+    width: auto;
+    height: clamp(3.5rem, 5vw, 4.5rem);
+    max-width: 100%;
+}
+
 .nav-pill {
     display: flex;
     gap: 8px;
@@ -1280,33 +1292,28 @@
 
     .welcome-nav {
         gap: 14px;
+        position: static;
+        padding-top: 12px;
+        padding-bottom: 12px;
     }
 
-    .nav-brand,
-    .nav-pill,
-    .btn-cta {
-        width: 100%;
+    .nav-brand {
+        width: auto;
+        padding-left: 0;
+    }
+
+    .welcome-logo {
+        height: 3.5rem;
     }
 
     .nav-pill {
-        display: grid;
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 10px;
-        padding: 10px;
-        border-radius: 1.25rem;
-    }
-
-    .nav-pill a {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        min-height: 2.75rem;
-        text-align: center;
-        padding: 0.75rem 0.9rem;
+        display: none;
     }
 
     .btn-cta {
+        width: auto;
         justify-content: center;
+        margin-left: auto;
     }
 }
 
@@ -1315,18 +1322,17 @@
         margin-left: -20px;
         margin-right: -20px;
         max-width: calc(100% + 40px);
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
     }
 
     .nav-pill {
-        grid-template-columns: 1fr;
-    }
-
-    .nav-pill a {
-        width: 100%;
+        display: none;
     }
 
     .btn-cta {
-        width: 100%;
+        width: auto;
         justify-content: center;
     }
 }
