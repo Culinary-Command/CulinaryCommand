@@ -239,14 +239,49 @@ namespace CulinaryCommand.Services
                 .ToListAsync();
         }
 
+        private async Task<List<Location>> GetAccessibleLocationsForUserAsync(int userId)
+        {
+            using var db = CreateDb();
+
+            var user = await db.Users
+                .Include(u => u.UserLocations)
+                    .ThenInclude(ul => ul.Location)
+                .Include(u => u.ManagerLocations)
+                    .ThenInclude(ml => ml.Location)
+                .FirstOrDefaultAsync(u => u.Id == userId);
+
+            if (user == null)
+            {
+                return new List<Location>();
+            }
+
+            var role = user.Role ?? string.Empty;
+
+            if (string.Equals(role, "Manager", StringComparison.OrdinalIgnoreCase))
+            {
+                var managerLocations = user.ManagerLocations
+                    .Select(ml => ml.Location)
+                    .Where(location => location != null)
+                    .DistinctBy(location => location.Id)
+                    .ToList();
+
+                if (managerLocations.Count > 0)
+                {
+                    return managerLocations!;
+                }
+            }
+
+            return user.UserLocations
+                .Select(ul => ul.Location)
+                .Where(location => location != null)
+                .DistinctBy(location => location.Id)
+                .ToList()!;
+        }
+
         // ---------------- Load and Persist ----------------
         public async Task LoadAndPersistLocationsAsync(int userId)
         {
-            var locations = await GetLocationsByManagerAsync(userId);
-            if (locations == null)
-            {
-                locations = new List<Location>();
-            }
+            var locations = await GetAccessibleLocationsForUserAsync(userId);
 
             await _locationState.SetLocationsAsync(locations);
 

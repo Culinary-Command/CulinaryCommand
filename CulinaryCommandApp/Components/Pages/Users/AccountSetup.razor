@@ -97,12 +97,17 @@ else
                 return;
             }
 
-            // Optional: if you still need any server-side prep, keep it.
-            // But DO NOT attempt Auth.SignInAsync here (Cognito owns login now).
+            // Post-login rehydrates locations from the authenticated user context,
+            // so this warm-up should never block activation if it fails.
             if (invitedUser != null)
             {
-                // If this method is safe/needed, keep it; otherwise remove.
-                await locationService.LoadAndPersistLocationsAsync(invitedUser.Id);
+                try
+                {
+                    await locationService.LoadAndPersistLocationsAsync(invitedUser.Id);
+                }
+                catch
+                {
+                }
             }
 
             success = true;
