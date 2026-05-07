@@ -11,6 +11,7 @@ Testing application:
 
 The Playwright UI test project lives in [PlaywrightTests](/Users/wyatthunter/projects/sdmay26-44/PlaywrightTests).
 
+
 Current admin coverage summary:
 - Dashboard access, Cognito login redirect, and navigation
 - Manage users create, invite verification, edit, cancel, and validation flows
