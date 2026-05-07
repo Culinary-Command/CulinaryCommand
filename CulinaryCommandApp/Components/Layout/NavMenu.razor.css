@@ -32,7 +32,7 @@
 }
 
 .top-row {
-  height: 3.5rem;
+  min-height: 4.5rem;
   background-color: #f7f7f7;
   border-bottom: 2px solid #d6d5d5;
   border-right: 2px solid #d6d5d5;
@@ -41,6 +41,16 @@
 .navbar-brand {
   font-size: 1.3rem;
   color: #0f2937;
+  display: inline-flex;
+  align-items: center;
+  min-height: 100%;
+}
+
+.sidebar-logo {
+  display: block;
+  width: auto;
+  height: clamp(2.75rem, 4.5vw, 3.5rem);
+  max-width: 100%;
 }
 
 .bi {
@@ -162,6 +172,14 @@
 }
 
 @media (max-width: 768px) {
+  .top-row {
+    min-height: 4rem;
+  }
+
+  .sidebar-logo {
+    height: 3rem;
+  }
+
   .nav-item {
     padding-bottom: 0.35rem;
   }
@@ -185,7 +203,7 @@
     display: block;
 
     /* Allow sidebar to scroll for tall menus */
-    height: calc(100vh - 3.5rem);
+    height: calc(100vh - 4.5rem);
     overflow-y: auto;
   }
 }
